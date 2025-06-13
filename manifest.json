@@ -1,0 +1,11 @@
+{
+	"id": "obsidian-quizium",
+	"name": "Quizium",
+	"version": "1.0.0",
+	"minAppVersion": "0.15.0",
+	"description": "Quizium plugin for Obsidian - create and manage quizzes.",
+	"author": "Obsidian",
+	"authorUrl": "https://obsidian.md",
+	"fundingUrl": "https://obsidian.md/pricing",
+	"isDesktopOnly": false
+}
