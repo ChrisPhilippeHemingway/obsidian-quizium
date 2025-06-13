@@ -7,17 +7,29 @@ export const menuStyles = {
     textAlign: 'center' as const
   },
 
+  // Header container with title and logo
+  headerContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'flex-start',
+    marginBottom: '20px',
+    position: 'relative' as const
+  },
+
   // Title and header
   title: {
-    marginBottom: '10px',
-    color: 'var(--text-normal)'
+    margin: '0',
+    color: 'var(--text-normal)',
+    textAlign: 'center' as const
   },
+
+
 
   // Topic breakdown container
   topicBreakdownContainer: {
     position: 'relative' as const,
     display: 'inline-block',
-    marginBottom: '30px'
+    marginBottom: '20px'
   },
 
   statsText: {

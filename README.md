@@ -1,3 +1,7 @@
+<div align="center">
+  <img src="docs/obsidian-quizium.png" alt="Quizium Logo" width="120" height="223">
+</div>
+
 # Quizium - Obsidian Plugin
 
 A powerful flashcard and quiz plugin for Obsidian that transforms your notes into an interactive learning experience. Study your knowledge through spaced repetition, difficulty-based flashcards, and comprehensive quizzes.

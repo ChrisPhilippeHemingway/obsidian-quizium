@@ -54,9 +54,6 @@ export const TopicSelectionView: React.FC<TopicSelectionViewProps> = ({
         </div>
 
         <div style={topicSelectionStyles.difficultySection}>
-          <div style={topicSelectionStyles.difficultyTitle}>
-            By Difficulty
-          </div>
           <div style={topicSelectionStyles.difficultyButtonsContainer}>
             <button
               onClick={() => startFlashcards('all', 'easy')}
@@ -166,9 +163,6 @@ export const TopicSelectionView: React.FC<TopicSelectionViewProps> = ({
           </div>
 
           <div style={topicSelectionStyles.difficultySection}>
-            <div style={topicSelectionStyles.difficultyTitle}>
-              By Difficulty
-            </div>
             <div style={topicSelectionStyles.difficultyButtonsContainer}>
               <button
                 onClick={() => startFlashcards(stat.topicName, 'easy')}

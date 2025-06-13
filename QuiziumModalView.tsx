@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import logoImage from './obsidian-quizium.png';
 import { useApp } from './AppContext';
 import { FlashcardService, Flashcard, Quiz, TopicStats, TopicDifficultyStats } from './FlashcardService';
 import { MonitoredTopic } from './main';
@@ -1005,8 +1006,32 @@ export const QuiziumModalView = ({ onClose, monitoredTopics, plugin }: QuiziumMo
   // Add logging to the main render function
   
   
+  // Function to determine if logo should be shown based on current view mode
+  const shouldShowLogo = () => {
+    return viewMode === 'menu' || viewMode === 'topicSelection' || viewMode === 'spacedRepetition';
+  };
+
   return (
     <div style={modalStyles.container}>
+      {/* Logo in top right corner - only show on main menu, topic selection, and spaced repetition views */}
+      {shouldShowLogo() && (
+        <img 
+          src={logoImage}
+          alt="Quizium Logo"
+          style={{
+            position: 'absolute',
+            top: '10px',
+            right: '10px',
+            width: '40px',
+            height: '40px',
+            objectFit: 'contain',
+            zIndex: 1000,
+            pointerEvents: 'none',
+            userSelect: 'none'
+          }}
+        />
+      )}
+      
       {/* Content area */}
       <div 
         className="quizium-modal-content"
@@ -1019,4 +1044,4 @@ export const QuiziumModalView = ({ onClose, monitoredTopics, plugin }: QuiziumMo
       {renderButtons()}
     </div>
   );
-}; 
+};

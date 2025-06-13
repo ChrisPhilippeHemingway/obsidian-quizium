@@ -76,7 +76,9 @@ export const MenuView: React.FC<MenuViewProps> = ({
 
   return (
     <div style={menuStyles.container}>
-      <h1 style={menuStyles.title}>Quizium</h1>
+      <div style={menuStyles.headerContainer}>
+        <h1 style={menuStyles.title}>Quizium</h1>
+      </div>
       <div className="topic-breakdown-container" style={menuStyles.topicBreakdownContainer}>
         <div style={menuStyles.statsText}>
           <div style={menuStyles.statsLine}>
@@ -89,10 +91,10 @@ export const MenuView: React.FC<MenuViewProps> = ({
         <button
           onClick={() => setShowTopicBreakdown(!showTopicBreakdown)}
           style={menuStyles.breakdownButton}
-          onMouseEnter={(e) => {
+          onMouseEnter={(e: React.MouseEvent<HTMLButtonElement>) => {
             Object.assign(e.currentTarget.style, menuHoverEffects.breakdownButton);
           }}
-          onMouseLeave={(e) => {
+          onMouseLeave={(e: React.MouseEvent<HTMLButtonElement>) => {
             Object.assign(e.currentTarget.style, menuHoverEffects.breakdownButtonReset);
           }}
           title="Show per-topic breakdown"
@@ -105,10 +107,10 @@ export const MenuView: React.FC<MenuViewProps> = ({
         <button
           onClick={showTopicSelection}
           style={combineStyles(menuStyles.actionButton, menuStyles.flashcardsButton)}
-          onMouseEnter={(e) => {
+          onMouseEnter={(e: React.MouseEvent<HTMLButtonElement>) => {
             Object.assign(e.currentTarget.style, menuHoverEffects.flashcardsButton);
           }}
-          onMouseLeave={(e) => {
+          onMouseLeave={(e: React.MouseEvent<HTMLButtonElement>) => {
             Object.assign(e.currentTarget.style, menuHoverEffects.flashcardsButtonReset);
           }}
         >
@@ -117,10 +119,10 @@ export const MenuView: React.FC<MenuViewProps> = ({
         <button
           onClick={showSpacedRepetition}
           style={combineStyles(menuStyles.actionButton, menuStyles.spacedRepetitionButton)}
-          onMouseEnter={(e) => {
+          onMouseEnter={(e: React.MouseEvent<HTMLButtonElement>) => {
             Object.assign(e.currentTarget.style, menuHoverEffects.spacedRepetitionButton);
           }}
-          onMouseLeave={(e) => {
+          onMouseLeave={(e: React.MouseEvent<HTMLButtonElement>) => {
             Object.assign(e.currentTarget.style, menuHoverEffects.spacedRepetitionButtonReset);
           }}
         >
@@ -129,10 +131,10 @@ export const MenuView: React.FC<MenuViewProps> = ({
         <button
           onClick={showQuizView}
           style={combineStyles(menuStyles.actionButton, menuStyles.quizzesButton)}
-          onMouseEnter={(e) => {
+          onMouseEnter={(e: React.MouseEvent<HTMLButtonElement>) => {
             Object.assign(e.currentTarget.style, menuHoverEffects.quizzesButton);
           }}
-          onMouseLeave={(e) => {
+          onMouseLeave={(e: React.MouseEvent<HTMLButtonElement>) => {
             Object.assign(e.currentTarget.style, menuHoverEffects.quizzesButtonReset);
           }}
         >

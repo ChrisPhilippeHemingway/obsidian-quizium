@@ -22,25 +22,25 @@ export const topicSelectionStyles = {
 
   // All topics section
   allTopicsContainer: {
-    marginBottom: '40px',
-    padding: '20px',
+    marginBottom: '12px',
+    padding: '12px',
     backgroundColor: 'var(--background-secondary)',
-    borderRadius: '12px',
-    border: '2px solid var(--background-modifier-border)'
+    borderRadius: '6px',
+    border: '1px solid var(--background-modifier-border)'
   },
 
   // Topic item container
   topicContainer: {
-    marginBottom: '30px',
-    padding: '20px',
+    marginBottom: '8px',
+    padding: '12px',
     backgroundColor: 'var(--background-secondary)',
-    borderRadius: '12px',
-    border: '2px solid var(--background-modifier-border)'
+    borderRadius: '6px',
+    border: '1px solid var(--background-modifier-border)'
   },
 
   // Topic header
   topicHeader: {
-    marginBottom: '15px'
+    marginBottom: '8px'
   },
 
   topicTitle: {
@@ -57,7 +57,7 @@ export const topicSelectionStyles = {
 
   // Difficulty buttons section
   difficultySection: {
-    marginBottom: '15px'
+    marginBottom: '8px'
   },
 
   difficultyTitle: {

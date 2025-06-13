@@ -8,7 +8,8 @@ export const modalStyles = {
     display: 'flex',
     flexDirection: 'column' as const,
     backgroundColor: 'var(--background-primary)',
-    color: 'var(--text-normal)'
+    color: 'var(--text-normal)',
+    position: 'relative' as const
   },
 
   // Content area
