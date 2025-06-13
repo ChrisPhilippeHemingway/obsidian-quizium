@@ -10,6 +10,7 @@ interface ModalButtonsViewProps {
   handleBackToTopicSelection: () => void;
   handleCancelQuiz: () => void;
   quizInProgress: boolean;
+  quizSessionDone?: boolean;
   isSpacedRepetitionMode: boolean;
   // Reset button props for menu view
   isResetting?: boolean;
@@ -25,6 +26,7 @@ export const ModalButtonsView: React.FC<ModalButtonsViewProps> = ({
   handleBackToTopicSelection,
   handleCancelQuiz,
   quizInProgress,
+  quizSessionDone = false,
   isSpacedRepetitionMode,
   isResetting = false,
   isResettingQuizResults = false,
@@ -156,7 +158,7 @@ export const ModalButtonsView: React.FC<ModalButtonsViewProps> = ({
         >
           ← Back to Menu
         </button>
-        {quizInProgress && (
+        {quizInProgress && !quizSessionDone && (
           <button 
             onClick={handleCancelQuiz}
             style={modalButtonStyles.secondaryButton}
@@ -166,6 +168,9 @@ export const ModalButtonsView: React.FC<ModalButtonsViewProps> = ({
         )}
       </div>
     );
+  } else if (viewMode === 'quizHistory') {
+    // Quiz History view has its own "Back to Quizzes" button, so we don't need additional buttons
+    return null;
   } else {
     // Flashcard view - show back button with appropriate text
     return (

@@ -929,6 +929,7 @@ export const QuiziumModalView = ({ onClose, monitoredTopics, plugin }: QuiziumMo
         setQuizResults={setQuizResults}
         setQuizTopic={setQuizTopic}
         setQuizShuffledAnswers={setQuizShuffledAnswers}
+        onBackToQuizTopics={() => setViewMode('quiz')}
       />
     );
   };
@@ -978,6 +979,7 @@ export const QuiziumModalView = ({ onClose, monitoredTopics, plugin }: QuiziumMo
         handleBackToTopicSelection={handleBackToTopicSelection}
         handleCancelQuiz={handleCancelQuiz}
         quizInProgress={quizInProgress}
+        quizSessionDone={quizSessionDone}
         isSpacedRepetitionMode={isSpacedRepetitionMode}
         isResetting={isResetting}
         isResettingQuizResults={isResettingQuizResults}

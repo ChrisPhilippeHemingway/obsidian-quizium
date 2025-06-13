@@ -28,6 +28,7 @@ interface QuizSessionViewProps {
   setQuizResults: (results: QuizResults | ((prev: QuizResults) => QuizResults)) => void;
   setQuizTopic: (topic: string | null) => void;
   setQuizShuffledAnswers: (answers: string[]) => void;
+  onBackToQuizTopics?: () => void; // Add callback to go back to quiz topic selection
 }
 
 export const QuizSessionView: React.FC<QuizSessionViewProps> = ({
@@ -44,7 +45,8 @@ export const QuizSessionView: React.FC<QuizSessionViewProps> = ({
   setQuizSelectedAnswer,
   setQuizResults,
   setQuizTopic,
-  setQuizShuffledAnswers
+  setQuizShuffledAnswers,
+  onBackToQuizTopics
 }) => {
   if (!quizQuestions.length || quizSessionDone || quizCurrentIndex >= quizQuestions.length) {
     // Show summary
@@ -63,6 +65,7 @@ export const QuizSessionView: React.FC<QuizSessionViewProps> = ({
           className="mod-cta"
           style={{ fontSize: '15px', padding: '10px 24px', borderRadius: '6px', fontWeight: 500 }}
           onClick={() => {
+            // Clear quiz state
             setQuizInProgress(false);
             setQuizSessionDone(false);
             setQuizQuestions([]);
@@ -71,9 +74,14 @@ export const QuizSessionView: React.FC<QuizSessionViewProps> = ({
             setQuizResults({ correct: 0, total: 0 });
             setQuizTopic(null);
             setQuizShuffledAnswers([]);
+            
+            // Navigate back to quiz topic selection
+            if (onBackToQuizTopics) {
+              onBackToQuizTopics();
+            }
           }}
         >
-          Back to Topics
+          Back to Quiz Topics
         </button>
       </div>
     );
