@@ -987,9 +987,16 @@ export const QuiziumModalView = ({ onClose, monitoredTopics, plugin }: QuiziumMo
     );
   };
 
-  // Add keyboard event handler for difficulty ratings and answer reveal
+  // Add keyboard event handler for difficulty ratings, answer reveal, and completion messages
   useEffect(() => {
     const handleKeyPress = (event: KeyboardEvent) => {
+      // Handle Enter key to return to menu when showing completion message
+      if (showCompletionMessage && event.key === 'Enter') {
+        event.preventDefault();
+        handleBackToMenu();
+        return;
+      }
+      
       // Handle Enter key to reveal answer when in flashcard mode and answer not yet revealed
       if ((viewMode === 'flashcards' || viewMode === 'spacedRepetition') && currentFlashcard && !answerRevealed) {
         if (event.key === 'Enter') {
@@ -1017,7 +1024,7 @@ export const QuiziumModalView = ({ onClose, monitoredTopics, plugin }: QuiziumMo
 
     window.addEventListener('keydown', handleKeyPress);
     return () => window.removeEventListener('keydown', handleKeyPress);
-  }, [viewMode, currentFlashcard, answerRevealed, difficultyRated]);
+  }, [viewMode, currentFlashcard, answerRevealed, difficultyRated, showCompletionMessage]);
 
   // Add logging to the main render function
   
