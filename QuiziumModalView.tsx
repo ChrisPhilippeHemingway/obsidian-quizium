@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import logoImage from './obsidian-quizium.png';
+import logoImage from './views/components/obsidian-quizium.png';
 import { useApp } from './AppContext';
 import { FlashcardService, Flashcard, Quiz, TopicStats, TopicDifficultyStats } from './FlashcardService';
 import { MonitoredTopic } from './main';
