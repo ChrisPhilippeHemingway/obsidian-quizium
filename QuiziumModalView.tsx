@@ -1027,6 +1027,12 @@ export const QuiziumModalView = ({ onClose, monitoredTopics, plugin }: QuiziumMo
     return viewMode === 'menu' || viewMode === 'topicSelection' || viewMode === 'spacedRepetition';
   };
 
+  // Function to get logo size based on current view mode
+  const getLogoSize = () => {
+    // Main modal gets larger logo (80x80px), others get standard size (40x40px)
+    return viewMode === 'menu' ? { width: '80px', height: '80px' } : { width: '40px', height: '40px' };
+  };
+
   return (
     <div style={modalStyles.container}>
       {/* Logo in top right corner - only show on main menu, topic selection, and spaced repetition views */}
@@ -1038,8 +1044,7 @@ export const QuiziumModalView = ({ onClose, monitoredTopics, plugin }: QuiziumMo
             position: 'absolute',
             top: '10px',
             right: '10px',
-            width: '40px',
-            height: '40px',
+            ...getLogoSize(),
             objectFit: 'contain',
             zIndex: 1000,
             pointerEvents: 'none',
