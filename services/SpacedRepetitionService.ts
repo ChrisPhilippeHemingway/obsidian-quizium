@@ -152,25 +152,75 @@ export class SpacedRepetitionService {
     dateThresholds: { challenging: Date; moderate: Date; easy: Date },
     settings: { challengingDays: number; moderateDays: number; easyDays: number }
   ): Flashcard[] {
-    return flashcards.filter(card => {
+    console.log('SpacedRepetition: Filtering flashcards', {
+      totalCards: flashcards.length,
+      settings,
+      dateThresholds: {
+        challenging: dateThresholds.challenging.toISOString(),
+        moderate: dateThresholds.moderate.toISOString(),
+        easy: dateThresholds.easy.toISOString()
+      }
+    });
+
+    const filteredCards = flashcards.filter(card => {
       // Include unrated cards (no difficulty or lastRated)
       if (!card.difficulty || !card.lastRated) {
+        console.log('SpacedRepetition: Including unrated card', { question: card.question.substring(0, 50) });
         return true;
       }
+      
+      const lastRatedTime = card.lastRated.getTime();
+      const now = new Date().getTime();
       
       // Apply spaced repetition logic based on difficulty
       switch (card.difficulty) {
         case 'challenging':
-          // For challenging cards, if interval is 0 days, include all challenging cards
-          return settings.challengingDays === 0 || card.lastRated <= dateThresholds.challenging;
+          const challengingResult = settings.challengingDays === 0 || card.lastRated <= dateThresholds.challenging;
+          console.log('SpacedRepetition: Challenging card', {
+            question: card.question.substring(0, 50),
+            lastRated: card.lastRated.toISOString(),
+            threshold: dateThresholds.challenging.toISOString(),
+            daysSinceRated: (now - lastRatedTime) / (24 * 60 * 60 * 1000),
+            included: challengingResult
+          });
+          return challengingResult;
         case 'moderate':
-          return card.lastRated <= dateThresholds.moderate;
+          const moderateResult = card.lastRated <= dateThresholds.moderate;
+          console.log('SpacedRepetition: Moderate card', {
+            question: card.question.substring(0, 50),
+            lastRated: card.lastRated.toISOString(),
+            threshold: dateThresholds.moderate.toISOString(),
+            daysSinceRated: (now - lastRatedTime) / (24 * 60 * 60 * 1000),
+            included: moderateResult
+          });
+          return moderateResult;
         case 'easy':
-          return card.lastRated <= dateThresholds.easy;
+          const easyResult = card.lastRated <= dateThresholds.easy;
+          console.log('SpacedRepetition: Easy card', {
+            question: card.question.substring(0, 50),
+            lastRated: card.lastRated.toISOString(),
+            threshold: dateThresholds.easy.toISOString(),
+            daysSinceRated: (now - lastRatedTime) / (24 * 60 * 60 * 1000),
+            included: easyResult
+          });
+          return easyResult;
         default:
           return false;
       }
     });
+
+    console.log('SpacedRepetition: Filtering complete', {
+      originalCount: flashcards.length,
+      filteredCount: filteredCards.length,
+      breakdown: {
+        challenging: filteredCards.filter(c => c.difficulty === 'challenging').length,
+        moderate: filteredCards.filter(c => c.difficulty === 'moderate').length,
+        easy: filteredCards.filter(c => c.difficulty === 'easy').length,
+        unrated: filteredCards.filter(c => !c.difficulty || !c.lastRated).length
+      }
+    });
+
+    return filteredCards;
   }
 
   /**

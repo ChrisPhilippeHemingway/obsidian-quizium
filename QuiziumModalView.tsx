@@ -332,12 +332,14 @@ export const QuiziumModalView = ({ onClose, monitoredTopics, plugin }: QuiziumMo
    * Navigates to the spaced repetition view.
    * Validates that topics are configured before allowing navigation.
    */
-  const showSpacedRepetition = () => {
+  const showSpacedRepetition = async () => {
     if (monitoredTopics.length === 0) {
       setError('No topics configured. Please add topics in the plugin settings first.');
       return;
     }
     setViewMode('spacedRepetition');
+    // Load fresh spaced repetition stats when entering the view
+    await loadSpacedRepetitionStats();
   };
 
   /**
@@ -864,12 +866,9 @@ export const QuiziumModalView = ({ onClose, monitoredTopics, plugin }: QuiziumMo
   const renderSpacedRepetitionView = () => {
     return (
       <SpacedRepetitionView
+        loading={loading}
         spacedRepetitionStats={spacedRepetitionStats}
-        showSpacedRepetitionHelp={showSpacedRepetitionHelp}
-        setShowSpacedRepetitionHelp={setShowSpacedRepetitionHelp}
-        handleStartRepetition={handleStartRepetition}
-        formatStatsText={formatStatsText}
-        plugin={plugin}
+        startSpacedRepetition={startSpacedRepetition}
       />
     );
   };

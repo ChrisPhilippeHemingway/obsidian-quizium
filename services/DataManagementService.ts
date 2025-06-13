@@ -283,7 +283,7 @@ export class DataManagementService {
   private extractEntriesFromTopicData(topicName: string, topicData: { results: any[] }): QuizHistoryEntry[] {
     return topicData.results.map(result => {
       const date = new Date(result.timestamp);
-      const formattedDate = date.toLocaleString('en-US', {
+      const formattedDate = date.toLocaleString('en-GB', {
         year: 'numeric',
         month: 'short',
         day: 'numeric',

@@ -1,5 +1,6 @@
 import React from 'react';
-import { TopicStats } from '../types';
+import { TopicStats } from '../../FlashcardService';
+import { topicBreakdownStyles } from './topic-breakdown-styles';
 
 interface TopicBreakdownViewProps {
   showTopicBreakdown: boolean;
@@ -13,58 +14,33 @@ export const TopicBreakdownView: React.FC<TopicBreakdownViewProps> = ({
   quizTopicStats
 }) => {
   if (!showTopicBreakdown) return null;
-  
+
   return (
-    <div style={{
-      position: 'absolute',
-      top: '35px',
-      right: '0px',
-      backgroundColor: 'var(--background-primary)',
-      border: '1px solid var(--background-modifier-border)',
-      borderRadius: '8px',
-      padding: '12px',
-      minWidth: '250px',
-      boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
-      zIndex: 1000
-    }}>
-      <div style={{ fontWeight: 'bold', marginBottom: '12px', fontSize: '13px' }}>
-        Per-Topic Breakdown:
+    <div style={topicBreakdownStyles.container}>
+      <div style={topicBreakdownStyles.sectionTitle}>
+        📚 Flashcards by Topic
       </div>
       
-      {/* Flashcards breakdown */}
-      <div style={{ marginBottom: '12px' }}>
-        <div style={{ fontWeight: '600', fontSize: '12px', color: '#666', marginBottom: '6px' }}>
-          📚 Flashcards:
+      <div style={topicBreakdownStyles.section}>
+        <div style={topicBreakdownStyles.subsectionTitle}>
+          Flashcards:
         </div>
         {topicStats.map((stat, index) => (
-          <div key={index} style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            marginBottom: '3px',
-            fontSize: '12px',
-            paddingLeft: '8px'
-          }}>
-            <span style={{ color: '#888' }}>{stat.topicName}:</span>
-            <span>{stat.count}</span>
+          <div key={index} style={topicBreakdownStyles.topicItem}>
+            <span style={topicBreakdownStyles.topicName}>{stat.topicName}:</span>
+            <span style={topicBreakdownStyles.topicCount}>{stat.count}</span>
           </div>
         ))}
       </div>
 
-      {/* Quizzes breakdown */}
-      <div>
-        <div style={{ fontWeight: '600', fontSize: '12px', color: '#666', marginBottom: '6px' }}>
-          🧠 Quizzes:
+      <div style={topicBreakdownStyles.section}>
+        <div style={topicBreakdownStyles.subsectionTitle}>
+          Quiz Questions:
         </div>
         {quizTopicStats.map((stat, index) => (
-          <div key={index} style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            marginBottom: '3px',
-            fontSize: '12px',
-            paddingLeft: '8px'
-          }}>
-            <span style={{ color: '#888' }}>{stat.topicName}:</span>
-            <span>{stat.count}</span>
+          <div key={index} style={topicBreakdownStyles.topicItem}>
+            <span style={topicBreakdownStyles.topicName}>{stat.topicName}:</span>
+            <span style={topicBreakdownStyles.topicCount}>{stat.count}</span>
           </div>
         ))}
       </div>

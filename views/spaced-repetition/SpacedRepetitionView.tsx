@@ -1,365 +1,146 @@
 import React from 'react';
 import { SpacedRepetitionStats } from '../types';
+import { spacedRepetitionStyles, spacedRepetitionHoverEffects } from './spaced-repetition-styles';
+import { commonStyles } from '../shared-styles';
 
 interface SpacedRepetitionViewProps {
+  loading: boolean;
   spacedRepetitionStats: SpacedRepetitionStats | null;
-  showSpacedRepetitionHelp: boolean;
-  setShowSpacedRepetitionHelp: (show: boolean) => void;
-  handleStartRepetition: (topic?: string) => void;
-  formatStatsText: (topicStats: SpacedRepetitionStats) => string | { main: string; distribution?: string };
-  plugin: any; // QuiziumPlugin type
+  startSpacedRepetition: (topic: string | null) => void;
 }
 
 export const SpacedRepetitionView: React.FC<SpacedRepetitionViewProps> = ({
+  loading,
   spacedRepetitionStats,
-  showSpacedRepetitionHelp,
-  setShowSpacedRepetitionHelp,
-  handleStartRepetition,
-  formatStatsText,
-  plugin
+  startSpacedRepetition
 }) => {
-  if (!spacedRepetitionStats) {
+  if (loading) {
     return (
-      <div style={{ textAlign: 'center', padding: '40px', color: '#888' }}>
-        Loading spaced repetition stats...
+      <div style={commonStyles.loadingState}>
+        Loading spaced repetition data...
+      </div>
+    );
+  }
+
+  if (!spacedRepetitionStats || spacedRepetitionStats.total === 0) {
+    return (
+      <div style={spacedRepetitionStyles.emptyState}>
+        <div style={spacedRepetitionStyles.emptyStateIcon}>
+          🔄
+        </div>
+        <div style={spacedRepetitionStyles.emptyStateTitle}>
+          No flashcards available for spaced repetition
+        </div>
+        <div style={spacedRepetitionStyles.emptyStateText}>
+          Complete some flashcard sessions first to build your review queue.
+        </div>
       </div>
     );
   }
 
   return (
-    <div style={{ padding: '20px', maxWidth: 500, margin: '0 auto' }}>
-      <div style={{ 
-        display: 'flex', 
-        justifyContent: 'space-between', 
-        alignItems: 'center', 
-        marginBottom: '28px'
-      }}>
-        <div style={{ 
-          fontSize: '20px', 
-          fontWeight: '600',
-          color: 'var(--text-normal)'
-        }}>
-          Spaced Repetition
+    <div style={spacedRepetitionStyles.container}>
+      <h2 style={spacedRepetitionStyles.title}>
+        🔄 Spaced Repetition
+      </h2>
+      
+      <div style={spacedRepetitionStyles.helpSection}>
+        <div style={spacedRepetitionStyles.helpTitle}>
+          How it works:
         </div>
-        <button
-          onClick={() => setShowSpacedRepetitionHelp(true)}
-          style={{
-            padding: '6px',
-            fontSize: '14px',
-            backgroundColor: 'transparent',
-            color: 'var(--text-muted)',
-            border: '1px solid var(--background-modifier-border)',
-            borderRadius: '50%',
-            cursor: 'pointer',
-            transition: 'all 0.2s',
-            width: '28px',
-            height: '28px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center'
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.backgroundColor = 'var(--background-modifier-hover)';
-            e.currentTarget.style.color = 'var(--text-normal)';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.backgroundColor = 'transparent';
-            e.currentTarget.style.color = 'var(--text-muted)';
-          }}
-          title="How does Spaced Repetition work?"
-        >
-          ?
-        </button>
+        <div style={spacedRepetitionStyles.helpText}>
+          Review flashcards based on their difficulty. Challenging cards appear more frequently, 
+          while easy cards are spaced out over longer intervals for optimal retention.
+        </div>
       </div>
 
       {/* All Topics Section */}
-      <div style={{ marginBottom: '36px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <div>
-          <div style={{ 
-            fontSize: '15px', 
-            fontWeight: '500', 
-            marginBottom: '4px',
-            color: 'var(--text-normal)',
-            textAlign: 'left'
-          }}>
+      <div style={spacedRepetitionStyles.topicContainer}>
+        <div style={spacedRepetitionStyles.topicHeader}>
+          <div style={spacedRepetitionStyles.topicTitle}>
             All Topics
           </div>
-          {(() => {
-            const statsText = formatStatsText(spacedRepetitionStats);
-            if (typeof statsText === 'string') {
-              return (
-                <div style={{
-                  fontSize: '13px',
-                  color: 'var(--text-muted)',
-                  marginBottom: 0,
-                  textAlign: 'left',
-                }}>{statsText}</div>
-              );
-            }
-            return (
-              <>
-                <div style={{
-                  fontSize: '13px',
-                  color: 'var(--text-muted)',
-                  marginBottom: 0,
-                  textAlign: 'left',
-                }}>
-                  {statsText.main}
-                </div>
-                {statsText.distribution && (
-                  <div style={{
-                    fontSize: '11px',
-                    color: 'var(--text-faint, #aaa)',
-                    marginTop: '2px',
-                    marginBottom: 0,
-                    textAlign: 'left',
-                  }}>
-                    ({statsText.distribution})
-                  </div>
-                )}
-              </>
-            );
-          })()}
+          <div style={spacedRepetitionStyles.topicStats}>
+            <span style={spacedRepetitionStyles.challengingStat}>
+              🔴 {spacedRepetitionStats.challenging}
+            </span>
+            <span style={spacedRepetitionStyles.moderateStat}>
+              🟡 {spacedRepetitionStats.moderate}
+            </span>
+            <span style={spacedRepetitionStyles.easyStat}>
+              🟢 {spacedRepetitionStats.easy}
+            </span>
+            {spacedRepetitionStats.unrated > 0 && (
+              <span style={spacedRepetitionStyles.unratedStat}>
+                ⚪ {spacedRepetitionStats.unrated}
+              </span>
+            )}
+          </div>
         </div>
         <button
-          onClick={() => handleStartRepetition()}
+          onClick={() => startSpacedRepetition('all')}
           disabled={spacedRepetitionStats.total === 0}
-          style={{
-            padding: '8px 18px',
-            fontSize: '15px',
-            borderRadius: '6px',
-            border: 'none',
-            cursor: spacedRepetitionStats.total === 0 ? 'not-allowed' : 'pointer',
-            backgroundColor: spacedRepetitionStats.total === 0 ? '#e5e7eb' : '#3b82f6',
-            color: 'white',
-            fontWeight: '500',
-            transition: 'background-color 0.2s',
-            opacity: spacedRepetitionStats.total === 0 ? 0.7 : 1,
-            marginLeft: '32px',
-            minWidth: '140px'
-          }}
+          style={spacedRepetitionStyles.startButton(spacedRepetitionStats.total > 0)}
           onMouseEnter={(e) => {
             if (spacedRepetitionStats.total > 0) {
-              e.currentTarget.style.backgroundColor = '#2563eb';
+              Object.assign(e.currentTarget.style, spacedRepetitionHoverEffects.startButton);
             }
           }}
           onMouseLeave={(e) => {
             if (spacedRepetitionStats.total > 0) {
-              e.currentTarget.style.backgroundColor = '#3b82f6';
+              Object.assign(e.currentTarget.style, spacedRepetitionHoverEffects.startButtonReset);
             }
           }}
         >
-          Start Repetition
+          Start Review ({spacedRepetitionStats.total} cards)
         </button>
       </div>
 
       {/* Individual Topics */}
-      <div style={{ marginBottom: '20px' }}>
-        <div style={{ 
-          fontSize: '15px', 
-          fontWeight: '500', 
-          marginBottom: '16px',
-          color: 'var(--text-normal)',
-          textAlign: 'left'
-        }}>
-          Topics
-        </div>
-        {spacedRepetitionStats.topics?.map((topicStats) => (
-          <div key={topicStats.topic} style={{ marginBottom: '28px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <div>
-              <div style={{ 
-                fontSize: '14px', 
-                fontWeight: '500', 
-                marginBottom: '4px',
-                color: 'var(--text-normal)',
-                textAlign: 'left'
-              }}>
-                {topicStats.topic}
+      {spacedRepetitionStats.topics && spacedRepetitionStats.topics
+        .filter(stat => stat.total > 0)
+        .map((stat, index) => (
+          <div key={index} style={spacedRepetitionStyles.topicContainer}>
+            <div style={spacedRepetitionStyles.topicHeader}>
+              <div style={spacedRepetitionStyles.topicTitle}>
+                {stat.topic}
               </div>
-              {(() => {
-                const statsText = formatStatsText(topicStats);
-                if (typeof statsText === 'string') {
-                  return (
-                    <div style={{
-                      fontSize: '13px',
-                      color: 'var(--text-muted)',
-                      marginBottom: 0,
-                      textAlign: 'left',
-                    }}>{statsText}</div>
-                  );
-                }
-                return (
-                  <>
-                    <div style={{
-                      fontSize: '13px',
-                      color: 'var(--text-muted)',
-                      marginBottom: 0,
-                      textAlign: 'left',
-                    }}>
-                      {statsText.main}
-                    </div>
-                    {statsText.distribution && (
-                      <div style={{
-                        fontSize: '11px',
-                        color: 'var(--text-faint, #aaa)',
-                        marginTop: '2px',
-                        marginBottom: 0,
-                        textAlign: 'left',
-                      }}>
-                        ({statsText.distribution})
-                      </div>
-                    )}
-                  </>
-                );
-              })()}
+              <div style={spacedRepetitionStyles.topicStats}>
+                <span style={spacedRepetitionStyles.challengingStat}>
+                  🔴 {stat.challenging}
+                </span>
+                <span style={spacedRepetitionStyles.moderateStat}>
+                  🟡 {stat.moderate}
+                </span>
+                <span style={spacedRepetitionStyles.easyStat}>
+                  🟢 {stat.easy}
+                </span>
+                {stat.unrated > 0 && (
+                  <span style={spacedRepetitionStyles.unratedStat}>
+                    ⚪ {stat.unrated}
+                  </span>
+                )}
+              </div>
             </div>
             <button
-              onClick={() => handleStartRepetition(topicStats.topic)}
-              disabled={topicStats.total === 0}
-              style={{
-                padding: '8px 18px',
-                fontSize: '15px',
-                borderRadius: '6px',
-                border: 'none',
-                cursor: topicStats.total === 0 ? 'not-allowed' : 'pointer',
-                backgroundColor: topicStats.total === 0 ? '#e5e7eb' : '#3b82f6',
-                color: 'white',
-                fontWeight: '500',
-                transition: 'background-color 0.2s',
-                opacity: topicStats.total === 0 ? 0.7 : 1,
-                marginLeft: '32px',
-                minWidth: '140px'
-              }}
+              onClick={() => startSpacedRepetition(stat.topic!)}
+              disabled={stat.total === 0}
+              style={spacedRepetitionStyles.startButton(stat.total > 0)}
               onMouseEnter={(e) => {
-                if (topicStats.total > 0) {
-                  e.currentTarget.style.backgroundColor = '#2563eb';
+                if (stat.total > 0) {
+                  Object.assign(e.currentTarget.style, spacedRepetitionHoverEffects.startButton);
                 }
               }}
               onMouseLeave={(e) => {
-                if (topicStats.total > 0) {
-                  e.currentTarget.style.backgroundColor = '#3b82f6';
+                if (stat.total > 0) {
+                  Object.assign(e.currentTarget.style, spacedRepetitionHoverEffects.startButtonReset);
                 }
               }}
             >
-              Start Repetition
+              Start Review ({stat.total} cards)
             </button>
           </div>
         ))}
-      </div>
-
-      {/* Help Modal */}
-      {showSpacedRepetitionHelp && (
-        <div style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          backgroundColor: 'rgba(0, 0, 0, 0.5)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          zIndex: 1000
-        }}>
-          <div style={{
-            backgroundColor: 'var(--background-primary)',
-            border: '1px solid var(--background-modifier-border)',
-            borderRadius: '8px',
-            padding: '24px',
-            maxWidth: '500px',
-            maxHeight: '80vh',
-            overflow: 'auto',
-            margin: '20px'
-          }}>
-            <div style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              marginBottom: '16px'
-            }}>
-              <h3 style={{
-                margin: 0,
-                fontSize: '18px',
-                fontWeight: '600',
-                color: 'var(--text-normal)'
-              }}>
-                How Spaced Repetition Works
-              </h3>
-              <button
-                onClick={() => setShowSpacedRepetitionHelp(false)}
-                style={{
-                  background: 'none',
-                  border: 'none',
-                  fontSize: '18px',
-                  cursor: 'pointer',
-                  color: 'var(--text-muted)',
-                  padding: '4px'
-                }}
-              >
-                ×
-              </button>
-            </div>
-
-            <div style={{
-              color: 'var(--text-normal)',
-              lineHeight: '1.6',
-              fontSize: '14px'
-            }}>
-              <p style={{ marginBottom: '16px' }}>
-                <strong>Spaced Repetition</strong> is a learning technique that shows you flashcards at increasing intervals based on how well you know them.
-              </p>
-
-              <div style={{ marginBottom: '16px' }}>
-                <strong>How it works:</strong>
-                <ul style={{ marginTop: '8px', paddingLeft: '20px' }}>
-                  <li style={{ marginBottom: '4px' }}>Rate each flashcard as <strong style={{ color: '#22c55e' }}>Easy</strong>, <strong style={{ color: '#f59e0b' }}>Moderate</strong>, or <strong style={{ color: '#ef4444' }}>Challenging</strong></li>
-                  <li style={{ marginBottom: '4px' }}>Cards you find easy appear less frequently</li>
-                  <li style={{ marginBottom: '4px' }}>Challenging cards appear more often</li>
-                  <li>This optimizes your study time on what you need most</li>
-                </ul>
-              </div>
-
-              <div style={{ marginBottom: '16px' }}>
-                <strong>Review intervals:</strong>
-                <ul style={{ marginTop: '8px', paddingLeft: '20px' }}>
-                  <li style={{ marginBottom: '4px' }}><strong style={{ color: '#ef4444' }}>Challenging:</strong> {plugin?.settings?.spacedRepetition?.challengingDays || 0} days</li>
-                  <li style={{ marginBottom: '4px' }}><strong style={{ color: '#f59e0b' }}>Moderate:</strong> {plugin?.settings?.spacedRepetition?.moderateDays || 1} days</li>
-                  <li><strong style={{ color: '#22c55e' }}>Easy:</strong> {plugin?.settings?.spacedRepetition?.easyDays || 3} days</li>
-                </ul>
-              </div>
-
-              <p style={{ 
-                fontSize: '13px', 
-                color: 'var(--text-muted)',
-                fontStyle: 'italic',
-                marginBottom: 0
-              }}>
-                💡 You can customize these intervals in the plugin settings.
-              </p>
-            </div>
-
-            <div style={{
-              marginTop: '20px',
-              textAlign: 'center'
-            }}>
-              <button
-                onClick={() => setShowSpacedRepetitionHelp(false)}
-                style={{
-                  padding: '8px 16px',
-                  fontSize: '14px',
-                  backgroundColor: 'var(--interactive-accent)',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '4px',
-                  cursor: 'pointer'
-                }}
-              >
-                Got it!
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }; 

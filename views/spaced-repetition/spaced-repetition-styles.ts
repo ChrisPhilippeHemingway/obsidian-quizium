@@ -4,22 +4,23 @@ export const spacedRepetitionStyles = {
   // Main container
   container: {
     padding: '20px',
-    maxWidth: 600,
+    maxWidth: 500,
     margin: '0 auto'
-  },
+  } as CSSProperties,
 
   // Header
   header: {
-    textAlign: 'center' as const,
+    textAlign: 'center',
     marginBottom: '30px'
-  },
+  } as CSSProperties,
 
   title: {
-    fontSize: '24px',
-    fontWeight: '700' as const,
+    fontSize: '20px',
+    fontWeight: '700',
     color: 'var(--text-normal)',
-    marginBottom: '10px'
-  },
+    marginBottom: '20px',
+    textAlign: 'center'
+  } as CSSProperties,
 
   subtitle: {
     fontSize: '16px',
@@ -28,35 +29,41 @@ export const spacedRepetitionStyles = {
   },
 
   // Help section
-  helpContainer: {
-    marginBottom: '30px'
-  },
-
-  helpButton: {
-    background: 'none',
-    border: 'none',
-    color: 'var(--text-accent)',
-    cursor: 'pointer',
-    fontSize: '14px',
-    textDecoration: 'underline',
-    padding: '0'
-  },
-
-  helpContent: {
-    marginTop: '15px',
+  helpSection: {
+    marginBottom: '30px',
     padding: '15px',
     backgroundColor: 'var(--background-secondary)',
     borderRadius: '8px',
-    border: '1px solid var(--background-modifier-border)',
+    border: '1px solid var(--background-modifier-border)'
+  } as CSSProperties,
+
+  helpTitle: {
     fontSize: '14px',
-    lineHeight: '1.5',
-    color: 'var(--text-normal)'
-  },
+    fontWeight: '600',
+    color: 'var(--text-normal)',
+    marginBottom: '8px'
+  } as CSSProperties,
+
+  helpText: {
+    fontSize: '13px',
+    color: 'var(--text-muted)',
+    lineHeight: '1.5'
+  } as CSSProperties,
+
+  topicContainer: {
+    marginBottom: '20px',
+    padding: '15px',
+    backgroundColor: 'var(--background-secondary)',
+    borderRadius: '8px',
+    border: '1px solid var(--background-modifier-border)'
+  } as CSSProperties,
 
   // Topics section
   topicsContainer: {
-    marginBottom: '30px'
-  },
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '15px'
+  } as CSSProperties,
 
   sectionTitle: {
     fontSize: '18px',
@@ -68,80 +75,93 @@ export const spacedRepetitionStyles = {
 
   // Topic item
   topicItem: {
-    marginBottom: '20px',
-    padding: '20px',
-    backgroundColor: 'var(--background-secondary)',
-    borderRadius: '12px',
-    border: '2px solid var(--background-modifier-border)',
-    transition: 'all 0.2s'
-  },
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: '12px',
+    backgroundColor: 'var(--background-primary)',
+    borderRadius: '6px',
+    border: '1px solid var(--background-modifier-border)'
+  } as CSSProperties,
 
   topicHeader: {
     display: 'flex',
     justifyContent: 'space-between',
-    alignItems: 'flex-start',
+    alignItems: 'center',
     marginBottom: '12px'
-  },
+  } as CSSProperties,
 
-  topicName: {
-    fontSize: '16px',
-    fontWeight: '600' as const,
-    color: 'var(--text-normal)',
-    marginBottom: '4px'
-  },
+  topicTitle: {
+    fontSize: '15px',
+    fontWeight: '500',
+    color: 'var(--text-normal)'
+  } as CSSProperties,
 
   topicStats: {
-    fontSize: '14px',
-    color: 'var(--text-muted)',
-    lineHeight: '1.4'
-  },
+    display: 'flex',
+    gap: '8px',
+    fontSize: '12px'
+  } as CSSProperties,
 
-  topicStatsMain: {
-    fontWeight: '500' as const,
-    marginBottom: '4px'
-  },
+  challengingStat: {
+    color: '#ef4444',
+    fontWeight: '500'
+  } as CSSProperties,
 
-  topicStatsDistribution: {
-    fontSize: '13px'
-  },
+  moderateStat: {
+    color: '#f59e0b',
+    fontWeight: '500'
+  } as CSSProperties,
+
+  easyStat: {
+    color: '#22c55e',
+    fontWeight: '500'
+  } as CSSProperties,
+
+  unratedStat: {
+    color: '#6b7280',
+    fontWeight: '500'
+  } as CSSProperties,
 
   // Start button
-  startButton: {
-    padding: '10px 20px',
-    fontSize: '14px',
-    fontWeight: '500' as const,
-    backgroundColor: 'var(--interactive-accent)',
-    color: 'var(--text-on-accent)',
-    border: 'none',
+  startButton: (enabled: boolean) => ({
+    padding: '8px 18px',
+    fontSize: '15px',
     borderRadius: '6px',
-    cursor: 'pointer',
-    transition: 'all 0.2s',
-    minWidth: '120px'
-  },
-
-  startButtonDisabled: {
-    backgroundColor: 'var(--background-modifier-border)',
-    color: 'var(--text-muted)',
-    cursor: 'not-allowed'
-  },
+    border: 'none',
+    cursor: enabled ? 'pointer' : 'not-allowed',
+    backgroundColor: enabled ? '#3b82f6' : '#e5e7eb',
+    color: 'white',
+    fontWeight: '500',
+    transition: 'background-color 0.2s',
+    opacity: enabled ? 1 : 0.7,
+    minWidth: '140px'
+  } as CSSProperties),
 
   // Empty state
   emptyState: {
-    textAlign: 'center' as const,
-    padding: '40px',
+    textAlign: 'center',
+    padding: '60px 20px',
     color: 'var(--text-muted)'
-  },
+  } as CSSProperties,
+
+  emptyStateIcon: {
+    fontSize: '48px',
+    marginBottom: '16px'
+  } as CSSProperties,
 
   emptyStateTitle: {
     fontSize: '18px',
-    fontWeight: '600' as const,
-    marginBottom: '10px'
-  },
+    fontWeight: '600',
+    color: 'var(--text-normal)',
+    marginBottom: '8px'
+  } as CSSProperties,
 
   emptyStateText: {
     fontSize: '14px',
+    color: 'var(--text-muted)',
     lineHeight: '1.5'
-  }
+  } as CSSProperties
 };
 
 // Hover effects
@@ -159,12 +179,12 @@ export const spacedRepetitionHoverEffects = {
   },
 
   startButton: {
-    backgroundColor: 'var(--interactive-accent-hover)',
+    backgroundColor: '#2563eb',
     transform: 'translateY(-1px)'
-  },
+  } as CSSProperties,
 
   startButtonReset: {
-    backgroundColor: 'var(--interactive-accent)',
+    backgroundColor: '#3b82f6',
     transform: 'translateY(0)'
-  }
+  } as CSSProperties
 }; 

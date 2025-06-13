@@ -151,7 +151,7 @@ export const FlashcardView: React.FC<FlashcardViewProps> = ({
    * @returns JSX element with celebration emojis
    */
   const renderCelebrationEmojis = () => (
-    <div style={{ fontSize: '48px', marginBottom: '20px', lineHeight: '1' }}>
+    <div style={flashcardStyles.celebrationEmojis}>
       🎉✨🎊
     </div>
   );
@@ -163,12 +163,7 @@ export const FlashcardView: React.FC<FlashcardViewProps> = ({
    * @returns JSX element with completion title
    */
   const renderCompletionTitle = (topicInfo: { isSpacedRepetition: boolean }) => (
-    <h1 style={{ 
-      color: 'var(--text-normal)', 
-      marginBottom: '25px',
-      fontSize: '28px',
-      fontWeight: 'bold'
-    }}>
+    <h1 style={flashcardStyles.completionTitle}>
       {topicInfo.isSpacedRepetition ? 'Spaced Repetition Complete! 🧠' : 'Congratulations! 🏆'}
     </h1>
   );
@@ -181,15 +176,7 @@ export const FlashcardView: React.FC<FlashcardViewProps> = ({
    * @returns JSX element with achievement summary
    */
   const renderAchievementSummary = (topicInfo: any, spacedBreakdown: any) => (
-    <div style={{ 
-      backgroundColor: 'var(--background-secondary)',
-      border: `2px solid ${topicInfo.isSpacedRepetition ? '#3b82f6' : '#22c55e'}`,
-      borderRadius: '12px',
-      padding: '20px',
-      marginBottom: '25px',
-      display: 'inline-block',
-      minWidth: '300px'
-    }}>
+    <div style={flashcardStyles.achievementSummary(topicInfo.isSpacedRepetition ? '#3b82f6' : '#22c55e')}>
       {renderSummaryTitle(topicInfo)}
       {renderSummaryStats(topicInfo)}
       {renderSpacedRepetitionDetails(topicInfo, spacedBreakdown)}
@@ -203,12 +190,7 @@ export const FlashcardView: React.FC<FlashcardViewProps> = ({
    * @returns JSX element with motivational message
    */
   const renderMotivationalMessage = (topicInfo: { isSpacedRepetition: boolean }) => (
-    <div style={{ 
-      fontSize: '16px',
-      color: 'var(--text-muted)',
-      marginBottom: '30px',
-      fontStyle: 'italic'
-    }}>
+    <div style={flashcardStyles.motivationalMessage}>
       {topicInfo.isSpacedRepetition ? 
         'Excellent progress with your spaced repetition! 🚀' : 
         'Keep up the great work! 💪'
@@ -226,11 +208,9 @@ export const FlashcardView: React.FC<FlashcardViewProps> = ({
     <button
       onClick={handleBackToMenu}
       style={{
+        ...flashcardStyles.returnButton,
         background: topicInfo.isSpacedRepetition ? '#3b82f6' : '#22c55e',
         border: 'none',
-        borderRadius: '10px',
-        padding: '14px 28px',
-        fontSize: '16px',
         color: 'white',
         cursor: 'pointer',
         fontWeight: '600',
@@ -238,8 +218,8 @@ export const FlashcardView: React.FC<FlashcardViewProps> = ({
         boxShadow: `0 4px 12px rgba(${topicInfo.isSpacedRepetition ? '59, 130, 246' : '34, 197, 94'}, 0.3)`
       }}
       onMouseEnter={(e) => {
+        Object.assign(e.currentTarget.style, hoverEffects.returnButton);
         e.currentTarget.style.background = topicInfo.isSpacedRepetition ? '#1d4ed8' : '#16a34a';
-        e.currentTarget.style.transform = 'translateY(-1px)';
       }}
       onMouseLeave={(e) => {
         e.currentTarget.style.background = topicInfo.isSpacedRepetition ? '#3b82f6' : '#22c55e';
