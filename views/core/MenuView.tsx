@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { ViewMode } from '../types';
 import { ViewProps } from '../types';
 import { menuStyles, menuHoverEffects } from './menu-styles';
@@ -11,7 +11,7 @@ interface MenuViewProps extends Pick<ViewProps,
   showTopicSelection: () => void;
   showSpacedRepetition: () => void;
   showQuizView: () => void;
-  renderTopicBreakdown: () => React.ReactNode;
+  renderTopicBreakdown: (buttonRef: React.RefObject<HTMLButtonElement | null>) => React.ReactNode;
 }
 
 export const MenuView: React.FC<MenuViewProps> = ({
@@ -27,6 +27,7 @@ export const MenuView: React.FC<MenuViewProps> = ({
   showQuizView,
   renderTopicBreakdown
 }) => {
+  const breakdownButtonRef = useRef<HTMLButtonElement>(null);
   if (loading) {
     return (
       <div style={menuStyles.loadingContainer}>
@@ -89,6 +90,7 @@ export const MenuView: React.FC<MenuViewProps> = ({
           </div>
         </div>
         <button
+          ref={breakdownButtonRef}
           onClick={() => setShowTopicBreakdown(!showTopicBreakdown)}
           style={menuStyles.breakdownButton}
           onMouseEnter={(e: React.MouseEvent<HTMLButtonElement>) => {
@@ -102,7 +104,7 @@ export const MenuView: React.FC<MenuViewProps> = ({
           📊 Show breakdown
         </button>
       </div>
-      {renderTopicBreakdown()}
+      {renderTopicBreakdown(breakdownButtonRef)}
       <div style={menuStyles.actionsContainer}>
         <button
           onClick={showTopicSelection}

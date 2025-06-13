@@ -762,12 +762,14 @@ export const QuiziumModalView = ({ onClose, monitoredTopics, plugin }: QuiziumMo
     return '/ ' + folders.join(' / ') + ' / ' + filename;
   };
 
-  const renderTopicBreakdown = () => {
+  const renderTopicBreakdown = (buttonRef: React.RefObject<HTMLButtonElement | null>) => {
     return (
       <TopicBreakdownView
         showTopicBreakdown={showTopicBreakdown}
         topicStats={topicStats}
         quizTopicStats={quizTopicStats}
+        onClose={() => setShowTopicBreakdown(false)}
+        buttonRef={buttonRef}
       />
     );
   };
