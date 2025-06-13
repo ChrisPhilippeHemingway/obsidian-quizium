@@ -322,8 +322,12 @@ export default class QuiziumPlugin extends Plugin {
 
 	async onload() {
 		await this.loadSettings();
-		this.progressManager = new ProgressManager(this.app, this.settings.progressFolderPath);
-		await this.initializeProgressManager();
+		
+		// Defer progress manager initialization until layout is ready
+		this.app.workspace.onLayoutReady(async () => {
+			this.progressManager = new ProgressManager(this.app, this.settings.progressFolderPath);
+			await this.initializeProgressManager();
+		});
 
 		// This creates an icon in the left ribbon.
 		const ribbonIconEl = this.addRibbonIcon('graduation-cap', 'Quizium', (evt: MouseEvent) => {
@@ -351,12 +355,12 @@ export default class QuiziumPlugin extends Plugin {
 
 		// If the plugin hooks up any global DOM events (on parts of the app that doesn't belong to this plugin)
 		// Using this function will automatically remove the event listener when this plugin is disabled.
-		this.registerDomEvent(document, 'click', (evt: MouseEvent) => {
-
-		});
+		// this.registerDomEvent(document, 'click', (evt: MouseEvent) => {
+		// 	// Add event handling logic here if needed
+		// });
 
 		// When registering intervals, this function will automatically clear the interval when the plugin is disabled.
-		this.registerInterval(window.setInterval(() => console.log('setInterval'), 5 * 60 * 1000));
+		// this.registerInterval(window.setInterval(() => console.log('setInterval'), 5 * 60 * 1000));
 	}
 
 	onunload() {
@@ -379,6 +383,11 @@ export default class QuiziumPlugin extends Plugin {
 	}
 
 	async recordQuizResult(topicName: string, scorePercentage: number) {
+		// Wait for progress manager to be initialized if needed
+		if (!this.progressManager) {
+			await this.waitForProgressManager();
+		}
+		
 		if (this.progressManager) {
 			await this.progressManager.addQuizResult(topicName, scorePercentage);
 		} else {
@@ -387,6 +396,11 @@ export default class QuiziumPlugin extends Plugin {
 	}
 
 	async resetAllQuizResults() {
+		// Wait for progress manager to be initialized if needed
+		if (!this.progressManager) {
+			await this.waitForProgressManager();
+		}
+		
 		if (this.progressManager) {
 			await this.progressManager.resetAllQuizResults();
 		} else {
@@ -395,6 +409,11 @@ export default class QuiziumPlugin extends Plugin {
 	}
 
 	async getProgressData() {
+		// Wait for progress manager to be initialized if needed
+		if (!this.progressManager) {
+			await this.waitForProgressManager();
+		}
+		
 		if (this.progressManager) {
 			return await this.progressManager.getProgressData();
 		} else {
@@ -406,6 +425,18 @@ export default class QuiziumPlugin extends Plugin {
 					}
 				}
 			};
+		}
+	}
+
+	private async waitForProgressManager(): Promise<void> {
+		// Wait up to 5 seconds for progress manager to be initialized
+		const maxWaitTime = 5000;
+		const checkInterval = 100;
+		let waitedTime = 0;
+		
+		while (!this.progressManager && waitedTime < maxWaitTime) {
+			await new Promise(resolve => setTimeout(resolve, checkInterval));
+			waitedTime += checkInterval;
 		}
 	}
 }
@@ -448,8 +479,6 @@ class QuiziumModal extends Modal {
 		this.root = null;
 	}
 }
-
-
 
 class QuiziumSettingTab extends PluginSettingTab {
 	plugin: QuiziumPlugin;
