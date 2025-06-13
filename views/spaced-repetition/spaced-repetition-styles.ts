@@ -14,12 +14,32 @@ export const spacedRepetitionStyles = {
     marginBottom: '30px'
   } as CSSProperties,
 
+  // Header container with title and help button
+  headerContainer: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: '30px'
+  } as CSSProperties,
+
   title: {
     fontSize: '20px',
     fontWeight: '700',
     color: 'var(--text-normal)',
-    marginBottom: '20px',
-    textAlign: 'center'
+    margin: '0',
+    textAlign: 'left'
+  } as CSSProperties,
+
+  // Help button
+  helpButton: {
+    background: 'none',
+    border: 'none',
+    cursor: 'pointer',
+    fontSize: '14px',
+    color: 'var(--text-muted)',
+    transition: 'color 0.2s',
+    padding: '4px 8px',
+    borderRadius: '4px'
   } as CSSProperties,
 
   subtitle: {
@@ -186,5 +206,15 @@ export const spacedRepetitionHoverEffects = {
   startButtonReset: {
     backgroundColor: '#3b82f6',
     transform: 'translateY(0)'
+  } as CSSProperties,
+
+  helpButton: {
+    color: 'var(--text-normal)',
+    backgroundColor: 'var(--background-modifier-hover)'
+  } as CSSProperties,
+
+  helpButtonReset: {
+    color: 'var(--text-muted)',
+    backgroundColor: 'transparent'
   } as CSSProperties
 }; 

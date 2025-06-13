@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { SpacedRepetitionStats } from '../types';
 import { spacedRepetitionStyles, spacedRepetitionHoverEffects } from './spaced-repetition-styles';
 import { commonStyles } from '../shared-styles';
@@ -7,13 +7,20 @@ interface SpacedRepetitionViewProps {
   loading: boolean;
   spacedRepetitionStats: SpacedRepetitionStats | null;
   startSpacedRepetition: (topic: string | null) => void;
+  showSpacedRepetitionHelp: boolean;
+  setShowSpacedRepetitionHelp: (show: boolean) => void;
+  renderSpacedRepetitionHelp: (buttonRef: React.RefObject<HTMLButtonElement | null>) => React.ReactNode;
 }
 
 export const SpacedRepetitionView: React.FC<SpacedRepetitionViewProps> = ({
   loading,
   spacedRepetitionStats,
-  startSpacedRepetition
+  startSpacedRepetition,
+  showSpacedRepetitionHelp,
+  setShowSpacedRepetitionHelp,
+  renderSpacedRepetitionHelp
 }) => {
+  const helpButtonRef = useRef<HTMLButtonElement>(null);
   if (loading) {
     return (
       <div style={commonStyles.loadingState}>
@@ -40,19 +47,27 @@ export const SpacedRepetitionView: React.FC<SpacedRepetitionViewProps> = ({
 
   return (
     <div style={spacedRepetitionStyles.container}>
-      <h2 style={spacedRepetitionStyles.title}>
-        🔄 Spaced Repetition
-      </h2>
-      
-      <div style={spacedRepetitionStyles.helpSection}>
-        <div style={spacedRepetitionStyles.helpTitle}>
-          How it works:
-        </div>
-        <div style={spacedRepetitionStyles.helpText}>
-          Review flashcards based on their difficulty. Challenging cards appear more frequently, 
-          while easy cards are spaced out over longer intervals for optimal retention.
-        </div>
+      <div style={spacedRepetitionStyles.headerContainer}>
+        <h2 style={spacedRepetitionStyles.title}>
+          🔄 Spaced Repetition
+        </h2>
+        <button
+          ref={helpButtonRef}
+          onClick={() => setShowSpacedRepetitionHelp(!showSpacedRepetitionHelp)}
+          style={spacedRepetitionStyles.helpButton}
+          onMouseEnter={(e: React.MouseEvent<HTMLButtonElement>) => {
+            Object.assign(e.currentTarget.style, spacedRepetitionHoverEffects.helpButton);
+          }}
+          onMouseLeave={(e: React.MouseEvent<HTMLButtonElement>) => {
+            Object.assign(e.currentTarget.style, spacedRepetitionHoverEffects.helpButtonReset);
+          }}
+          title="Learn how spaced repetition works"
+        >
+          ❓ How it works
+        </button>
       </div>
+      
+      {renderSpacedRepetitionHelp(helpButtonRef)}
 
       {/* All Topics Section */}
       <div style={spacedRepetitionStyles.topicContainer}>

@@ -13,6 +13,7 @@ import { QuizSessionView } from './views/quizzes/QuizSessionView';
 import { TopicBreakdownView } from './views/core/TopicBreakdownView';
 import { ModalButtonsView } from './views/core/ModalButtonsView';
 import { FlashcardView } from './views/flashcards/FlashcardView';
+import { SpacedRepetitionHelpView } from './views/spaced-repetition/SpacedRepetitionHelpView';
 import { ViewMode, SpacedRepetitionStats, QuizHistoryEntry } from './views/types';
 import { SpacedRepetitionService } from './services/SpacedRepetitionService';
 import { DataManagementService } from './services/DataManagementService';
@@ -774,6 +775,16 @@ export const QuiziumModalView = ({ onClose, monitoredTopics, plugin }: QuiziumMo
     );
   };
 
+  const renderSpacedRepetitionHelp = (buttonRef: React.RefObject<HTMLButtonElement | null>) => {
+    return (
+      <SpacedRepetitionHelpView
+        showSpacedRepetitionHelp={showSpacedRepetitionHelp}
+        onClose={() => setShowSpacedRepetitionHelp(false)}
+        buttonRef={buttonRef}
+      />
+    );
+  };
+
   const showQuizView = () => {
     setViewMode('quiz');
   };
@@ -872,6 +883,9 @@ export const QuiziumModalView = ({ onClose, monitoredTopics, plugin }: QuiziumMo
         loading={loading}
         spacedRepetitionStats={spacedRepetitionStats}
         startSpacedRepetition={startSpacedRepetition}
+        showSpacedRepetitionHelp={showSpacedRepetitionHelp}
+        setShowSpacedRepetitionHelp={setShowSpacedRepetitionHelp}
+        renderSpacedRepetitionHelp={renderSpacedRepetitionHelp}
       />
     );
   };
