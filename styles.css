@@ -160,10 +160,29 @@ available in the app when your plugin is enabled.
     background-color: var(--background-primary);
     border-radius: 8px;
     padding: 20px;
-    max-width: 500px;
-    width: 90%;
+    /* Remove width constraints to fill container */
+    width: 100%;
     max-height: 80vh;
     overflow-y: auto;
+    /* Ensure content is centered accounting for button spacing */
+    box-sizing: border-box;
+    /* Center the content within the available space */
+    margin: 0 auto;
+}
+
+/* Fix for modal button container alignment */
+.quizium-modal-buttons {
+    /* Override inline styles to fix alignment */
+    justify-content: center !important;
+    padding-left: 160px !important;  /* Space for left reset button */
+    padding-right: 160px !important; /* Space for right reset button */
+    box-sizing: border-box !important;
+}
+
+/* Ensure the close button stays centered */
+.quizium-modal-buttons .mod-cta {
+    margin: 0 !important;
+    flex: none !important;
 }
 
 /* Hover effects for interactive elements */

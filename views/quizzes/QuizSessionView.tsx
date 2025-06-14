@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 interface Quiz {
   question: string;
@@ -121,12 +121,76 @@ export const QuizSessionView: React.FC<QuizSessionViewProps> = ({
     }
   };
 
+  // Handle keyboard shortcuts for quiz interaction
+  useEffect(() => {
+    const handleKeyPress = (event: KeyboardEvent) => {
+      // Only handle keyboard shortcuts when we're in an active quiz (not on completion screen)
+      if (quizSessionDone || !quizQuestions.length || quizCurrentIndex >= quizQuestions.length) {
+        return;
+      }
+
+      // Handle Enter key to advance to next question when answer is selected
+      if (event.key === 'Enter' && quizSelectedAnswer) {
+        event.preventDefault();
+        handleNext();
+        return;
+      }
+
+      // Handle number keys (1-4) to select answers when no answer is selected yet
+      if (!quizSelectedAnswer && ['1', '2', '3', '4'].includes(event.key)) {
+        event.preventDefault();
+        const answerIndex = parseInt(event.key) - 1;
+        
+        // Make sure we have enough answers for this index
+        if (answerIndex < allAnswers.length) {
+          handleAnswer(allAnswers[answerIndex]);
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, [quizSessionDone, quizQuestions.length, quizCurrentIndex, quizSelectedAnswer, allAnswers, quiz.correctAnswer]);
+
   return (
-    <div style={{ padding: '32px', maxWidth: 600, margin: '0 auto' }}>
-      <div style={{ fontSize: '17px', fontWeight: '600', marginBottom: '24px', color: 'var(--text-normal)' }}>
+    <div style={{ 
+      padding: '24px', 
+      maxWidth: 550, 
+      margin: '0 auto',
+      width: '100%',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center'
+    }}>
+      <div style={{ 
+        fontSize: '17px', 
+        fontWeight: '600', 
+        marginBottom: '16px', 
+        color: 'var(--text-normal)',
+        width: '100%',
+        textAlign: 'center'
+      }}>
         {quiz.question}
       </div>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
+      
+      {/* Add keyboard shortcut hints */}
+      <div style={{ 
+        fontSize: '11px', 
+        color: 'var(--text-muted)', 
+        marginBottom: '12px', 
+        textAlign: 'center',
+        fontStyle: 'italic',
+        width: '100%'
+      }}>
+        Use number keys (1-4) to select answers{quizSelectedAnswer ? ', then Enter to continue' : ''}
+      </div>
+      
+      <div style={{ 
+        display: 'flex', 
+        flexDirection: 'column', 
+        gap: '10px',
+        width: '100%'
+      }}>
         {allAnswers.map((answer, idx) => {
           let bg = '#111';
           let color = 'white';
@@ -162,10 +226,10 @@ export const QuizSessionView: React.FC<QuizSessionViewProps> = ({
                 background: bg,
                 color,
                 border,
-                borderRadius: '8px',
-                fontSize: '15px',
+                borderRadius: '6px',
+                fontSize: '14px',
                 fontWeight: 500,
-                padding: '20px',
+                padding: '12px 16px',
                 width: '100%',
                 textAlign: 'left',
                 whiteSpace: 'pre-wrap',
@@ -173,14 +237,15 @@ export const QuizSessionView: React.FC<QuizSessionViewProps> = ({
                 wordBreak: 'break-word',
                 overflowWrap: 'break-word',
                 hyphens: 'auto',
-                minHeight: '60px',
-                display: 'block',
+                minHeight: '44px',
+                display: 'flex',
+                alignItems: 'center',
                 transition: 'background 0.2s, color 0.2s, border-color 0.2s',
-                boxShadow: '0 1px 4px rgba(0,0,0,0.04)',
+                boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
                 cursor: quizSelectedAnswer ? 'not-allowed' : 'pointer',
                 outline: 'none',
                 userSelect: 'text',
-                lineHeight: '1.5',
+                lineHeight: '1.4',
                 maxWidth: '100%',
                 boxSizing: 'border-box',
                 position: 'relative',
@@ -205,19 +270,38 @@ export const QuizSessionView: React.FC<QuizSessionViewProps> = ({
                 }
               }}
             >
+              <span style={{ 
+                marginRight: '10px', 
+                fontSize: '12px', 
+                fontWeight: '600',
+                color: quizSelectedAnswer ? (answer === quiz.correctAnswer ? 'white' : answer === quizSelectedAnswer ? 'white' : '#888') : '#666',
+                minWidth: '14px'
+              }}>
+                {idx + 1}.
+              </span>
               {answer}
             </div>
           );
         })}
       </div>
-      <div style={{ marginTop: '32px', color: 'var(--text-muted)', fontSize: '13px', textAlign: 'center' }}>
+      <div style={{ 
+        marginTop: '20px', 
+        color: 'var(--text-muted)', 
+        fontSize: '12px', 
+        textAlign: 'center',
+        width: '100%'
+      }}>
         Question {quizCurrentIndex + 1} of {quizQuestions.length}
       </div>
       {quizSelectedAnswer && (
-        <div style={{ textAlign: 'center', marginTop: '24px' }}>
+        <div style={{ 
+          textAlign: 'center', 
+          marginTop: '16px',
+          width: '100%'
+        }}>
           <button
             className="mod-cta"
-            style={{ fontSize: '15px', padding: '10px 24px', borderRadius: '6px', fontWeight: 500 }}
+            style={{ fontSize: '14px', padding: '8px 20px', borderRadius: '6px', fontWeight: 500 }}
             onClick={handleNext}
           >
             Next

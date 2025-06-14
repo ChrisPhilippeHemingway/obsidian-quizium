@@ -1066,37 +1066,19 @@ export const QuiziumModalView = ({ onClose, monitoredTopics, plugin }: QuiziumMo
   
   // Function to determine if logo should be shown based on current view mode
   const shouldShowLogo = () => {
-    // Don't show logo if there's an error, even on menu view
+    // Only show logo on the main menu view and only if there's no error
     if (error) return false;
-    return viewMode === 'menu' || viewMode === 'topicSelection' || viewMode === 'spacedRepetition';
+    return viewMode === 'menu';
   };
 
   // Function to get logo size based on current view mode
   const getLogoSize = () => {
-    // Main modal gets larger logo (80x80px), others get standard size (40x40px)
-    return viewMode === 'menu' ? { width: '80px', height: '80px' } : { width: '40px', height: '40px' };
+    // Main modal gets larger logo (80x80px)
+    return { width: '80px', height: '80px' };
   };
 
   return (
     <div style={modalStyles.container}>
-      {/* Logo in top right corner - only show on main menu, topic selection, and spaced repetition views */}
-      {shouldShowLogo() && (
-        <img 
-          src={logoImage}
-          alt="Quizium Logo"
-          style={{
-            position: 'absolute',
-            top: '10px',
-            right: '10px',
-            ...getLogoSize(),
-            objectFit: 'contain',
-            zIndex: 1000,
-            pointerEvents: 'none',
-            userSelect: 'none'
-          }}
-        />
-      )}
-      
       {/* Content area */}
       <div 
         className="quizium-modal-content"

@@ -3,6 +3,7 @@ import { ViewMode } from '../types';
 import { ViewProps } from '../types';
 import { menuStyles, menuHoverEffects } from './menu-styles';
 import { combineStyles } from '../shared-styles';
+import logoImage from '../components/obsidian-quizium.png';
 
 interface MenuViewProps extends Pick<ViewProps, 
   'loading' | 'error' | 'monitoredTopics' | 'totalFlashcards' | 'totalQuizzes' | 
@@ -81,7 +82,26 @@ export const MenuView: React.FC<MenuViewProps> = ({
   return (
     <div style={menuStyles.container}>
       <div style={menuStyles.headerContainer}>
-        <h1 style={menuStyles.title}>Quizium</h1>
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: '16px',
+          marginBottom: '8px'
+        }}>
+          <h1 style={menuStyles.title}>Quizium</h1>
+          <img 
+            src={logoImage}
+            alt="Quizium Logo"
+            style={{
+              width: '60px',
+              height: '60px',
+              objectFit: 'contain',
+              pointerEvents: 'none',
+              userSelect: 'none'
+            }}
+          />
+        </div>
       </div>
       {streakData && (
         <div style={{
