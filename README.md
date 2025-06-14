@@ -26,6 +26,12 @@ A powerful flashcard and quiz plugin for Obsidian that transforms your notes int
 - **Quiz History**: Review your past quiz results and track improvement over time
 - **Topic-Based Quizzes**: Focus on specific subjects or test across all topics
 
+### 💎 Learning Streaks
+- **Daily Motivation**: Track consecutive days of study activity
+- **Automatic Tracking**: Streaks update when you complete quizzes or rate flashcards
+- **Highest Record**: Keep track of your longest learning streak ever achieved
+- **Visual Display**: See your current streak and personal best on the main screen
+
 ## 📝 How to Format Questions
 
 Quizium automatically detects questions in your notes when they're tagged with monitored hashtags. Here's how to format different types of questions:
@@ -74,7 +80,7 @@ Quizium automatically detects questions in your notes when they're tagged with m
    - **Flashcards**: Study with immediate feedback and difficulty rating
    - **Spaced Repetition**: Review cards that are due based on your previous ratings
    - **Quizzes**: Test yourself with multiple-choice questions
-4. **Track Your Progress**: View statistics, quiz history, and spaced repetition analytics
+4. **Track Your Progress**: View statistics, quiz history, spaced repetition analytics, and learning streaks
 
 ## ⚙️ Configuration
 
@@ -105,6 +111,7 @@ Quizium provides comprehensive analytics to track your learning progress:
 - **Spaced Repetition Progress**: Track cards due for review and your consistency
 - **Quiz Performance**: Monitor your quiz scores over time and identify areas for improvement
 - **Topic Breakdown**: Understand your strengths and weaknesses across different subjects
+- **Learning Streaks**: Monitor your daily study consistency with current and highest streak counters
 
 ## 🔄 Spaced Repetition Rules
 
@@ -115,6 +122,17 @@ The spaced repetition system follows these principles:
 3. **Moderate Cards**: Reappear after the moderate interval you've set
 4. **Easy Cards**: Reappear after the longest interval you've configured
 5. **Adaptive Scheduling**: The system focuses on cards that need the most attention
+
+## 💎 Learning Streak System
+
+The learning streak feature helps maintain consistent study habits:
+
+1. **Daily Tracking**: A streak day is counted when you complete any quiz or rate any flashcard
+2. **Automatic Updates**: Streaks are updated automatically - no manual tracking needed
+3. **Streak Continuation**: Study on consecutive days to maintain and grow your streak
+4. **Streak Breaks**: Missing a day resets your current streak, but your highest record is preserved
+5. **Multiple Activities**: Both quiz completion and flashcard rating count toward streaks
+6. **Same-Day Protection**: Multiple study sessions on the same day count as one streak day
 
 ## 📖 Technical Documentation
 

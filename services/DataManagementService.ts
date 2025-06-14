@@ -130,7 +130,7 @@ export class DataManagementService {
     return confirm(
       'Are you sure you want to reset all historical quiz results?\n\n' +
       'This will clear all quiz scores and timestamps from the progress file.\n' +
-      'The file will be reset as if the plugin was just installed.\n\n' +
+      'Your learning streak data will be preserved.\n\n' +
       'This action cannot be undone.'
     );
   }

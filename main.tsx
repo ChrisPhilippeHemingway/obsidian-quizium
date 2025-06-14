@@ -267,23 +267,25 @@ class ProgressManager {
 	}
 
 	async resetAllQuizResults(): Promise<void> {
-		const filePath = `${this.progressFolderPath}/${this.progressFileName}`;
-		
-		// Reset to default content (empty topics)
-		const defaultContent = `quizium:
-  data:
-    topics: {}
-    streak:
-      daysOfStudy: []
-      highestSoFar: 0
-`;
-		
 		try {
-			// Ensure the folder exists
-			await this.ensureProgressFolder();
+			// First, get the current progress data to preserve streak information
+			const currentData = await this.getProgressData();
 			
-			// Write the default content to reset the file
-			await this.app.vault.adapter.write(filePath, defaultContent);
+			// Create new data with empty topics but preserved streak data
+			const resetData: ProgressData = {
+				quizium: {
+					data: {
+						topics: {}, // Clear all quiz results
+						streak: currentData.quizium.data.streak || {
+							daysOfStudy: [],
+							highestSoFar: 0
+						}
+					}
+				}
+			};
+			
+			// Save the reset data (this preserves streak while clearing quiz results)
+			await this.saveProgressData(resetData);
 		} catch (error) {
 			console.error('Error resetting quiz results:', error);
 			throw error;
