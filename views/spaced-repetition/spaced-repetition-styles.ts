@@ -4,8 +4,8 @@ export const spacedRepetitionStyles = {
   // Main container
   container: {
     padding: '20px',
-    maxWidth: 500,
-    margin: '0 auto'
+    height: '100%',
+    overflow: 'auto'
   } as CSSProperties,
 
   // Header
@@ -78,6 +78,16 @@ export const spacedRepetitionStyles = {
     border: '1px solid var(--background-modifier-border)'
   } as CSSProperties,
 
+  // Special styling for topics with no questions available
+  topicContainerEmpty: {
+    marginBottom: '20px',
+    padding: '15px',
+    backgroundColor: 'var(--background-secondary)',
+    borderRadius: '8px',
+    border: '1px solid var(--background-modifier-border)',
+    opacity: 0.8
+  } as CSSProperties,
+
   // Topics section
   topicsContainer: {
     display: 'flex',
@@ -143,6 +153,14 @@ export const spacedRepetitionStyles = {
     fontWeight: '500'
   } as CSSProperties,
 
+  // Completion message for topics with no questions available
+  completionMessage: {
+    fontSize: '12px',
+    color: 'var(--text-muted)',
+    fontStyle: 'italic',
+    marginTop: '4px'
+  } as CSSProperties,
+
   // Start button
   startButton: (enabled: boolean) => ({
     padding: '8px 18px',
@@ -157,6 +175,20 @@ export const spacedRepetitionStyles = {
     opacity: enabled ? 1 : 0.7,
     minWidth: '140px'
   } as CSSProperties),
+
+  // Special button style for completed topics
+  completedButton: {
+    padding: '8px 18px',
+    fontSize: '15px',
+    borderRadius: '6px',
+    border: 'none',
+    cursor: 'not-allowed',
+    backgroundColor: '#22c55e',
+    color: 'white',
+    fontWeight: '500',
+    opacity: 0.8,
+    minWidth: '140px'
+  } as CSSProperties,
 
   // Empty state
   emptyState: {

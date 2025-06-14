@@ -21,6 +21,51 @@ export const SpacedRepetitionView: React.FC<SpacedRepetitionViewProps> = ({
   renderSpacedRepetitionHelp
 }) => {
   const helpButtonRef = useRef<HTMLButtonElement>(null);
+  
+  /**
+   * Gets appropriate button text for a topic based on whether it has questions available
+   */
+  const getButtonText = (total: number): string => {
+    if (total === 0) {
+      return 'All reviewed for today ✓';
+    }
+    return `Start Review (${total} card${total === 1 ? '' : 's'})`;
+  };
+
+  /**
+   * Gets the appropriate button style for a topic based on whether it has questions available
+   */
+  const getButtonStyle = (total: number) => {
+    if (total === 0) {
+      return spacedRepetitionStyles.completedButton;
+    }
+    return spacedRepetitionStyles.startButton(total > 0);
+  };
+
+  /**
+   * Gets the appropriate container style for a topic based on whether it has questions available
+   */
+  const getContainerStyle = (total: number) => {
+    if (total === 0) {
+      return spacedRepetitionStyles.topicContainerEmpty;
+    }
+    return spacedRepetitionStyles.topicContainer;
+  };
+
+  /**
+   * Renders additional information for topics with no questions available
+   */
+  const renderCompletionMessage = (total: number) => {
+    if (total === 0) {
+      return (
+        <div style={spacedRepetitionStyles.completionMessage}>
+          All questions have been reviewed according to your spaced repetition schedule
+        </div>
+      );
+    }
+    return null;
+  };
+
   if (loading) {
     return (
       <div style={commonStyles.loadingState}>
@@ -70,7 +115,7 @@ export const SpacedRepetitionView: React.FC<SpacedRepetitionViewProps> = ({
       {renderSpacedRepetitionHelp(helpButtonRef)}
 
       {/* All Topics Section */}
-      <div style={spacedRepetitionStyles.topicContainer}>
+      <div style={getContainerStyle(spacedRepetitionStats.total)}>
         <div style={spacedRepetitionStyles.topicHeader}>
           <div style={spacedRepetitionStyles.topicTitle}>
             All Topics
@@ -92,10 +137,11 @@ export const SpacedRepetitionView: React.FC<SpacedRepetitionViewProps> = ({
             )}
           </div>
         </div>
+        {renderCompletionMessage(spacedRepetitionStats.total)}
         <button
           onClick={() => startSpacedRepetition('all')}
           disabled={spacedRepetitionStats.total === 0}
-          style={spacedRepetitionStyles.startButton(spacedRepetitionStats.total > 0)}
+          style={getButtonStyle(spacedRepetitionStats.total)}
           onMouseEnter={(e) => {
             if (spacedRepetitionStats.total > 0) {
               Object.assign(e.currentTarget.style, spacedRepetitionHoverEffects.startButton);
@@ -107,15 +153,14 @@ export const SpacedRepetitionView: React.FC<SpacedRepetitionViewProps> = ({
             }
           }}
         >
-          Start Review ({spacedRepetitionStats.total} cards)
+          {getButtonText(spacedRepetitionStats.total)}
         </button>
       </div>
 
-      {/* Individual Topics */}
+      {/* Individual Topics - Now shows all topics, even those with 0 questions */}
       {spacedRepetitionStats.topics && spacedRepetitionStats.topics
-        .filter(stat => stat.total > 0)
         .map((stat, index) => (
-          <div key={index} style={spacedRepetitionStyles.topicContainer}>
+          <div key={index} style={getContainerStyle(stat.total)}>
             <div style={spacedRepetitionStyles.topicHeader}>
               <div style={spacedRepetitionStyles.topicTitle}>
                 {stat.topic}
@@ -137,10 +182,11 @@ export const SpacedRepetitionView: React.FC<SpacedRepetitionViewProps> = ({
                 )}
               </div>
             </div>
+            {renderCompletionMessage(stat.total)}
             <button
               onClick={() => startSpacedRepetition(stat.topic!)}
               disabled={stat.total === 0}
-              style={spacedRepetitionStyles.startButton(stat.total > 0)}
+              style={getButtonStyle(stat.total)}
               onMouseEnter={(e) => {
                 if (stat.total > 0) {
                   Object.assign(e.currentTarget.style, spacedRepetitionHoverEffects.startButton);
@@ -152,7 +198,7 @@ export const SpacedRepetitionView: React.FC<SpacedRepetitionViewProps> = ({
                 }
               }}
             >
-              Start Review ({stat.total} cards)
+              {getButtonText(stat.total)}
             </button>
           </div>
         ))}
