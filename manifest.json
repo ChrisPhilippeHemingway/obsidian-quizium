@@ -3,9 +3,9 @@
 	"name": "Quizium",
 	"version": "0.1.0",
 	"minAppVersion": "0.15.0",
-	"description": "Quizium plugin for Obsidian - create and manage quizzes.",
+	"description": "An Obsidian plugin that allows users to study with the help of flashcards, spaced repetition, and quizzes",
 	"author": "Chris Philippe Hemingway",
 	"authorUrl": "https://chrisphilippehemingway.com",
-	"fundingUrl": "https://chrisphilippehemingway.com",
+	"fundingUrl": "https://www.buymeacoffee.com/obsidian.quizium",
 	"isDesktopOnly": false
 }
