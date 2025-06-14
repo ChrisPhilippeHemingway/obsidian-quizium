@@ -1079,6 +1079,25 @@ export const QuiziumModalView = ({ onClose, monitoredTopics, plugin }: QuiziumMo
 
   return (
     <div style={modalStyles.container}>
+      {/* Logo positioned at top-right of modal */}
+      {shouldShowLogo() && (
+        <img 
+          src={logoImage}
+          alt="Quizium Logo"
+          style={{
+            position: 'absolute',
+            top: '20px',
+            right: '20px',
+            width: '60px',
+            height: '60px',
+            objectFit: 'contain',
+            pointerEvents: 'none',
+            userSelect: 'none',
+            zIndex: 10
+          }}
+        />
+      )}
+      
       {/* Content area */}
       <div 
         className="quizium-modal-content"

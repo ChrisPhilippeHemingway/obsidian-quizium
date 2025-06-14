@@ -84,23 +84,11 @@ export const MenuView: React.FC<MenuViewProps> = ({
       <div style={menuStyles.headerContainer}>
         <div style={{
           display: 'flex',
-          alignItems: 'center',
           justifyContent: 'center',
-          gap: '16px',
+          alignItems: 'center',
           marginBottom: '8px'
         }}>
           <h1 style={menuStyles.title}>Quizium</h1>
-          <img 
-            src={logoImage}
-            alt="Quizium Logo"
-            style={{
-              width: '60px',
-              height: '60px',
-              objectFit: 'contain',
-              pointerEvents: 'none',
-              userSelect: 'none'
-            }}
-          />
         </div>
       </div>
       {streakData && (
