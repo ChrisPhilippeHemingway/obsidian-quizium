@@ -288,7 +288,7 @@ class ProgressManager {
 			
 			// Write the updated content back to the file
 			await this.app.vault.adapter.write(filePath, updatedContent);
-			console.log(`Quiz result saved: ${topicName} - ${scorePercentage}%`);
+
 			
 		} catch (error) {
 			console.error('Error saving quiz result:', error);
@@ -599,7 +599,7 @@ export default class QuiziumPlugin extends Plugin {
 		
 		if (this.settings.monitoredTopics.length > 0 && yamlTopics.length === 0) {
 			// Migrate topics from data.json to YAML
-			console.log('Migrating monitored topics from data.json to YAML...');
+	
 			
 			for (const topic of this.settings.monitoredTopics) {
 				await this.progressManager.addMonitoredTopic(topic.hashtag, topic.topicName);
@@ -609,7 +609,7 @@ export default class QuiziumPlugin extends Plugin {
 			this.settings.monitoredTopics = [];
 			await this.saveSettings();
 			
-			console.log('Migration completed.');
+	
 		}
 	}
 
@@ -793,7 +793,10 @@ class QuiziumSettingTab extends PluginSettingTab {
 				// Topic display
 				const topicInfo = topicEl.createDiv();
 				topicInfo.style.flex = '1';
-				topicInfo.innerHTML = `<strong>${topic.topicName}</strong> - <code>${topic.hashtag}</code>`;
+				topicInfo.empty();
+				topicInfo.createSpan({ text: topic.topicName, cls: 'topic-name-bold' });
+				topicInfo.createSpan({ text: ' - ' });
+				topicInfo.createEl('code', { text: topic.hashtag });
 				
 				// Delete button
 				const deleteBtn = topicEl.createEl('button');
@@ -943,7 +946,9 @@ class QuiziumSettingTab extends PluginSettingTab {
 		requirementsEl.style.backgroundColor = 'var(--background-modifier-info)';
 		requirementsEl.style.borderRadius = '4px';
 		requirementsEl.style.fontSize = '0.85em';
-		requirementsEl.innerHTML = '<strong>Requirements:</strong> Each block must be surrounded by empty lines. [Q], [A], [B], and [H] lines can appear in any order within each block.';
+		requirementsEl.empty();
+		requirementsEl.createSpan({ text: 'Requirements:', cls: 'requirements-bold' });
+		requirementsEl.createSpan({ text: ' Each block must be surrounded by empty lines. [Q], [A], [B], and [H] lines can appear in any order within each block.' });
 		
 		// Flashcard example
 		const flashcardTitle = exampleEl.createEl('div');
@@ -1009,7 +1014,11 @@ class QuiziumSettingTab extends PluginSettingTab {
 		qzNote.style.marginLeft = '0px'; // Fix indentation
 		qzNote.style.fontSize = '0.8em';
 		qzNote.style.color = 'var(--text-muted)';
-		qzNote.innerHTML = '<strong>Note:</strong> Lines like <code>&lt;!--QZ:timestamp,difficulty--&gt;</code> are automatically added when you rate flashcard difficulty. Don\'t delete them - they track your spaced repetition progress.';
+		qzNote.empty();
+		qzNote.createSpan({ text: 'Note:', cls: 'note-bold' });
+		qzNote.createSpan({ text: ' Lines like ' });
+		qzNote.createEl('code', { text: '<!--QZ:timestamp,difficulty-->' });
+		qzNote.createSpan({ text: ' are automatically added when you rate flashcard difficulty. Don\'t delete them - they track your spaced repetition progress.' });
 
 		// Important note about quizzes being flashcards too
 		const noteEl = exampleEl.createEl('div');
@@ -1021,7 +1030,9 @@ class QuiziumSettingTab extends PluginSettingTab {
 		noteEl.style.borderRadius = '4px';
 		noteEl.style.fontSize = '0.9em';
 		noteEl.style.fontStyle = 'italic';
-		noteEl.innerHTML = '<strong>Note:</strong> Quiz questions are automatically available as flashcards too. You only need to define the question once to get both quiz and flashcard functionality.';
+		noteEl.empty();
+		noteEl.createSpan({ text: 'Note:', cls: 'note-bold' });
+		noteEl.createSpan({ text: ' Quiz questions are automatically available as flashcards too. You only need to define the question once to get both quiz and flashcard functionality.' });
 	}
 }
 
