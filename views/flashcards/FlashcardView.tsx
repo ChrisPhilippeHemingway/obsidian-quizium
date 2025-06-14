@@ -252,46 +252,50 @@ export const FlashcardView: React.FC<FlashcardViewProps> = ({
    */
   function renderQuestionSection() {
     return (
-      <div style={{ 
-        fontSize: '18px', 
-        fontWeight: '500', 
-        marginBottom: '20px',
-        lineHeight: '1.5',
-        color: 'var(--text-normal)',
-        position: 'relative'
-      }}>
-        {currentFlashcard?.question}
-        
-        {/* Hint icon - only show if flashcard has a hint */}
+      <div style={{ marginBottom: '20px' }}>
+        {/* Hint button container - positioned above the question */}
         {currentFlashcard?.hint && (
-          <button
-            onClick={handleRevealHint}
-            style={{
-              position: 'absolute',
-              top: '0',
-              right: '0',
-              background: 'none',
-              border: 'none',
-              cursor: 'pointer',
-              fontSize: '20px',
-              padding: '4px',
-              borderRadius: '50%',
-              transition: 'all 0.2s',
-              opacity: 0.7
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.opacity = '1';
-              e.currentTarget.style.backgroundColor = 'var(--background-modifier-hover)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.opacity = '0.7';
-              e.currentTarget.style.backgroundColor = 'transparent';
-            }}
-            title="Show hint"
-          >
-            💡
-          </button>
+          <div style={{
+            display: 'flex',
+            justifyContent: 'flex-end',
+            marginBottom: '8px'
+          }}>
+            <button
+              onClick={handleRevealHint}
+              style={{
+                background: 'none',
+                border: 'none',
+                cursor: 'pointer',
+                fontSize: '20px',
+                padding: '4px',
+                borderRadius: '50%',
+                transition: 'all 0.2s',
+                opacity: 0.7
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.opacity = '1';
+                e.currentTarget.style.backgroundColor = 'var(--background-modifier-hover)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.opacity = '0.7';
+                e.currentTarget.style.backgroundColor = 'transparent';
+              }}
+              title="Show hint"
+            >
+              💡
+            </button>
+          </div>
         )}
+        
+        {/* Question text */}
+        <div style={{ 
+          fontSize: '18px', 
+          fontWeight: '500', 
+          lineHeight: '1.5',
+          color: 'var(--text-normal)'
+        }}>
+          {currentFlashcard?.question}
+        </div>
       </div>
     );
   }
