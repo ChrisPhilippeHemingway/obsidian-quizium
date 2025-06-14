@@ -24,3 +24,6 @@ quizium-progress.yaml
 
 # Deployment script
 deploy.sh
+
+# Release script
+release_new_version.sh
