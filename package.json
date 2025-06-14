@@ -1,7 +1,7 @@
 {
-	"name": "obsidian-quizium",
-	"version": "0.1.0",
-	"description": "Quizium plugin for Obsidian - create and manage quizzes.",
+	"name": "quizium",
+	"version": "0.2.0",
+	"description": "Quizium plugin - create and manage quizzes.",
 	"main": "main.js",
 	"scripts": {
 		"dev": "node esbuild.config.mjs",
