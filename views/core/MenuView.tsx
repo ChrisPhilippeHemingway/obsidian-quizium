@@ -12,6 +12,7 @@ interface MenuViewProps extends Pick<ViewProps,
   showSpacedRepetition: () => void;
   showQuizView: () => void;
   renderTopicBreakdown: (buttonRef: React.RefObject<HTMLButtonElement | null>) => React.ReactNode;
+  streakData?: { currentStreak: number; highestStreak: number };
 }
 
 export const MenuView: React.FC<MenuViewProps> = ({
@@ -25,7 +26,8 @@ export const MenuView: React.FC<MenuViewProps> = ({
   showTopicSelection,
   showSpacedRepetition,
   showQuizView,
-  renderTopicBreakdown
+  renderTopicBreakdown,
+  streakData
 }) => {
   const breakdownButtonRef = useRef<HTMLButtonElement>(null);
   if (loading) {
@@ -80,6 +82,21 @@ export const MenuView: React.FC<MenuViewProps> = ({
       <div style={menuStyles.headerContainer}>
         <h1 style={menuStyles.title}>Quizium</h1>
       </div>
+      {streakData && (
+        <div style={{
+          fontSize: '12px',
+          color: 'var(--text-muted)',
+          textAlign: 'center',
+          marginBottom: '20px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: '4px'
+        }}>
+          <span>💎</span>
+          <span>Learning streak: {streakData.currentStreak}. Highest ever: {streakData.highestStreak}.</span>
+        </div>
+      )}
       <div className="topic-breakdown-container" style={menuStyles.topicBreakdownContainer}>
         <div style={menuStyles.statsText}>
           <div style={menuStyles.statsLine}>

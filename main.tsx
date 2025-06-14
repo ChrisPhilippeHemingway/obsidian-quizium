@@ -24,6 +24,10 @@ export interface ProgressData {
 					results: QuizResult[];
 				};
 			};
+			streak?: {
+				daysOfStudy: string[]; // Array of ISO date strings (YYYY-MM-DD)
+				highestSoFar: number;
+			};
 		};
 	};
 }
@@ -63,6 +67,9 @@ class ProgressManager {
 			const defaultContent = `quizium:
   data:
     topics: {}
+    streak:
+      daysOfStudy: []
+      highestSoFar: 0
 `;
 			try {
 				await this.app.vault.create(filePath, defaultContent);
@@ -97,7 +104,11 @@ class ProgressManager {
 			const data: ProgressData = {
 				quizium: {
 					data: {
-						topics: {}
+						topics: {},
+						streak: {
+							daysOfStudy: [],
+							highestSoFar: 0
+						}
 					}
 				}
 			};
@@ -106,6 +117,8 @@ class ProgressManager {
 			const lines = content.split('\n');
 			let currentTopic = '';
 			let inTopics = false;
+			let inStreak = false;
+			let inDaysOfStudy = false;
 			
 			for (let i = 0; i < lines.length; i++) {
 				const line = lines[i];
@@ -114,7 +127,40 @@ class ProgressManager {
 				// Look for topics: line (could be "topics:" or "topics: {}")
 				if (trimmedLine === 'topics:' || trimmedLine === 'topics: {}') {
 					inTopics = true;
+					inStreak = false;
 					continue;
+				}
+				
+				// Look for streak: line
+				if (trimmedLine === 'streak:') {
+					inStreak = true;
+					inTopics = false;
+					continue;
+				}
+				
+				// Handle streak data
+				if (inStreak) {
+					if (trimmedLine === 'daysOfStudy:' || trimmedLine === 'daysOfStudy: []') {
+						inDaysOfStudy = true;
+						continue;
+					}
+					
+					if (trimmedLine.startsWith('highestSoFar:')) {
+						const value = parseInt(trimmedLine.replace('highestSoFar:', '').trim());
+						if (!isNaN(value)) {
+							data.quizium.data.streak!.highestSoFar = value;
+						}
+						continue;
+					}
+					
+					// Handle daysOfStudy array items
+					if (inDaysOfStudy && line.startsWith('        - ')) {
+						const dateStr = line.replace('        - ', '').trim();
+						if (dateStr) {
+							data.quizium.data.streak!.daysOfStudy.push(dateStr);
+						}
+						continue;
+					}
 				}
 				
 				// Look for topic names - they are indented with 6 spaces and end with ':'
@@ -122,6 +168,7 @@ class ProgressManager {
 				if (inTopics && line.startsWith('      ') && line.endsWith(':') && !trimmedLine.startsWith('results:')) {
 					currentTopic = trimmedLine.replace(':', '');
 					data.quizium.data.topics[currentTopic] = { results: [] };
+					inDaysOfStudy = false; // Reset when entering topics
 				}
 				
 				// Look for quiz results - they start with '          - timestamp:'
@@ -148,7 +195,11 @@ class ProgressManager {
 		return {
 			quizium: {
 				data: {
-					topics: {}
+					topics: {},
+					streak: {
+						daysOfStudy: [],
+						highestSoFar: 0
+					}
 				}
 			}
 		};
@@ -222,6 +273,9 @@ class ProgressManager {
 		const defaultContent = `quizium:
   data:
     topics: {}
+    streak:
+      daysOfStudy: []
+      highestSoFar: 0
 `;
 		
 		try {
@@ -234,6 +288,64 @@ class ProgressManager {
 			console.error('Error resetting quiz results:', error);
 			throw error;
 		}
+	}
+
+	async updateStreak(): Promise<void> {
+		const data = await this.getProgressData();
+		const today = new Date().toISOString().split('T')[0]; // Get YYYY-MM-DD format
+		
+		// Initialize streak data if it doesn't exist
+		if (!data.quizium.data.streak) {
+			data.quizium.data.streak = {
+				daysOfStudy: [],
+				highestSoFar: 0
+			};
+		}
+		
+		const streakData = data.quizium.data.streak;
+		
+		// Check if we already have an entry for today
+		if (streakData.daysOfStudy.includes(today)) {
+			// Already studied today, no need to update
+			return;
+		}
+		
+		// Check if the last entry was yesterday
+		const yesterday = new Date();
+		yesterday.setDate(yesterday.getDate() - 1);
+		const yesterdayStr = yesterday.toISOString().split('T')[0];
+		
+		const lastStudyDay = streakData.daysOfStudy[streakData.daysOfStudy.length - 1];
+		
+		if (lastStudyDay !== yesterdayStr && streakData.daysOfStudy.length > 0) {
+			// Streak is broken, reset the array
+			streakData.daysOfStudy = [];
+		}
+		
+		// Add today to the streak
+		streakData.daysOfStudy.push(today);
+		
+		// Update highest streak if current streak is higher
+		const currentStreak = streakData.daysOfStudy.length;
+		if (currentStreak > streakData.highestSoFar) {
+			streakData.highestSoFar = currentStreak;
+		}
+		
+		// Save the updated data
+		await this.saveProgressData(data);
+	}
+
+	async getStreakData(): Promise<{ currentStreak: number; highestStreak: number }> {
+		const data = await this.getProgressData();
+		
+		if (!data.quizium.data.streak) {
+			return { currentStreak: 0, highestStreak: 0 };
+		}
+		
+		return {
+			currentStreak: data.quizium.data.streak.daysOfStudy.length,
+			highestStreak: data.quizium.data.streak.highestSoFar
+		};
 	}
 
 	private async saveProgressData(data: ProgressData): Promise<void> {
@@ -257,6 +369,20 @@ class ProgressManager {
 				yamlContent += `            scorePercentage: ${result.scorePercentage}\n`;
 			}
 		}
+		
+		// Add streak data
+		yamlContent += `    streak:\n`;
+		yamlContent += `      daysOfStudy:\n`;
+		
+		if (data.quizium.data.streak && data.quizium.data.streak.daysOfStudy.length > 0) {
+			for (const day of data.quizium.data.streak.daysOfStudy) {
+				yamlContent += `        - ${day}\n`;
+			}
+		} else {
+			yamlContent += `        []\n`;
+		}
+		
+		yamlContent += `      highestSoFar: ${data.quizium.data.streak?.highestSoFar || 0}\n`;
 		
 		if (file instanceof TFile) {
 			await this.app.vault.modify(file, yamlContent);
@@ -390,8 +516,38 @@ export default class QuiziumPlugin extends Plugin {
 		
 		if (this.progressManager) {
 			await this.progressManager.addQuizResult(topicName, scorePercentage);
+			// Update learning streak
+			await this.progressManager.updateStreak();
 		} else {
 			console.error('Progress manager not available for recording quiz result');
+		}
+	}
+
+	async recordSpacedRepetitionActivity() {
+		// Wait for progress manager to be initialized if needed
+		if (!this.progressManager) {
+			await this.waitForProgressManager();
+		}
+		
+		if (this.progressManager) {
+			// Update learning streak for spaced repetition activity
+			await this.progressManager.updateStreak();
+		} else {
+			console.error('Progress manager not available for recording spaced repetition activity');
+		}
+	}
+
+	async getStreakData(): Promise<{ currentStreak: number; highestStreak: number }> {
+		// Wait for progress manager to be initialized if needed
+		if (!this.progressManager) {
+			await this.waitForProgressManager();
+		}
+		
+		if (this.progressManager) {
+			return await this.progressManager.getStreakData();
+		} else {
+			console.error('Progress manager not available for getting streak data');
+			return { currentStreak: 0, highestStreak: 0 };
 		}
 	}
 

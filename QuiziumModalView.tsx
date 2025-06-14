@@ -86,6 +86,9 @@ export const QuiziumModalView = ({ onClose, monitoredTopics, plugin }: QuiziumMo
   const [isResettingQuizResults, setIsResettingQuizResults] = useState(false);
   const [quizHistory, setQuizHistory] = useState<QuizHistoryEntry[]>([]);
   
+  // Streak state
+  const [streakData, setStreakData] = useState<{ currentStreak: number; highestStreak: number } | null>(null);
+  
   // Quiz state
   const [quizInProgress, setQuizInProgress] = useState(false);
   const [quizQuestions, setQuizQuestions] = useState<Quiz[]>([]);
@@ -173,6 +176,7 @@ export const QuiziumModalView = ({ onClose, monitoredTopics, plugin }: QuiziumMo
       setDataManagementService(dataService);
       
       await loadFlashcardStats(service);
+      await loadStreakData();
     } catch (error) {
       console.error('Error initializing services:', error);
       setError('Failed to initialize application services');
@@ -229,8 +233,27 @@ export const QuiziumModalView = ({ onClose, monitoredTopics, plugin }: QuiziumMo
       const scorePercentage = Math.round((quizResults.correct / quizResults.total) * 100);
       const topicForRecord = quizTopic || 'All Topics';
       await plugin.recordQuizResult(topicForRecord, scorePercentage);
+      // Reload streak data after recording quiz result
+      await loadStreakData();
     } catch (error) {
       console.error('Error recording quiz result:', error);
+    }
+  };
+
+  /**
+   * Loads current streak data from the plugin.
+   * Updates the streak display with current and highest streak values.
+   */
+  const loadStreakData = async () => {
+    if (!plugin) return;
+    
+    try {
+      const data = await plugin.getStreakData();
+      setStreakData(data);
+    } catch (error) {
+      console.error('Error loading streak data:', error);
+      // Set default values on error
+      setStreakData({ currentStreak: 0, highestStreak: 0 });
     }
   };
 
@@ -641,6 +664,13 @@ export const QuiziumModalView = ({ onClose, monitoredTopics, plugin }: QuiziumMo
 
       setDifficultyRated(true);
       
+      // Record activity for streak tracking (both regular flashcards and spaced repetition)
+      if (plugin) {
+        await plugin.recordSpacedRepetitionActivity();
+        // Reload streak data after recording activity
+        await loadStreakData();
+      }
+      
       // Refresh stats in background to update difficulty counts
       refreshStatsAfterRating();
       
@@ -817,6 +847,7 @@ export const QuiziumModalView = ({ onClose, monitoredTopics, plugin }: QuiziumMo
         showSpacedRepetition={showSpacedRepetition}
         showQuizView={showQuizView}
         renderTopicBreakdown={renderTopicBreakdown}
+        streakData={streakData || undefined}
       />
     );
   };
