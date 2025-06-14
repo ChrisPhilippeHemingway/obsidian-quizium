@@ -14,24 +14,14 @@ export const QuizView: React.FC<QuizViewProps> = ({
   handleStartQuiz
 }) => {
   return (
-    <div style={{ padding: '20px', maxWidth: 500, margin: '0 auto' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '28px' }}>
-        <div style={{ fontSize: '20px', fontWeight: '600', color: 'var(--text-normal)' }}>
+    <div className="quizium-quiz-container">
+      <div className="quizium-quiz-header">
+        <div className="quizium-quiz-title">
           Quizzes
         </div>
         <button
           onClick={() => setViewMode('quizHistory')}
-          style={{
-            padding: '6px 12px',
-            fontSize: '12px',
-            fontWeight: '500',
-            backgroundColor: '#ea580c',
-            color: 'white',
-            border: 'none',
-            borderRadius: '4px',
-            cursor: 'pointer',
-            transition: 'all 0.2s'
-          }}
+          className="quizium-quiz-history-button"
           onMouseEnter={(e) => {
             e.currentTarget.style.backgroundColor = '#c2410c';
             e.currentTarget.style.transform = 'translateY(-1px)';
@@ -45,60 +35,34 @@ export const QuizView: React.FC<QuizViewProps> = ({
           Historical Results
         </button>
       </div>
-      <div style={{ fontSize: '15px', fontWeight: '500', marginBottom: '16px', color: 'var(--text-normal)', textAlign: 'left' }}>
+      <div className="quizium-quiz-section-title">
         Topics
       </div>
       {/* All Topics Row */}
-      <div style={{ marginBottom: '28px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <div>
-          <div style={{ fontSize: '14px', fontWeight: '500', marginBottom: '4px', color: 'var(--text-normal)', textAlign: 'left' }}>All Topics</div>
-          <div style={{ fontSize: '13px', color: 'var(--text-muted)', marginBottom: 0, textAlign: 'left' }}>{totalQuizzes} quiz question{totalQuizzes === 1 ? '' : 's'} available</div>
+      <div className="quizium-quiz-topic-item">
+        <div className="quizium-quiz-topic-info">
+          <div className="quizium-quiz-topic-name">All Topics</div>
+          <div className="quizium-quiz-topic-count">{totalQuizzes} quiz question{totalQuizzes === 1 ? '' : 's'} available</div>
         </div>
         <button
           onClick={() => handleStartQuiz(null)}
           disabled={totalQuizzes === 0}
-          style={{
-            padding: '8px 18px',
-            fontSize: '15px',
-            borderRadius: '6px',
-            border: 'none',
-            cursor: totalQuizzes === 0 ? 'not-allowed' : 'pointer',
-            backgroundColor: totalQuizzes === 0 ? '#e5e7eb' : 'rgba(147, 51, 234, 0.5)',
-            color: 'white',
-            fontWeight: '500',
-            transition: 'background-color 0.2s',
-            opacity: totalQuizzes === 0 ? 0.7 : 1,
-            marginLeft: '32px',
-            minWidth: '140px'
-          }}
+          className="quizium-quiz-start-button"
         >
           Start Quiz
         </button>
       </div>
       {/* Individual Topics */}
       {quizTopicStats.map(topic => (
-        <div key={topic.topicName} style={{ marginBottom: '28px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <div>
-            <div style={{ fontSize: '14px', fontWeight: '500', marginBottom: '4px', color: 'var(--text-normal)', textAlign: 'left' }}>{topic.topicName}</div>
-            <div style={{ fontSize: '13px', color: 'var(--text-muted)', marginBottom: 0, textAlign: 'left' }}>{topic.count} quiz question{topic.count === 1 ? '' : 's'} available</div>
+        <div key={topic.topicName} className="quizium-quiz-topic-item">
+          <div className="quizium-quiz-topic-info">
+            <div className="quizium-quiz-topic-name">{topic.topicName}</div>
+            <div className="quizium-quiz-topic-count">{topic.count} quiz question{topic.count === 1 ? '' : 's'} available</div>
           </div>
           <button
             onClick={() => handleStartQuiz(topic.topicName)}
             disabled={topic.count === 0}
-            style={{
-              padding: '8px 18px',
-              fontSize: '15px',
-              borderRadius: '6px',
-              border: 'none',
-              cursor: topic.count === 0 ? 'not-allowed' : 'pointer',
-              backgroundColor: topic.count === 0 ? '#e5e7eb' : 'rgba(147, 51, 234, 0.5)',
-              color: 'white',
-              fontWeight: '500',
-              transition: 'background-color 0.2s',
-              opacity: topic.count === 0 ? 0.7 : 1,
-              marginLeft: '32px',
-              minWidth: '140px'
-            }}
+            className="quizium-quiz-start-button"
           >
             Start Quiz
           </button>

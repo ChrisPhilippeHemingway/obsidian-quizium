@@ -10,24 +10,14 @@ export const QuizHistoryView: React.FC<QuizHistoryViewProps> = ({
   quizHistory
 }) => {
   return (
-    <div style={{ padding: '20px', maxWidth: 800, margin: '0 auto' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '28px' }}>
-        <div style={{ fontSize: '20px', fontWeight: '600', color: 'var(--text-normal)' }}>
+    <div className="quizium-quiz-history-container">
+      <div className="quizium-quiz-history-header">
+        <div className="quizium-quiz-history-title">
           Quiz History
         </div>
         <button
           onClick={() => setViewMode('quiz')}
-          style={{
-            padding: '6px 12px',
-            fontSize: '12px',
-            fontWeight: '500',
-            backgroundColor: '#6b7280',
-            color: 'white',
-            border: 'none',
-            borderRadius: '4px',
-            cursor: 'pointer',
-            transition: 'all 0.2s'
-          }}
+          className="quizium-quiz-history-back-button"
           onMouseEnter={(e) => {
             e.currentTarget.style.backgroundColor = '#4b5563';
             e.currentTarget.style.transform = 'translateY(-1px)';
@@ -43,9 +33,9 @@ export const QuizHistoryView: React.FC<QuizHistoryViewProps> = ({
       </div>
 
       {quizHistory.length === 0 ? (
-        <div style={{ textAlign: 'center', padding: '40px', color: 'var(--text-muted)' }}>
-          <div style={{ fontSize: '16px', marginBottom: '8px' }}>No quiz history found</div>
-          <div style={{ fontSize: '14px' }}>Complete some quizzes to see your results here!</div>
+        <div className="quizium-quiz-history-empty">
+          <div className="quizium-quiz-history-empty-title">No quiz history found</div>
+          <div className="quizium-quiz-history-empty-text">Complete some quizzes to see your results here!</div>
         </div>
       ) : (
         <div style={{ 

@@ -51,19 +51,18 @@ export const QuizSessionView: React.FC<QuizSessionViewProps> = ({
   if (!quizQuestions.length || quizSessionDone || quizCurrentIndex >= quizQuestions.length) {
     // Show summary
     return (
-      <div style={{ padding: '32px', textAlign: 'center' }}>
-        <div style={{ fontSize: '20px', fontWeight: '600', marginBottom: '18px', color: 'var(--text-normal)' }}>
+      <div className="quizium-quiz-results-container">
+        <div className="quizium-quiz-results-title">
           Quiz Complete!
         </div>
-        <div style={{ fontSize: '16px', color: 'var(--text-normal)', marginBottom: '10px' }}>
+        <div className="quizium-quiz-results-score">
           You got {quizResults.correct} out of {quizResults.total} correct.
         </div>
-        <div style={{ fontSize: '14px', color: 'var(--text-muted)', marginBottom: '24px' }}>
+        <div className="quizium-quiz-results-percentage">
           Score: {quizResults.total > 0 ? Math.round((quizResults.correct / quizResults.total) * 100) : 0}%
         </div>
         <button
-          className="mod-cta"
-          style={{ fontSize: '15px', padding: '10px 24px', borderRadius: '6px', fontWeight: 500 }}
+          className="mod-cta quizium-quiz-results-button"
           onClick={() => {
             // Clear quiz state
             setQuizInProgress(false);
@@ -153,63 +152,30 @@ export const QuizSessionView: React.FC<QuizSessionViewProps> = ({
   }, [quizSessionDone, quizQuestions.length, quizCurrentIndex, quizSelectedAnswer, allAnswers, quiz.correctAnswer]);
 
   return (
-    <div style={{ 
-      padding: '24px', 
-      maxWidth: 550, 
-      margin: '0 auto',
-      width: '100%',
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center'
-    }}>
-      <div style={{ 
-        fontSize: '17px', 
-        fontWeight: '600', 
-        marginBottom: '16px', 
-        color: 'var(--text-normal)',
-        width: '100%',
-        textAlign: 'center'
-      }}>
+    <div className="quizium-quiz-session-container">
+      <div className="quizium-quiz-question-text">
         {quiz.question}
       </div>
       
       {/* Add keyboard shortcut hints */}
-      <div style={{ 
-        fontSize: '11px', 
-        color: 'var(--text-muted)', 
-        marginBottom: '12px', 
-        textAlign: 'center',
-        fontStyle: 'italic',
-        width: '100%'
-      }}>
+      <div className="quizium-quiz-keyboard-hints">
         Use number keys (1-4) to select answers{quizSelectedAnswer ? ', then Enter to continue' : ''}
       </div>
       
-      <div style={{ 
-        display: 'flex', 
-        flexDirection: 'column', 
-        gap: '10px',
-        width: '100%'
-      }}>
+      <div className="quizium-quiz-answers-container">
         {allAnswers.map((answer, idx) => {
-          let bg = '#111';
-          let color = 'white';
-          let border = '1.5px solid #222';
+          let buttonClass = 'quizium-quiz-answer-button';
+          
           if (quizSelectedAnswer) {
             if (answer === quiz.correctAnswer) {
-              bg = '#22c55e';
-              color = 'white';
-              border = '1.5px solid #16a34a';
+              buttonClass += ' quizium-quiz-answer-button-correct';
             } else if (answer === quizSelectedAnswer) {
-              bg = '#ef4444';
-              color = 'white';
-              border = '1.5px solid #dc2626';
+              buttonClass += ' quizium-quiz-answer-button-incorrect';
             } else {
-              bg = '#222';
-              color = '#bbb';
-              border = '1.5px solid #222';
+              buttonClass += ' quizium-quiz-answer-button-unselected';
             }
           }
+          
           return (
             <div
               key={idx}
@@ -222,52 +188,25 @@ export const QuizSessionView: React.FC<QuizSessionViewProps> = ({
                   handleAnswer(answer);
                 }
               }}
+              className={buttonClass}
               style={{
-                background: bg,
-                color,
-                border,
-                borderRadius: '6px',
-                fontSize: '14px',
-                fontWeight: 500,
-                padding: '12px 16px',
-                width: '100%',
-                textAlign: 'left',
-                whiteSpace: 'pre-wrap',
-                wordWrap: 'break-word',
-                wordBreak: 'break-word',
-                overflowWrap: 'break-word',
-                hyphens: 'auto',
+                cursor: quizSelectedAnswer ? 'not-allowed' : 'pointer',
+                whiteSpace: 'pre-wrap' as const,
+                wordWrap: 'break-word' as const,
+                wordBreak: 'break-word' as const,
+                overflowWrap: 'break-word' as const,
+                hyphens: 'auto' as const,
                 minHeight: '44px',
                 display: 'flex',
                 alignItems: 'center',
-                transition: 'background 0.2s, color 0.2s, border-color 0.2s',
                 boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
-                cursor: quizSelectedAnswer ? 'not-allowed' : 'pointer',
                 outline: 'none',
-                userSelect: 'text',
+                userSelect: 'text' as const,
                 lineHeight: '1.4',
                 maxWidth: '100%',
-                boxSizing: 'border-box',
-                position: 'relative',
-                // Add hover effect for better UX
-                ...(quizSelectedAnswer ? {} : {
-                  ':hover': {
-                    backgroundColor: '#1a1a1a',
-                    borderColor: '#333'
-                  }
-                })
-              }}
-              onMouseEnter={(e) => {
-                if (!quizSelectedAnswer) {
-                  e.currentTarget.style.backgroundColor = '#1a1a1a';
-                  e.currentTarget.style.borderColor = '#333';
-                }
-              }}
-              onMouseLeave={(e) => {
-                if (!quizSelectedAnswer) {
-                  e.currentTarget.style.backgroundColor = '#111';
-                  e.currentTarget.style.borderColor = '#222';
-                }
+                boxSizing: 'border-box' as const,
+                position: 'relative' as const,
+                width: '100%'
               }}
             >
               <span style={{ 
@@ -284,30 +223,19 @@ export const QuizSessionView: React.FC<QuizSessionViewProps> = ({
           );
         })}
       </div>
-      <div style={{ 
-        marginTop: '20px', 
-        color: 'var(--text-muted)', 
-        fontSize: '12px', 
-        textAlign: 'center',
-        width: '100%'
-      }}>
-        Question {quizCurrentIndex + 1} of {quizQuestions.length}
-      </div>
-      {quizSelectedAnswer && (
-        <div style={{ 
-          textAlign: 'center', 
-          marginTop: '16px',
-          width: '100%'
-        }}>
+      <div className="quizium-quiz-progress-container">
+        <div className="quizium-quiz-progress-text">
+          Question {quizCurrentIndex + 1} of {quizQuestions.length}
+        </div>
+        {quizSelectedAnswer && (
           <button
-            className="mod-cta"
-            style={{ fontSize: '14px', padding: '8px 20px', borderRadius: '6px', fontWeight: 500 }}
+            className="mod-cta quizium-quiz-next-button"
             onClick={handleNext}
           >
             Next
           </button>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }; 

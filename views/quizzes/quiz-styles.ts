@@ -190,9 +190,13 @@ export const quizHistoryStyles = {
 export const quizSessionStyles = {
   // Session container
   sessionContainer: {
-    padding: '32px',
-    maxWidth: 600,
-    margin: '0 auto'
+    padding: '24px',
+    maxWidth: 550,
+    margin: '0 auto',
+    width: '100%',
+    display: 'flex',
+    flexDirection: 'column' as const,
+    alignItems: 'center'
   },
 
   // Results container
@@ -220,77 +224,88 @@ export const quizSessionStyles = {
     marginBottom: '24px'
   },
 
-  // Question container
-  questionContainer: {
+  resultsButton: {
+    fontSize: '15px',
+    padding: '10px 24px',
+    borderRadius: '6px',
+    fontWeight: 500 as const
+  },
+
+  // Question styles
+  questionText: {
     fontSize: '17px',
     fontWeight: '600' as const,
-    marginBottom: '24px',
-    color: 'var(--text-normal)'
-  },
-
-  // Answers container
-  answersContainer: {
-    display: 'flex',
-    flexDirection: 'column' as const,
-    gap: '18px'
-  },
-
-  // Answer button
-  answerButton: (isSelected: boolean, isCorrect: boolean, isRevealed: boolean) => {
-    let backgroundColor = 'var(--background-secondary)';
-    let borderColor = 'var(--background-modifier-border)';
-    let color = 'var(--text-normal)';
-
-    if (isRevealed) {
-      if (isCorrect) {
-        backgroundColor = '#dcfce7';
-        borderColor = '#22c55e';
-        color = '#166534';
-      } else if (isSelected && !isCorrect) {
-        backgroundColor = '#fee2e2';
-        borderColor = '#ef4444';
-        color = '#991b1b';
-      }
-    } else if (isSelected) {
-      backgroundColor = 'var(--interactive-accent)';
-      borderColor = 'var(--interactive-accent)';
-      color = 'var(--text-on-accent)';
-    }
-
-    return {
-      padding: '16px 20px',
-      fontSize: '15px',
-      fontWeight: '500' as const,
-      backgroundColor,
-      color,
-      border: `2px solid ${borderColor}`,
-      borderRadius: '8px',
-      cursor: isRevealed ? 'default' : 'pointer',
-      transition: 'all 0.2s',
-      textAlign: 'left' as const,
-      lineHeight: '1.4',
-      minHeight: '60px',
-      display: 'flex',
-      alignItems: 'center'
-    };
-  },
-
-  // Progress and navigation
-  progressText: {
-    marginTop: '32px',
-    color: 'var(--text-muted)',
-    fontSize: '13px',
+    marginBottom: '16px',
+    color: 'var(--text-normal)',
+    width: '100%',
     textAlign: 'center' as const
   },
 
-  navigationContainer: {
+  keyboardHints: {
+    fontSize: '11px',
+    color: 'var(--text-muted)',
+    marginBottom: '12px',
     textAlign: 'center' as const,
-    marginTop: '24px'
+    fontStyle: 'italic' as const,
+    width: '100%'
+  },
+
+  answersContainer: {
+    display: 'flex',
+    flexDirection: 'column' as const,
+    gap: '10px',
+    width: '100%'
+  },
+
+  // Answer button base styles
+  answerButton: {
+    padding: '12px 16px',
+    fontSize: '14px',
+    fontWeight: '500' as const,
+    border: '1.5px solid #222',
+    borderRadius: '6px',
+    cursor: 'pointer',
+    transition: 'all 0.2s',
+    textAlign: 'left' as const,
+    backgroundColor: '#111',
+    color: 'white'
+  },
+
+  answerButtonCorrect: {
+    backgroundColor: '#22c55e',
+    borderColor: '#16a34a',
+    color: 'white'
+  },
+
+  answerButtonIncorrect: {
+    backgroundColor: '#ef4444',
+    borderColor: '#dc2626',
+    color: 'white'
+  },
+
+  answerButtonUnselected: {
+    backgroundColor: '#374151',
+    borderColor: '#4b5563',
+    color: '#d1d5db'
+  },
+
+  // Progress and navigation
+  progressContainer: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: '20px',
+    width: '100%'
+  },
+
+  progressText: {
+    fontSize: '12px',
+    color: 'var(--text-muted)'
   },
 
   nextButton: {
-    fontSize: '15px',
-    padding: '10px 24px',
+    fontSize: '14px',
+    padding: '8px 20px',
     borderRadius: '6px',
     fontWeight: 500 as const
   }
