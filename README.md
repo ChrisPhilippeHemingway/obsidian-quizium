@@ -156,3 +156,5 @@ For developers and advanced users, see [Technical Documentation](docs/technical.
 - Building and development instructions
 - Architecture overview
 - Code structure and documentation standards
+
+<a href="https://www.buymeacoffee.com/obsidian.quizium" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a>
