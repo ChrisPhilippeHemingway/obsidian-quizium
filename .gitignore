@@ -21,3 +21,6 @@ quizium-progress.yaml
 
 # Exclude macOS Finder (System Explorer) View States
 .DS_Store
+
+# Deployment script
+deploy.sh

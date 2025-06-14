@@ -210,10 +210,12 @@ export const QuiziumModalView = ({ onClose, monitoredTopics, plugin }: QuiziumMo
       
       // Check if any content was found and show appropriate error message
       if (stats.totalUnique === 0 && quizStats.totalUnique === 0) {
-        const tagsText = monitoredTopics.length > 0 
-          ? monitoredTopics.map(t => t.hashtag).join(', ') 
-          : 'monitored hashtags';
-        setError(`No flashcards or quizzes found in your vault. Create a note with one of these tags: ${tagsText} and add questions with the exact format shown below.`);
+        if (monitoredTopics.length === 0) {
+          setError('No monitored hashtags configured. Please go to Settings → Plugin Options → Quizium to add hashtags first, then create notes with those tags and add questions with the exact format shown below.');
+        } else {
+          const tagsText = monitoredTopics.map(t => t.hashtag).join(', ');
+          setError(`No flashcards or quizzes found in your vault. Create a note with one of these tags: ${tagsText} and add questions with the exact format shown below.`);
+        }
       }
     } catch (err) {
       setError('Error loading flashcards: ' + (err instanceof Error ? err.message : 'Unknown error'));
@@ -1064,6 +1066,8 @@ export const QuiziumModalView = ({ onClose, monitoredTopics, plugin }: QuiziumMo
   
   // Function to determine if logo should be shown based on current view mode
   const shouldShowLogo = () => {
+    // Don't show logo if there's an error, even on menu view
+    if (error) return false;
     return viewMode === 'menu' || viewMode === 'topicSelection' || viewMode === 'spacedRepetition';
   };
 

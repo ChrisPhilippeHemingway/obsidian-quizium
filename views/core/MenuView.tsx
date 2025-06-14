@@ -67,7 +67,8 @@ export const MenuView: React.FC<MenuViewProps> = ({
 [A]4
 [B]3
 [B]5
-[B]6`}
+[B]6
+[H]Your hint here (optional)`}
           </pre>
           <div style={menuStyles.instructionsNote}>
             Add these to any note with your monitored hashtags.

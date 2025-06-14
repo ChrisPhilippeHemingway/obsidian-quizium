@@ -28,6 +28,7 @@ export interface ProgressData {
 				daysOfStudy: string[]; // Array of ISO date strings (YYYY-MM-DD)
 				highestSoFar: number;
 			};
+			monitoredTopics?: MonitoredTopic[]; // Monitored topics stored in YAML
 		};
 	};
 }
@@ -70,6 +71,7 @@ class ProgressManager {
     streak:
       daysOfStudy: []
       highestSoFar: 0
+    monitoredTopics: []
 `;
 			try {
 				await this.app.vault.create(filePath, defaultContent);
@@ -108,7 +110,8 @@ class ProgressManager {
 						streak: {
 							daysOfStudy: [],
 							highestSoFar: 0
-						}
+						},
+						monitoredTopics: []
 					}
 				}
 			};
@@ -119,6 +122,7 @@ class ProgressManager {
 			let inTopics = false;
 			let inStreak = false;
 			let inDaysOfStudy = false;
+			let inMonitoredTopics = false;
 			
 			for (let i = 0; i < lines.length; i++) {
 				const line = lines[i];
@@ -128,6 +132,7 @@ class ProgressManager {
 				if (trimmedLine === 'topics:' || trimmedLine === 'topics: {}') {
 					inTopics = true;
 					inStreak = false;
+					inMonitoredTopics = false;
 					continue;
 				}
 				
@@ -135,6 +140,15 @@ class ProgressManager {
 				if (trimmedLine === 'streak:') {
 					inStreak = true;
 					inTopics = false;
+					inMonitoredTopics = false;
+					continue;
+				}
+				
+				// Look for monitoredTopics: line
+				if (trimmedLine === 'monitoredTopics:' || trimmedLine === 'monitoredTopics: []') {
+					inMonitoredTopics = true;
+					inTopics = false;
+					inStreak = false;
 					continue;
 				}
 				
@@ -160,6 +174,21 @@ class ProgressManager {
 							data.quizium.data.streak!.daysOfStudy.push(dateStr);
 						}
 						continue;
+					}
+				}
+				
+				// Handle monitored topics
+				if (inMonitoredTopics && line.startsWith('      - hashtag:')) {
+					const hashtag = line.replace('      - hashtag:', '').trim();
+					const nextLine = lines[i + 1];
+					if (nextLine && nextLine.trim().startsWith('topicName:')) {
+						const topicName = nextLine.replace('        topicName:', '').trim();
+						if (hashtag && topicName) {
+							data.quizium.data.monitoredTopics!.push({
+								hashtag,
+								topicName
+							});
+						}
 					}
 				}
 				
@@ -199,7 +228,8 @@ class ProgressManager {
 					streak: {
 						daysOfStudy: [],
 						highestSoFar: 0
-					}
+					},
+					monitoredTopics: []
 				}
 			}
 		};
@@ -350,6 +380,40 @@ class ProgressManager {
 		};
 	}
 
+	async getMonitoredTopics(): Promise<MonitoredTopic[]> {
+		const data = await this.getProgressData();
+		return data.quizium.data.monitoredTopics || [];
+	}
+
+	async addMonitoredTopic(hashtag: string, topicName: string): Promise<void> {
+		const data = await this.getProgressData();
+		if (!data.quizium.data.monitoredTopics) {
+			data.quizium.data.monitoredTopics = [];
+		}
+		
+		// Check if topic already exists
+		const exists = data.quizium.data.monitoredTopics.some(
+			topic => topic.hashtag === hashtag || topic.topicName === topicName
+		);
+		
+		if (!exists) {
+			data.quizium.data.monitoredTopics.push({ hashtag, topicName });
+			await this.saveProgressData(data);
+			// Also ensure topic exists in the topics section
+			await this.addTopic(topicName);
+		}
+	}
+
+	async removeMonitoredTopic(hashtag: string): Promise<void> {
+		const data = await this.getProgressData();
+		if (data.quizium.data.monitoredTopics) {
+			data.quizium.data.monitoredTopics = data.quizium.data.monitoredTopics.filter(
+				topic => topic.hashtag !== hashtag
+			);
+			await this.saveProgressData(data);
+		}
+	}
+
 	private async saveProgressData(data: ProgressData): Promise<void> {
 		const filePath = `${this.progressFolderPath}/${this.progressFileName}`;
 		
@@ -385,6 +449,18 @@ class ProgressManager {
 		}
 		
 		yamlContent += `      highestSoFar: ${data.quizium.data.streak?.highestSoFar || 0}\n`;
+		
+		// Add monitored topics
+		yamlContent += `    monitoredTopics:\n`;
+		
+		if (data.quizium.data.monitoredTopics && data.quizium.data.monitoredTopics.length > 0) {
+			for (const topic of data.quizium.data.monitoredTopics) {
+				yamlContent += `      - hashtag: ${topic.hashtag}\n`;
+				yamlContent += `        topicName: ${topic.topicName}\n`;
+			}
+		} else {
+			yamlContent += `      []\n`;
+		}
 		
 		if (file instanceof TFile) {
 			await this.app.vault.modify(file, yamlContent);
@@ -497,13 +573,49 @@ export default class QuiziumPlugin extends Plugin {
 
 	async loadSettings() {
 		this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
+		
+		// Migration: Move monitored topics from data.json to YAML if they exist in data.json but not in YAML
+		if (this.settings.monitoredTopics && this.settings.monitoredTopics.length > 0) {
+			// We'll migrate after progress manager is initialized
+		}
 	}
 
 	async initializeProgressManager() {
 		if (this.progressManager) {
 			// Only ensure progress file exists, don't add topics until quiz completion
 			await this.progressManager.ensureProgressFile();
+			
+			// Migration: Move monitored topics from data.json to YAML if needed
+			await this.migrateMonitoredTopics();
+			
+			// Load monitored topics from YAML into settings
+			await this.loadMonitoredTopicsFromYAML();
 		}
+	}
+
+	async migrateMonitoredTopics() {
+		// Check if we have topics in data.json but not in YAML
+		const yamlTopics = await this.progressManager.getMonitoredTopics();
+		
+		if (this.settings.monitoredTopics.length > 0 && yamlTopics.length === 0) {
+			// Migrate topics from data.json to YAML
+			console.log('Migrating monitored topics from data.json to YAML...');
+			
+			for (const topic of this.settings.monitoredTopics) {
+				await this.progressManager.addMonitoredTopic(topic.hashtag, topic.topicName);
+			}
+			
+			// Clear topics from data.json settings and save
+			this.settings.monitoredTopics = [];
+			await this.saveSettings();
+			
+			console.log('Migration completed.');
+		}
+	}
+
+	async loadMonitoredTopicsFromYAML() {
+		// Load monitored topics from YAML into settings
+		this.settings.monitoredTopics = await this.progressManager.getMonitoredTopics();
 	}
 
 	async saveSettings() {
@@ -662,8 +774,11 @@ class QuiziumSettingTab extends PluginSettingTab {
 		topicsContainer.style.marginBottom = '15px';
 		
 		// Function to refresh the topics display
-		const refreshTopicsDisplay = () => {
+		const refreshTopicsDisplay = async () => {
 			topicsContainer.empty();
+			
+			// Load topics from YAML
+			await this.plugin.loadMonitoredTopicsFromYAML();
 			
 			this.plugin.settings.monitoredTopics.forEach((topic, index) => {
 				const topicEl = topicsContainer.createDiv();
@@ -690,9 +805,9 @@ class QuiziumSettingTab extends PluginSettingTab {
 				deleteBtn.style.padding = '4px 8px';
 				deleteBtn.style.cursor = 'pointer';
 				deleteBtn.onclick = async () => {
-					this.plugin.settings.monitoredTopics.splice(index, 1);
-					await this.plugin.saveSettings();
-					refreshTopicsDisplay();
+					// Remove from YAML using progress manager
+					await this.plugin.progressManager.removeMonitoredTopic(topic.hashtag);
+					await refreshTopicsDisplay();
 				};
 			});
 		};
@@ -709,11 +824,9 @@ class QuiziumSettingTab extends PluginSettingTab {
 					.onClick(() => {
 						// Create a modal for adding new topic
 						const modal = new AddTopicModal(this.app, async (hashtag: string, topicName: string) => {
-							this.plugin.settings.monitoredTopics.push({ hashtag, topicName });
-							await this.plugin.saveSettings();
-							// Add topic to progress file
-							await this.plugin.progressManager.addTopic(topicName);
-							refreshTopicsDisplay();
+							// Add topic to YAML using progress manager
+							await this.plugin.progressManager.addMonitoredTopic(hashtag, topicName);
+							await refreshTopicsDisplay();
 						});
 						modal.open();
 					});
