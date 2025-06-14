@@ -6,6 +6,10 @@
 
 A powerful flashcard and quiz plugin for Obsidian that transforms your notes into an interactive learning experience. Study your knowledge through spaced repetition, difficulty-based flashcards, and comprehensive quizzes.
 
+<div align="center">
+  <img src="docs/images/01_main_modal.png" alt="Main modal" width="250">
+</div>
+
 ## ✨ Features
 
 ### 📚 Flashcards with Smart Classification
@@ -14,17 +18,29 @@ A powerful flashcard and quiz plugin for Obsidian that transforms your notes int
 - **Topic Organization**: Study by specific topics or review all flashcards together
 - **Hint Support**: Add optional hints to help guide your thinking
 
+<div align="center">
+  <img src="docs/images/02_flash_cards.png" alt="Flashcards" width="250">
+</div>
+
 ### 🧠 Spaced Repetition
 - **Intelligent Scheduling**: Cards reappear based on their difficulty rating and time intervals
 - **Customizable Intervals**: Configure how often Easy, Moderate, and Challenging cards appear
 - **Progress Tracking**: See statistics on your spaced repetition progress across all topics
 - **Adaptive Learning**: Focus on cards that need the most attention
 
+<div align="center">
+  <img src="docs/images/03_spaced_repetition.png" alt="Spaced Repetition" width="250">
+</div>
+
 ### 🎯 Interactive Quizzes
 - **Multiple Choice Format**: Test your knowledge with 4-option quizzes
 - **Immediate Feedback**: See correct answers and track your performance
 - **Quiz History**: Review your past quiz results and track improvement over time
 - **Topic-Based Quizzes**: Focus on specific subjects or test across all topics
+
+<div align="center">
+  <img src="docs/images/04_quiz.png" alt="Interactive Quizzes" width="250">
+</div>
 
 ### 💎 Learning Streaks
 - **Daily Motivation**: Track consecutive days of study activity

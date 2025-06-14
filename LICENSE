@@ -1,5 +1,44 @@
-Copyright (C) 2020-2025 by Dynalist Inc.
+QUIZIUM PLUGIN RESTRICTIVE LICENSE
 
-Permission to use, copy, modify, and/or distribute this software for any purpose with or without fee is hereby granted.
+Copyright (c) 2025 [Chris Philippe Hemingway]
 
-THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+TERMS AND CONDITIONS FOR USE
+
+1. PERMITTED USE
+   You are granted permission to use this software (the "Plugin") in its unmodified form 
+   for personal or commercial purposes within the Obsidian note-taking application.
+
+2. RESTRICTIONS
+   You may NOT:
+   a) Redistribute, publish, or share this Plugin in any form or through any medium
+   b) Create derivative works or modifications of this Plugin
+   c) Sublicense, sell, rent, lease, or transfer rights to this Plugin
+   d) Remove or alter any copyright notices or this license
+
+3. CONTRIBUTIONS
+   The ONLY permitted way to suggest changes or improvements is by:
+   a) Opening issues in the original repository
+   b) Submitting pull requests to the original repository at https://github.com/ChrisPhilippeHemingway/obsidian-quizium
+   
+   By submitting a pull request, you grant the copyright holder a perpetual, 
+   worldwide, non-exclusive, royalty-free license to use, modify, and distribute 
+   your contributions as part of this Plugin.
+
+4. NO WARRANTIES
+   This Plugin is provided "AS IS" without warranty of any kind, express or implied,
+   including but not limited to the warranties of merchantability, fitness for a
+   particular purpose, and non-infringement. In no event shall the authors or
+   copyright holders be liable for any claim, damages, or other liability, whether
+   in an action of contract, tort, or otherwise, arising from, out of, or in
+   connection with the Plugin or the use or other dealings in the Plugin.
+
+5. TERMINATION
+   This license is effective until terminated. Your rights under this license will
+   terminate automatically without notice if you fail to comply with any term hereof.
+
+6. GOVERNING LAW
+   This license shall be governed by and construed in accordance with the laws of
+   the jurisdiction where the copyright holder resides.
+
+BY USING THIS PLUGIN, YOU ACKNOWLEDGE THAT YOU HAVE READ THIS LICENSE AND AGREE
+TO BE BOUND BY ITS TERMS AND CONDITIONS.
