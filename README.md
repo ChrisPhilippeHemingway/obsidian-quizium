@@ -42,6 +42,10 @@ A powerful flashcard and quiz plugin for Obsidian that transforms your notes int
   <img src="docs/images/04_quiz.png" alt="Interactive Quizzes" width="250">
 </div>
 
+<div align="center">
+  <img src="docs/images/05_quiz_analytics.png" alt="Quiz Analytics" width="250">
+</div>
+
 ### 💎 Learning Streaks
 - **Daily Motivation**: Track consecutive days of study activity
 - **Automatic Tracking**: Streaks update when you complete quizzes or rate flashcards

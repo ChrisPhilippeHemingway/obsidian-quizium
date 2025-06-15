@@ -501,8 +501,6 @@ available in the app when your plugin is enabled.
     padding: 20px;
     /* Remove width constraints to fill container */
     width: 100%;
-    max-height: 80vh;
-    overflow-y: auto;
     /* Ensure content is centered accounting for button spacing */
     box-sizing: border-box;
     /* Center the content within the available space */
@@ -993,7 +991,6 @@ available in the app when your plugin is enabled.
 }
 
 .quizium-quiz-history-table-container {
-    overflow-x: auto;
     margin-top: 20px;
 }
 
@@ -1332,4 +1329,104 @@ available in the app when your plugin is enabled.
 .quizium-spaced-repetition-start-button-hover:hover:not(:disabled) {
     background-color: #1d4ed8 !important;
     transform: translateY(-1px) !important;
+}
+
+/* Quiz History Line Chart Styles */
+.quizium-qhist-linechart-container {
+    margin-bottom: 32px;
+    padding: 20px;
+    background-color: var(--background-primary);
+    border: 1px solid var(--background-modifier-border);
+    border-radius: 8px;
+}
+
+.quizium-qhist-linechart-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-normal);
+    margin-bottom: 16px;
+    text-align: center;
+}
+
+.quizium-qhist-linechart-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 16px;
+    padding: 10px;
+}
+
+.quizium-qhist-linechart-svg {
+    background-color: var(--background-secondary);
+    border-radius: 6px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.quizium-qhist-linechart-grid-line {
+    stroke: var(--background-modifier-border);
+    stroke-width: 1;
+    opacity: 0.5;
+}
+
+.quizium-qhist-linechart-y-label {
+    font-size: 12px;
+    fill: var(--text-muted);
+    font-family: system-ui, -apple-system, sans-serif;
+}
+
+.quizium-qhist-linechart-x-label {
+    font-size: 11px;
+    fill: var(--text-muted);
+    font-family: system-ui, -apple-system, sans-serif;
+}
+
+.quizium-qhist-linechart-line {
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    filter: drop-shadow(1px 1px 2px rgba(0, 0, 0, 0.1));
+}
+
+.quizium-qhist-linechart-point {
+    cursor: pointer;
+    transition: r 0.2s ease;
+    filter: drop-shadow(1px 1px 2px rgba(0, 0, 0, 0.1));
+}
+
+.quizium-qhist-linechart-point:hover {
+    r: 6;
+}
+
+.quizium-qhist-linechart-border {
+    stroke: var(--background-modifier-border);
+}
+
+.quizium-qhist-linechart-legend {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 12px;
+}
+
+.quizium-qhist-linechart-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--text-normal);
+}
+
+.quizium-qhist-linechart-legend-color {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 1px solid var(--background-modifier-border);
+    background-color: var(--legend-color);
+}
+
+.quizium-qhist-linechart-legend-label {
+    font-weight: 500;
+    max-width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }

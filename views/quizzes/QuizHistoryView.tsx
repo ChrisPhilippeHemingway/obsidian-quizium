@@ -1,5 +1,6 @@
 import React from 'react';
 import { ViewProps, QuizHistoryEntry } from '../types';
+import QuizHistoryLineChart from './QuizHistoryLineChart';
 
 interface QuizHistoryViewProps extends Pick<ViewProps, 'setViewMode'> {
   quizHistory: QuizHistoryEntry[];
@@ -30,7 +31,11 @@ export const QuizHistoryView: React.FC<QuizHistoryViewProps> = ({
           <div className="quizium-quiz-history-empty-text">Complete some quizzes to see your results here!</div>
         </div>
       ) : (
-        <div className="quizium-quiz-history-table-container">
+        <>
+          {/* Line Chart - only shown when there is historical data */}
+          <QuizHistoryLineChart quizHistory={quizHistory} />
+          
+          <div className="quizium-quiz-history-table-container">
           {/* Table Header */}
           <div className="quizium-quiz-history-table-header-grid">
             <div>Date & Time</div>
@@ -62,6 +67,7 @@ export const QuizHistoryView: React.FC<QuizHistoryViewProps> = ({
             );
           })}
         </div>
+        </>
       )}
 
       {quizHistory.length > 0 && (
