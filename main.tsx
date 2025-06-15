@@ -771,7 +771,7 @@ class QuiziumSettingTab extends PluginSettingTab {
 		
 		// Create container for topics list
 		const topicsContainer = containerEl.createDiv();
-		topicsContainer.style.marginBottom = '15px';
+		topicsContainer.addClass('quizium-settings-topics-container');
 		
 		// Function to refresh the topics display
 		const refreshTopicsDisplay = async () => {
@@ -782,17 +782,11 @@ class QuiziumSettingTab extends PluginSettingTab {
 			
 			this.plugin.settings.monitoredTopics.forEach((topic, index) => {
 				const topicEl = topicsContainer.createDiv();
-				topicEl.style.display = 'flex';
-				topicEl.style.alignItems = 'center';
-				topicEl.style.gap = '10px';
-				topicEl.style.marginBottom = '8px';
-				topicEl.style.padding = '8px';
-				topicEl.style.backgroundColor = 'var(--background-secondary)';
-				topicEl.style.borderRadius = '5px';
+				topicEl.addClass('quizium-settings-topic-item');
 				
 				// Topic display
 				const topicInfo = topicEl.createDiv();
-				topicInfo.style.flex = '1';
+				topicInfo.addClass('quizium-settings-topic-info');
 				topicInfo.empty();
 				topicInfo.createSpan({ text: topic.topicName, cls: 'topic-name-bold' });
 				topicInfo.createSpan({ text: ' - ' });
@@ -801,12 +795,7 @@ class QuiziumSettingTab extends PluginSettingTab {
 				// Delete button
 				const deleteBtn = topicEl.createEl('button');
 				deleteBtn.textContent = '×';
-				deleteBtn.style.background = '#ff6b6b';
-				deleteBtn.style.color = 'white';
-				deleteBtn.style.border = 'none';
-				deleteBtn.style.borderRadius = '3px';
-				deleteBtn.style.padding = '4px 8px';
-				deleteBtn.style.cursor = 'pointer';
+				deleteBtn.addClass('quizium-settings-delete-button');
 				deleteBtn.onclick = async () => {
 					// Remove from YAML using progress manager
 					await this.plugin.progressManager.removeMonitoredTopic(topic.hashtag);
@@ -927,11 +916,7 @@ class QuiziumSettingTab extends PluginSettingTab {
 
 		// Add example section
 		const exampleEl = containerEl.createDiv();
-		exampleEl.style.marginTop = '20px';
-		exampleEl.style.padding = '10px';
-		exampleEl.style.backgroundColor = 'var(--background-secondary)';
-		exampleEl.style.borderRadius = '5px';
-		exampleEl.style.fontSize = '0.9em';
+		exampleEl.addClass('quizium-settings-example-container');
 		
 		exampleEl.createEl('strong', {text: 'Format:'});
 		exampleEl.createEl('br');
@@ -939,69 +924,39 @@ class QuiziumSettingTab extends PluginSettingTab {
 		
 		// Requirements section
 		const requirementsEl = exampleEl.createEl('div');
-		requirementsEl.style.marginTop = '8px';
-		requirementsEl.style.marginLeft = '-10px'; // Offset the parent container's padding
-		requirementsEl.style.marginRight = '-10px'; // Offset the parent container's padding
-		requirementsEl.style.padding = '8px 10px'; // Add back the padding we need
-		requirementsEl.style.backgroundColor = 'var(--background-modifier-info)';
-		requirementsEl.style.borderRadius = '4px';
-		requirementsEl.style.fontSize = '0.85em';
+		requirementsEl.addClass('quizium-settings-requirements-section');
 		requirementsEl.empty();
 		requirementsEl.createSpan({ text: 'Requirements:', cls: 'requirements-bold' });
 		requirementsEl.createSpan({ text: ' Each block must be surrounded by empty lines. [Q], [A], [B], and [H] lines can appear in any order within each block.' });
 		
 		// Flashcard example
 		const flashcardTitle = exampleEl.createEl('div');
-		flashcardTitle.style.marginTop = '12px';
-		flashcardTitle.style.fontWeight = 'bold';
-		flashcardTitle.style.fontSize = '0.9em';
-		flashcardTitle.style.color = 'var(--text-accent)';
+		flashcardTitle.addClass('quizium-settings-section-title');
 		flashcardTitle.textContent = 'Flashcard (question + answer):';
 		
 		const flashcardCodeEl = exampleEl.createEl('pre');
-		flashcardCodeEl.style.marginTop = '4px';
-		flashcardCodeEl.style.padding = '8px';
-		flashcardCodeEl.style.backgroundColor = 'var(--background-primary)';
-		flashcardCodeEl.style.borderRadius = '4px';
-		flashcardCodeEl.style.fontSize = '0.8em';
-		flashcardCodeEl.style.lineHeight = '1.3';
+		flashcardCodeEl.addClass('quizium-settings-code-example');
 		flashcardCodeEl.textContent = `[Q]What is the speed of light?
 [A]299,792,458 m/s`;
 
 		// Flashcard with hint example
 		const flashcardHintTitle = exampleEl.createEl('div');
-		flashcardHintTitle.style.marginTop = '12px';
-		flashcardHintTitle.style.fontWeight = 'bold';
-		flashcardHintTitle.style.fontSize = '0.9em';
-		flashcardHintTitle.style.color = 'var(--text-accent)';
+		flashcardHintTitle.addClass('quizium-settings-section-title');
 		flashcardHintTitle.textContent = 'Flashcard with optional hint:';
 		
 		const flashcardHintCodeEl = exampleEl.createEl('pre');
-		flashcardHintCodeEl.style.marginTop = '4px';
-		flashcardHintCodeEl.style.padding = '8px';
-		flashcardHintCodeEl.style.backgroundColor = 'var(--background-primary)';
-		flashcardHintCodeEl.style.borderRadius = '4px';
-		flashcardHintCodeEl.style.fontSize = '0.8em';
-		flashcardHintCodeEl.style.lineHeight = '1.3';
+		flashcardHintCodeEl.addClass('quizium-settings-code-example');
 		flashcardHintCodeEl.textContent = `[Q]What is the chemical symbol for gold?
 [A]Au (from the Latin word "aurum")
 [H]Think about the Latin name for gold`;
 
 		// Quiz example
 		const quizTitle = exampleEl.createEl('div');
-		quizTitle.style.marginTop = '12px';
-		quizTitle.style.fontWeight = 'bold';
-		quizTitle.style.fontSize = '0.9em';
-		quizTitle.style.color = 'var(--text-accent)';
+		quizTitle.addClass('quizium-settings-section-title');
 		quizTitle.textContent = 'Quiz (question + 1 correct + 3 wrong answers):';
 		
 		const quizCodeEl = exampleEl.createEl('pre');
-		quizCodeEl.style.marginTop = '4px';
-		quizCodeEl.style.padding = '8px';
-		quizCodeEl.style.backgroundColor = 'var(--background-primary)';
-		quizCodeEl.style.borderRadius = '4px';
-		quizCodeEl.style.fontSize = '0.8em';
-		quizCodeEl.style.lineHeight = '1.3';
+		quizCodeEl.addClass('quizium-settings-code-example');
 		quizCodeEl.textContent = `[Q]Which planet is closest to the Sun?
 [A]Mercury
 [B]Venus
@@ -1010,10 +965,7 @@ class QuiziumSettingTab extends PluginSettingTab {
 
 		// QZ comments explanation
 		const qzNote = exampleEl.createEl('div');
-		qzNote.style.marginTop = '12px';
-		qzNote.style.marginLeft = '0px'; // Fix indentation
-		qzNote.style.fontSize = '0.8em';
-		qzNote.style.color = 'var(--text-muted)';
+		qzNote.addClass('quizium-settings-note-text');
 		qzNote.empty();
 		qzNote.createSpan({ text: 'Note:', cls: 'note-bold' });
 		qzNote.createSpan({ text: ' Lines like ' });
@@ -1022,14 +974,7 @@ class QuiziumSettingTab extends PluginSettingTab {
 
 		// Important note about quizzes being flashcards too
 		const noteEl = exampleEl.createEl('div');
-		noteEl.style.marginTop = '12px';
-		noteEl.style.marginLeft = '-10px'; // Offset the parent container's padding
-		noteEl.style.marginRight = '-10px'; // Offset the parent container's padding
-		noteEl.style.padding = '8px 10px'; // Add back the padding we need
-		noteEl.style.backgroundColor = 'var(--background-modifier-info)';
-		noteEl.style.borderRadius = '4px';
-		noteEl.style.fontSize = '0.9em';
-		noteEl.style.fontStyle = 'italic';
+		noteEl.addClass('quizium-settings-note-info');
 		noteEl.empty();
 		noteEl.createSpan({ text: 'Note:', cls: 'note-bold' });
 		noteEl.createSpan({ text: ' Quiz questions are automatically available as flashcards too. You only need to define the question once to get both quiz and flashcard functionality.' });
