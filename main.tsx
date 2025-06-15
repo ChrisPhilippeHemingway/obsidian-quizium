@@ -510,15 +510,15 @@ interface QuiziumPluginSettings {
 	};
 }
 
-const DEFAULT_SETTINGS: QuiziumPluginSettings = {
+const getDefaultSettings = (app: App): QuiziumPluginSettings => ({
 	monitoredTopics: [],
-	progressFolderPath: '.obsidian/plugins/obsidian-quizium',
+	progressFolderPath: `${app.vault.configDir}/plugins/obsidian-quizium`,
 	spacedRepetition: {
 		easyDays: 4,
 		moderateDays: 2,
 		challengingDays: 0
 	}
-}
+})
 
 export default class QuiziumPlugin extends Plugin {
 	settings: QuiziumPluginSettings;
@@ -572,7 +572,7 @@ export default class QuiziumPlugin extends Plugin {
 	}
 
 	async loadSettings() {
-		this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
+		this.settings = Object.assign({}, getDefaultSettings(this.app), await this.loadData());
 		
 		// Migration: Move monitored topics from data.json to YAML if they exist in data.json but not in YAML
 		if (this.settings.monitoredTopics && this.settings.monitoredTopics.length > 0) {
@@ -840,10 +840,10 @@ class QuiziumSettingTab extends PluginSettingTab {
 			.setName('Progress folder path')
 			.setDesc('Path to folder where Quizium will store progress data (YAML file)')
 			.addText(text => text
-				.setPlaceholder('.obsidian/plugins/obsidian-quizium')
+				.setPlaceholder(`${this.app.vault.configDir}/plugins/obsidian-quizium`)
 				.setValue(this.plugin.settings.progressFolderPath)
 				.onChange(async (value) => {
-					this.plugin.settings.progressFolderPath = value || '.obsidian/plugins/obsidian-quizium';
+					this.plugin.settings.progressFolderPath = value || `${this.app.vault.configDir}/plugins/obsidian-quizium`;
 					await this.plugin.saveSettings();
 					// Update progress manager with new path
 					this.plugin.progressManager = new ProgressManager(this.app, this.plugin.settings.progressFolderPath);
