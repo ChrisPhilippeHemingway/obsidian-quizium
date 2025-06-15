@@ -548,7 +548,7 @@ export default class QuiziumPlugin extends Plugin {
 		// This adds a command to open Quizium from the command palette
 		this.addCommand({
 			id: 'open-quizium',
-			name: 'Open Quizium',
+			name: 'Open',
 			callback: () => {
 				new QuiziumModal(this.app, this.settings, this).open();
 			}
