@@ -59,14 +59,7 @@ export const TopicBreakdownView: React.FC<TopicBreakdownViewProps> = ({
         <button
           onClick={onClose}
           style={topicBreakdownStyles.closeButton}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.backgroundColor = 'var(--background-modifier-hover)';
-            e.currentTarget.style.color = 'var(--text-normal)';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.backgroundColor = 'transparent';
-            e.currentTarget.style.color = 'var(--text-muted)';
-          }}
+          className="quizium-close-button-hover"
           title="Close breakdown"
         >
           ✕

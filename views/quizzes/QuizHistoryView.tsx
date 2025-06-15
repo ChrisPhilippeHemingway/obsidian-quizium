@@ -17,15 +17,7 @@ export const QuizHistoryView: React.FC<QuizHistoryViewProps> = ({
         </div>
         <button
           onClick={() => setViewMode('quiz')}
-          className="quizium-quiz-history-back-button"
-          onMouseEnter={(e) => {
-            e.currentTarget.style.backgroundColor = '#4b5563';
-            e.currentTarget.style.transform = 'translateY(-1px)';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.backgroundColor = '#6b7280';
-            e.currentTarget.style.transform = 'translateY(0)';
-          }}
+          className="quizium-quiz-history-back-button quizium-quiz-history-back-button-hover-fix"
           title="Back to quiz selection"
         >
           Back to Quizzes
@@ -38,73 +30,42 @@ export const QuizHistoryView: React.FC<QuizHistoryViewProps> = ({
           <div className="quizium-quiz-history-empty-text">Complete some quizzes to see your results here!</div>
         </div>
       ) : (
-        <div style={{ 
-          border: '1px solid var(--background-modifier-border)', 
-          borderRadius: '8px', 
-          overflow: 'hidden',
-          backgroundColor: 'var(--background-primary)'
-        }}>
+        <div className="quizium-quiz-history-table-container">
           {/* Table Header */}
-          <div style={{ 
-            display: 'grid', 
-            gridTemplateColumns: '2fr 1fr 1fr', 
-            gap: '12px',
-            padding: '12px 16px',
-            backgroundColor: 'var(--background-secondary)',
-            borderBottom: '1px solid var(--background-modifier-border)',
-            fontWeight: '600',
-            fontSize: '13px',
-            color: 'var(--text-normal)'
-          }}>
+          <div className="quizium-quiz-history-table-header-grid">
             <div>Date & Time</div>
             <div>Topic</div>
-            <div style={{ textAlign: 'center' }}>Score</div>
+            <div className="quizium-quiz-history-table-score-header">Score</div>
           </div>
 
           {/* Table Rows */}
-          {quizHistory.map((entry, index) => (
-            <div 
-              key={`${entry.timestamp}-${entry.topic}`}
-              style={{ 
-                display: 'grid', 
-                gridTemplateColumns: '2fr 1fr 1fr', 
-                gap: '12px',
-                padding: '12px 16px',
-                borderBottom: index < quizHistory.length - 1 ? '1px solid var(--background-modifier-border)' : 'none',
-                fontSize: '13px',
-                color: 'var(--text-normal)',
-                backgroundColor: index % 2 === 0 ? 'var(--background-primary)' : 'var(--background-secondary-alt)'
-              }}
-            >
-              <div style={{ fontFamily: 'monospace' }}>{entry.formattedDate}</div>
-              <div style={{ 
-                overflow: 'hidden', 
-                textOverflow: 'ellipsis', 
-                whiteSpace: 'nowrap',
-                fontWeight: '500'
-              }}>
-                {entry.topic}
+          {quizHistory.map((entry, index) => {
+            const scoreClass = entry.scorePercentage >= 80 ? 'quizium-quiz-history-table-score-good' :
+                              entry.scorePercentage >= 60 ? 'quizium-quiz-history-table-score-average' :
+                              'quizium-quiz-history-table-score-poor';
+            
+            return (
+              <div 
+                key={`${entry.timestamp}-${entry.topic}`}
+                className={`quizium-quiz-history-table-row-grid ${
+                  index % 2 === 0 ? 'quizium-quiz-history-table-row-even' : 'quizium-quiz-history-table-row-odd'
+                } ${index < quizHistory.length - 1 ? 'quizium-quiz-history-table-row-border' : ''}`}
+              >
+                <div className="quizium-quiz-history-table-date">{entry.formattedDate}</div>
+                <div className="quizium-quiz-history-table-topic">
+                  {entry.topic}
+                </div>
+                <div className={`quizium-quiz-history-table-score ${scoreClass}`}>
+                  {entry.scorePercentage}%
+                </div>
               </div>
-              <div style={{ 
-                textAlign: 'center', 
-                fontWeight: '600',
-                color: entry.scorePercentage >= 80 ? '#22c55e' : 
-                       entry.scorePercentage >= 60 ? '#f59e0b' : '#ef4444'
-              }}>
-                {entry.scorePercentage}%
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
 
       {quizHistory.length > 0 && (
-        <div style={{ 
-          marginTop: '16px', 
-          textAlign: 'center', 
-          fontSize: '12px', 
-          color: 'var(--text-muted)' 
-        }}>
+        <div className="quizium-quiz-history-summary">
           Total quiz attempts: {quizHistory.length}
         </div>
       )}

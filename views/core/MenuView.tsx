@@ -82,26 +82,12 @@ export const MenuView: React.FC<MenuViewProps> = ({
   return (
     <div style={menuStyles.container}>
       <div style={menuStyles.headerContainer}>
-        <div style={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          marginBottom: '8px'
-        }}>
+        <div className="quizium-menu-header-container">
           <h1 style={menuStyles.title}>Quizium</h1>
         </div>
       </div>
       {streakData && (
-        <div style={{
-          fontSize: '12px',
-          color: 'var(--text-muted)',
-          textAlign: 'center',
-          marginBottom: '20px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: '4px'
-        }}>
+        <div className="quizium-menu-streak-display">
           <span>💎</span>
           <span>Learning streak: {streakData.currentStreak}. Highest ever: {streakData.highestStreak}.</span>
         </div>
@@ -119,12 +105,7 @@ export const MenuView: React.FC<MenuViewProps> = ({
           ref={breakdownButtonRef}
           onClick={() => setShowTopicBreakdown(!showTopicBreakdown)}
           style={menuStyles.breakdownButton}
-          onMouseEnter={(e: React.MouseEvent<HTMLButtonElement>) => {
-            Object.assign(e.currentTarget.style, menuHoverEffects.breakdownButton);
-          }}
-          onMouseLeave={(e: React.MouseEvent<HTMLButtonElement>) => {
-            Object.assign(e.currentTarget.style, menuHoverEffects.breakdownButtonReset);
-          }}
+          className="quizium-breakdown-button-hover"
           title="Show per-topic breakdown"
         >
           📊 Show breakdown
@@ -134,37 +115,19 @@ export const MenuView: React.FC<MenuViewProps> = ({
       <div style={menuStyles.actionsContainer}>
         <button
           onClick={showTopicSelection}
-          style={combineStyles(menuStyles.actionButton, menuStyles.flashcardsButton)}
-          onMouseEnter={(e: React.MouseEvent<HTMLButtonElement>) => {
-            Object.assign(e.currentTarget.style, menuHoverEffects.flashcardsButton);
-          }}
-          onMouseLeave={(e: React.MouseEvent<HTMLButtonElement>) => {
-            Object.assign(e.currentTarget.style, menuHoverEffects.flashcardsButtonReset);
-          }}
+          className="quizium-action-button quizium-flashcards-button"
         >
           📚 Flashcards
         </button>
         <button
           onClick={showSpacedRepetition}
-          style={combineStyles(menuStyles.actionButton, menuStyles.spacedRepetitionButton)}
-          onMouseEnter={(e: React.MouseEvent<HTMLButtonElement>) => {
-            Object.assign(e.currentTarget.style, menuHoverEffects.spacedRepetitionButton);
-          }}
-          onMouseLeave={(e: React.MouseEvent<HTMLButtonElement>) => {
-            Object.assign(e.currentTarget.style, menuHoverEffects.spacedRepetitionButtonReset);
-          }}
+          className="quizium-action-button quizium-spaced-repetition-button"
         >
           🔄 Flashcards - Spaced Repetition
         </button>
         <button
           onClick={showQuizView}
-          style={combineStyles(menuStyles.actionButton, menuStyles.quizzesButton)}
-          onMouseEnter={(e: React.MouseEvent<HTMLButtonElement>) => {
-            Object.assign(e.currentTarget.style, menuHoverEffects.quizzesButton);
-          }}
-          onMouseLeave={(e: React.MouseEvent<HTMLButtonElement>) => {
-            Object.assign(e.currentTarget.style, menuHoverEffects.quizzesButtonReset);
-          }}
+          className="quizium-action-button quizium-quizzes-button"
         >
           🧠 Quizzes
         </button>

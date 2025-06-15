@@ -182,6 +182,260 @@ available in the app when your plugin is enabled.
     font-style: italic;
 }
 
+/* Quizium Views Specific Inline Style Replacements */
+
+/* FlashcardView.tsx replacements */
+.quizium-flashcard-question-section {
+    margin-bottom: 20px;
+}
+
+.quizium-flashcard-hint-button-container {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 8px;
+}
+
+.quizium-flashcard-hint-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 20px;
+    padding: 4px;
+    border-radius: 50%;
+    transition: all 0.2s;
+    opacity: 0.7;
+}
+
+.quizium-flashcard-hint-button:hover {
+    opacity: 1;
+    background-color: var(--background-modifier-hover);
+}
+
+.quizium-flashcard-question-text {
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 1.5;
+    color: var(--text-normal);
+}
+
+.quizium-flashcard-hint-section {
+    font-size: 14px;
+    color: var(--text-muted);
+    margin-bottom: 20px;
+    padding: 12px 16px;
+    background-color: rgba(59, 130, 246, 0.08);
+    border: 1px solid rgba(59, 130, 246, 0.2);
+    border-radius: 8px;
+    font-style: italic;
+    line-height: 1.4;
+}
+
+.quizium-flashcard-answer-section {
+    margin-top: 20px;
+    margin-bottom: 40px;
+}
+
+.quizium-flashcard-show-answer-button {
+    padding: 8px 16px;
+    font-size: 14px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    background-color: #3b82f6;
+    color: white;
+    font-weight: 500;
+    transition: background-color 0.2s;
+    display: block;
+    margin: 0 auto;
+}
+
+.quizium-flashcard-show-answer-button:hover {
+    background-color: #2563eb;
+}
+
+.quizium-flashcard-summary-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-normal);
+    margin-bottom: 12px;
+}
+
+.quizium-flashcard-summary-stat {
+    font-size: 16px;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+}
+
+.quizium-flashcard-spaced-details {
+    font-size: 14px;
+    color: var(--text-muted);
+    margin-top: 12px;
+    padding-top: 8px;
+    border-top: 1px solid var(--background-modifier-border);
+}
+
+.quizium-flashcard-spaced-stat-item {
+    margin-bottom: 4px;
+}
+
+/* QuizHistoryView.tsx replacements */
+.quizium-quiz-history-back-button-hover-fix:hover {
+    background-color: #4b5563 !important;
+    transform: translateY(-1px) !important;
+}
+
+.quizium-quiz-history-table-container {
+    border: 1px solid var(--background-modifier-border);
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: var(--background-primary);
+}
+
+.quizium-quiz-history-table-header-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 12px;
+    padding: 12px 16px;
+    background-color: var(--background-secondary);
+    border-bottom: 1px solid var(--background-modifier-border);
+    font-weight: 600;
+    font-size: 13px;
+    color: var(--text-normal);
+}
+
+.quizium-quiz-history-table-score-header {
+    text-align: center;
+}
+
+.quizium-quiz-history-table-row-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 12px;
+    padding: 12px 16px;
+    font-size: 13px;
+    color: var(--text-normal);
+}
+
+.quizium-quiz-history-table-row-even {
+    background-color: var(--background-primary);
+}
+
+.quizium-quiz-history-table-row-odd {
+    background-color: var(--background-secondary-alt);
+}
+
+.quizium-quiz-history-table-row-border {
+    border-bottom: 1px solid var(--background-modifier-border);
+}
+
+.quizium-quiz-history-table-date {
+    font-family: monospace;
+}
+
+.quizium-quiz-history-table-topic {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-weight: 500;
+}
+
+.quizium-quiz-history-table-score {
+    text-align: center;
+    font-weight: 600;
+}
+
+.quizium-quiz-history-table-score-good {
+    color: #22c55e;
+}
+
+.quizium-quiz-history-table-score-average {
+    color: #f59e0b;
+}
+
+.quizium-quiz-history-table-score-poor {
+    color: #ef4444;
+}
+
+.quizium-quiz-history-summary {
+    margin-top: 16px;
+    text-align: center;
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+/* QuizSessionView.tsx replacements */
+.quizium-quiz-answer-complex {
+    cursor: pointer;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    outline: none;
+    user-select: text;
+    line-height: 1.4;
+    max-width: 100%;
+    box-sizing: border-box;
+    position: relative;
+    width: 100%;
+}
+
+.quizium-quiz-answer-complex-disabled {
+    cursor: not-allowed;
+}
+
+.quizium-quiz-answer-number-correct {
+    margin-right: 10px;
+    font-size: 12px;
+    font-weight: 600;
+    color: white;
+    min-width: 14px;
+}
+
+.quizium-quiz-answer-number-incorrect {
+    margin-right: 10px;
+    font-size: 12px;
+    font-weight: 600;
+    color: white;
+    min-width: 14px;
+}
+
+.quizium-quiz-answer-number-unselected {
+    margin-right: 10px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #888;
+    min-width: 14px;
+}
+
+.quizium-quiz-answer-number-default {
+    margin-right: 10px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #666;
+    min-width: 14px;
+}
+
+/* Interactive hover effects - these need to be applied via JS for dynamic colors */
+.quizium-view-hover-interactive {
+    transition: all 0.2s ease;
+}
+
+.quizium-view-hover-interactive:hover {
+    opacity: 0.8;
+    transform: translateY(-1px);
+}
+
+/* Close button hover effects for modal components */
+.quizium-close-button-hover:hover {
+    background-color: var(--background-modifier-hover) !important;
+    color: var(--text-normal) !important;
+}
+
 /* Button hover effects using CSS variables */
 .quiz-button {
     background-color: var(--interactive-accent);
@@ -339,22 +593,20 @@ available in the app when your plugin is enabled.
 }
 
 .quizium-action-button {
-    width: 100%;
-    padding: 15px;
-    margin-bottom: 15px;
+    padding: 20px;
+    font-size: 16px;
+    font-weight: 600;
+    color: white;
     border: none;
-    border-radius: 8px;
-    font-size: 1.1em;
-    font-weight: bold;
+    border-radius: 10px;
     cursor: pointer;
-    transition: all 0.2s ease;
-    background-color: var(--interactive-normal);
-    color: var(--text-normal);
+    transition: all 0.2s;
+    width: 100%;
+    margin-bottom: 15px;
 }
 
 .quizium-action-button:hover {
-    background-color: var(--interactive-hover);
-    transform: translateY(-2px);
+    transform: translateY(-1px);
 }
 
 .quizium-action-button:active {
@@ -362,30 +614,36 @@ available in the app when your plugin is enabled.
 }
 
 .quizium-flashcards-button {
-    background-color: var(--color-green);
-    color: var(--text-on-accent);
+    background-color: rgba(34, 197, 94, 0.5) !important;
+    box-shadow: 0 2px 8px rgba(34, 197, 94, 0.2);
+    color: white !important;
 }
 
 .quizium-flashcards-button:hover {
-    background-color: var(--color-green-hover);
+    background-color: rgba(34, 197, 94, 0.7) !important;
+    transform: translateY(-1px) !important;
 }
 
 .quizium-spaced-repetition-button {
-    background-color: var(--color-blue);
-    color: var(--text-on-accent);
+    background-color: rgba(59, 130, 246, 0.5) !important;
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.2);
+    color: white !important;
 }
 
 .quizium-spaced-repetition-button:hover {
-    background-color: var(--color-blue-hover);
+    background-color: rgba(59, 130, 246, 0.7) !important;
+    transform: translateY(-1px) !important;
 }
 
 .quizium-quizzes-button {
-    background-color: var(--color-purple);
-    color: var(--text-on-accent);
+    background-color: rgba(147, 51, 234, 0.5) !important;
+    box-shadow: 0 2px 8px rgba(147, 51, 234, 0.2);
+    color: white !important;
 }
 
 .quizium-quizzes-button:hover {
-    background-color: var(--color-purple-hover);
+    background-color: rgba(147, 51, 234, 0.7) !important;
+    transform: translateY(-1px) !important;
 }
 
 .quizium-breakdown-button {
@@ -621,7 +879,7 @@ available in the app when your plugin is enabled.
     padding: 6px 12px;
     font-size: 12px;
     font-weight: 500;
-    background-color: #ea580c;
+    background-color: #9a3412 !important;
     color: white;
     border: none;
     border-radius: 4px;
@@ -812,4 +1070,266 @@ available in the app when your plugin is enabled.
     font-size: 12px;
     color: var(--text-muted);
     margin-top: 2px;
+}
+
+/* Quiz history button hover effect */
+.quizium-quiz-history-button-hover:hover {
+    background-color: #7c2d12 !important;
+    transform: translateY(-1px) !important;
+}
+
+/* Reset button hover effects */
+.quizium-reset-button-hover:hover {
+    background-color: #b91c1c !important;
+    transform: translateY(-1px) !important;
+}
+
+/* Breakdown button hover effects */
+.quizium-breakdown-button-hover:hover {
+    background-color: rgba(156, 163, 175, 0.2) !important;
+    transform: translateY(-1px) !important;
+}
+
+/* Menu view specific styles */
+.quizium-menu-header-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.quizium-menu-streak-display {
+    font-size: 12px;
+    color: var(--text-muted);
+    text-align: center;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+}
+
+/* Topic Selection View button hover effects */
+.quizium-difficulty-easy-hover:hover:not(:disabled) {
+    background-color: #16a34a !important;
+    transform: translateY(-1px) !important;
+}
+
+.quizium-difficulty-moderate-hover:hover:not(:disabled) {
+    background-color: #1d4ed8 !important;
+    transform: translateY(-1px) !important;
+}
+
+.quizium-difficulty-challenging-hover:hover:not(:disabled) {
+    background-color: #dc2626 !important;
+    transform: translateY(-1px) !important;
+}
+
+.quizium-unrated-button-blue-hover:hover:not(:disabled) {
+    background-color: #1d4ed8 !important;
+    transform: translateY(-1px) !important;
+}
+
+.quizium-unrated-button-gray-hover:hover:not(:disabled) {
+    background-color: #4b5563 !important;
+    transform: translateY(-1px) !important;
+}
+
+.quizium-secondary-button-hover:hover:not(:disabled) {
+    background-color: var(--interactive-hover) !important;
+    transform: translateY(-1px) !important;
+}
+
+/* Flashcard View additional styles */
+.quizium-flashcard-return-button-spaced {
+    background: #3b82f6 !important;
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.quizium-flashcard-return-button-regular {
+    background: #22c55e !important;
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s;
+    box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+}
+
+.quizium-flashcard-return-button-spaced:hover {
+    background: #1d4ed8 !important;
+    transform: translateY(-1px) !important;
+}
+
+.quizium-flashcard-return-button-regular:hover {
+    background: #16a34a !important;
+    transform: translateY(-1px) !important;
+}
+
+.quizium-flashcard-difficulty-text {
+    font-size: 16px;
+    color: var(--text-muted);
+}
+
+.quizium-flashcard-answer-content {
+    font-size: 16px;
+    color: var(--text-normal);
+    margin-bottom: 30px;
+    line-height: 1.5;
+    padding: 20px;
+    background-color: rgba(34, 197, 94, 0.08);
+    border: 2px solid #22c55e;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(34, 197, 94, 0.15);
+    transition: all 0.3s ease;
+}
+
+.quizium-flashcard-rating-container {
+    margin-top: 20px;
+    margin-bottom: 40px;
+}
+
+.quizium-flashcard-rating-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 15px;
+    color: var(--text-normal);
+    text-align: center;
+}
+
+.quizium-flashcard-rating-buttons {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.quizium-flashcard-source-info {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: var(--background-modifier-border);
+    border-radius: 6px;
+    font-size: 14px;
+    color: var(--text-muted);
+}
+
+.quizium-flashcard-topic-tags {
+    margin-top: 15px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.quizium-flashcard-topic-tag {
+    background-color: var(--interactive-accent);
+    color: var(--text-on-accent);
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.quizium-flashcard-navigation-info {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 14px;
+    color: var(--text-muted);
+}
+
+/* Difficulty rating button styles */
+.quizium-difficulty-rating-button {
+    padding: 8px 16px;
+    font-size: 14px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.quizium-difficulty-rating-button-easy {
+    background-color: #dcfce7;
+    color: #166534;
+    border: none;
+}
+
+.quizium-difficulty-rating-button-easy:hover {
+    background-color: #bbf7d0 !important;
+}
+
+.quizium-difficulty-rating-button-moderate {
+    background-color: #fef9c3;
+    color: #854d0e;
+    border: none;
+}
+
+.quizium-difficulty-rating-button-moderate:hover {
+    background-color: #fef08a !important;
+}
+
+.quizium-difficulty-rating-button-challenging {
+    background-color: #fee2e2;
+    color: #991b1b;
+    border: none;
+}
+
+.quizium-difficulty-rating-button-challenging:hover {
+    background-color: #fecaca !important;
+}
+
+.quizium-difficulty-rating-shortcut {
+    font-size: 12px;
+    opacity: 0.7;
+    color: white;
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+.quizium-difficulty-rating-shortcut-easy {
+    background: #166534;
+}
+
+.quizium-difficulty-rating-shortcut-moderate {
+    background: #854d0e;
+}
+
+.quizium-difficulty-rating-shortcut-challenging {
+    background: #991b1b;
+}
+
+.quizium-flashcard-rating-saved {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 12px;
+    font-style: italic;
+    margin-top: 20px;
+    margin-bottom: 30px;
+}
+
+.quizium-flashcard-rating-instructions {
+    text-align: center;
+    font-size: 12px;
+    color: var(--text-muted);
+    font-style: italic;
+    margin-top: 8px;
+    margin-bottom: 30px;
+}
+
+/* Spaced Repetition View hover effects */
+.quizium-spaced-repetition-help-button-hover:hover {
+    background-color: rgba(156, 163, 175, 0.2) !important;
+    transform: translateY(-1px) !important;
+}
+
+.quizium-spaced-repetition-start-button-hover:hover:not(:disabled) {
+    background-color: #1d4ed8 !important;
+    transform: translateY(-1px) !important;
 }

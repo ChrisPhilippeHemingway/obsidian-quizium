@@ -54,14 +54,7 @@ export const SpacedRepetitionHelpView: React.FC<SpacedRepetitionHelpViewProps> =
         <button
           onClick={onClose}
           style={spacedRepetitionHelpStyles.closeButton}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.backgroundColor = 'var(--background-modifier-hover)';
-            e.currentTarget.style.color = 'var(--text-normal)';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.backgroundColor = 'transparent';
-            e.currentTarget.style.color = 'var(--text-muted)';
-          }}
+          className="quizium-close-button-hover"
           title="Close help"
         >
           ✕

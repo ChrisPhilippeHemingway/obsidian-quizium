@@ -100,12 +100,7 @@ export const SpacedRepetitionView: React.FC<SpacedRepetitionViewProps> = ({
           ref={helpButtonRef}
           onClick={() => setShowSpacedRepetitionHelp(!showSpacedRepetitionHelp)}
           style={spacedRepetitionStyles.helpButton}
-          onMouseEnter={(e: React.MouseEvent<HTMLButtonElement>) => {
-            Object.assign(e.currentTarget.style, spacedRepetitionHoverEffects.helpButton);
-          }}
-          onMouseLeave={(e: React.MouseEvent<HTMLButtonElement>) => {
-            Object.assign(e.currentTarget.style, spacedRepetitionHoverEffects.helpButtonReset);
-          }}
+          className="quizium-spaced-repetition-help-button-hover"
           title="Learn how spaced repetition works"
         >
           ❓ How it works
@@ -142,16 +137,7 @@ export const SpacedRepetitionView: React.FC<SpacedRepetitionViewProps> = ({
           onClick={() => startSpacedRepetition('all')}
           disabled={spacedRepetitionStats.total === 0}
           style={getButtonStyle(spacedRepetitionStats.total)}
-          onMouseEnter={(e) => {
-            if (spacedRepetitionStats.total > 0) {
-              Object.assign(e.currentTarget.style, spacedRepetitionHoverEffects.startButton);
-            }
-          }}
-          onMouseLeave={(e) => {
-            if (spacedRepetitionStats.total > 0) {
-              Object.assign(e.currentTarget.style, spacedRepetitionHoverEffects.startButtonReset);
-            }
-          }}
+          className="quizium-spaced-repetition-start-button-hover"
         >
           {getButtonText(spacedRepetitionStats.total)}
         </button>
@@ -187,16 +173,7 @@ export const SpacedRepetitionView: React.FC<SpacedRepetitionViewProps> = ({
               onClick={() => startSpacedRepetition(stat.topic!)}
               disabled={stat.total === 0}
               style={getButtonStyle(stat.total)}
-              onMouseEnter={(e) => {
-                if (stat.total > 0) {
-                  Object.assign(e.currentTarget.style, spacedRepetitionHoverEffects.startButton);
-                }
-              }}
-              onMouseLeave={(e) => {
-                if (stat.total > 0) {
-                  Object.assign(e.currentTarget.style, spacedRepetitionHoverEffects.startButtonReset);
-                }
-              }}
+              className="quizium-spaced-repetition-start-button-hover"
             >
               {getButtonText(stat.total)}
             </button>

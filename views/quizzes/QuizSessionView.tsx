@@ -188,34 +188,15 @@ export const QuizSessionView: React.FC<QuizSessionViewProps> = ({
                   handleAnswer(answer);
                 }
               }}
-              className={buttonClass}
-              style={{
-                cursor: quizSelectedAnswer ? 'not-allowed' : 'pointer',
-                whiteSpace: 'pre-wrap' as const,
-                wordWrap: 'break-word' as const,
-                wordBreak: 'break-word' as const,
-                overflowWrap: 'break-word' as const,
-                hyphens: 'auto' as const,
-                minHeight: '44px',
-                display: 'flex',
-                alignItems: 'center',
-                boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
-                outline: 'none',
-                userSelect: 'text' as const,
-                lineHeight: '1.4',
-                maxWidth: '100%',
-                boxSizing: 'border-box' as const,
-                position: 'relative' as const,
-                width: '100%'
-              }}
+              className={`${buttonClass} quizium-quiz-answer-complex ${quizSelectedAnswer ? 'quizium-quiz-answer-complex-disabled' : ''}`}
             >
-              <span style={{ 
-                marginRight: '10px', 
-                fontSize: '12px', 
-                fontWeight: '600',
-                color: quizSelectedAnswer ? (answer === quiz.correctAnswer ? 'white' : answer === quizSelectedAnswer ? 'white' : '#888') : '#666',
-                minWidth: '14px'
-              }}>
+              <span className={
+                quizSelectedAnswer ? 
+                  (answer === quiz.correctAnswer ? 'quizium-quiz-answer-number-correct' : 
+                   answer === quizSelectedAnswer ? 'quizium-quiz-answer-number-incorrect' : 
+                   'quizium-quiz-answer-number-unselected') : 
+                  'quizium-quiz-answer-number-default'
+              }>
                 {idx + 1}.
               </span>
               {answer}

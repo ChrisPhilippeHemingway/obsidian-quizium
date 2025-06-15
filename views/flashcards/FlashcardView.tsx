@@ -207,24 +207,8 @@ export const FlashcardView: React.FC<FlashcardViewProps> = ({
   const renderReturnButton = (topicInfo: { isSpacedRepetition: boolean }) => (
     <button
       onClick={handleBackToMenu}
-      style={{
-        ...flashcardStyles.returnButton,
-        background: topicInfo.isSpacedRepetition ? '#3b82f6' : '#22c55e',
-        border: 'none',
-        color: 'white',
-        cursor: 'pointer',
-        fontWeight: '600',
-        transition: 'all 0.2s',
-        boxShadow: `0 4px 12px rgba(${topicInfo.isSpacedRepetition ? '59, 130, 246' : '34, 197, 94'}, 0.3)`
-      }}
-      onMouseEnter={(e) => {
-        Object.assign(e.currentTarget.style, hoverEffects.returnButton);
-        e.currentTarget.style.background = topicInfo.isSpacedRepetition ? '#1d4ed8' : '#16a34a';
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.background = topicInfo.isSpacedRepetition ? '#3b82f6' : '#22c55e';
-        e.currentTarget.style.transform = 'translateY(0)';
-      }}
+      style={flashcardStyles.returnButton}
+      className={topicInfo.isSpacedRepetition ? 'quizium-flashcard-return-button-spaced' : 'quizium-flashcard-return-button-regular'}
     >
       🏠 Return to Menu
     </button>
@@ -252,34 +236,13 @@ export const FlashcardView: React.FC<FlashcardViewProps> = ({
    */
   function renderQuestionSection() {
     return (
-      <div style={{ marginBottom: '20px' }}>
+      <div className="quizium-flashcard-question-section">
         {/* Hint button container - positioned above the question */}
         {currentFlashcard?.hint && (
-          <div style={{
-            display: 'flex',
-            justifyContent: 'flex-end',
-            marginBottom: '8px'
-          }}>
+          <div className="quizium-flashcard-hint-button-container">
             <button
               onClick={handleRevealHint}
-              style={{
-                background: 'none',
-                border: 'none',
-                cursor: 'pointer',
-                fontSize: '20px',
-                padding: '4px',
-                borderRadius: '50%',
-                transition: 'all 0.2s',
-                opacity: 0.7
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.opacity = '1';
-                e.currentTarget.style.backgroundColor = 'var(--background-modifier-hover)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.opacity = '0.7';
-                e.currentTarget.style.backgroundColor = 'transparent';
-              }}
+              className="quizium-flashcard-hint-button"
               title="Show hint"
             >
               💡
@@ -288,12 +251,7 @@ export const FlashcardView: React.FC<FlashcardViewProps> = ({
         )}
         
         {/* Question text */}
-        <div style={{ 
-          fontSize: '18px', 
-          fontWeight: '500', 
-          lineHeight: '1.5',
-          color: 'var(--text-normal)'
-        }}>
+        <div className="quizium-flashcard-question-text">
           {currentFlashcard?.question}
         </div>
       </div>
@@ -309,17 +267,7 @@ export const FlashcardView: React.FC<FlashcardViewProps> = ({
     if (!currentFlashcard?.hint || !hintRevealed) return null;
 
     return (
-      <div style={{
-        fontSize: '14px',
-        color: 'var(--text-muted)',
-        marginBottom: '20px',
-        padding: '12px 16px',
-        backgroundColor: 'rgba(59, 130, 246, 0.08)',
-        border: '1px solid rgba(59, 130, 246, 0.2)',
-        borderRadius: '8px',
-        fontStyle: 'italic',
-        lineHeight: '1.4'
-      }}>
+      <div className="quizium-flashcard-hint-section">
         💡 <strong>Hint:</strong> {currentFlashcard.hint}
       </div>
     );
@@ -334,29 +282,11 @@ export const FlashcardView: React.FC<FlashcardViewProps> = ({
     if (!currentFlashcard) return null;
 
     return (
-      <div style={{ marginTop: '20px', marginBottom: '40px' }}>
+      <div className="quizium-flashcard-answer-section">
         {!answerRevealed ? (
           <button
             onClick={() => setAnswerRevealed(true)}
-            style={{
-              padding: '8px 16px',
-              fontSize: '14px',
-              borderRadius: '6px',
-              border: 'none',
-              cursor: 'pointer',
-              backgroundColor: '#3b82f6',
-              color: 'white',
-              fontWeight: '500',
-              transition: 'background-color 0.2s',
-              display: 'block',
-              margin: '0 auto'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = '#2563eb';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = '#3b82f6';
-            }}
+            className="quizium-flashcard-show-answer-button"
           >
             Show Answer
           </button>
@@ -381,12 +311,7 @@ export const FlashcardView: React.FC<FlashcardViewProps> = ({
    */
   function renderSummaryTitle(topicInfo: { isSpacedRepetition: boolean }) {
     return (
-      <div style={{ 
-        fontSize: '18px', 
-        fontWeight: '600',
-        color: 'var(--text-normal)',
-        marginBottom: '12px'
-      }}>
+      <div className="quizium-flashcard-summary-title">
         {topicInfo.isSpacedRepetition ? 'Spaced Review Session Complete!' : 'Study Session Complete!'}
       </div>
     );
@@ -401,19 +326,11 @@ export const FlashcardView: React.FC<FlashcardViewProps> = ({
   function renderSummaryStats(topicInfo: any) {
     return (
       <>
-        <div style={{ 
-          fontSize: '16px', 
-          color: 'var(--text-muted)',
-          marginBottom: '8px'
-        }}>
+        <div className="quizium-flashcard-summary-stat">
           📚 <strong>{totalAvailableForTopic}</strong> questions reviewed
         </div>
         
-        <div style={{ 
-          fontSize: '16px', 
-          color: 'var(--text-muted)',
-          marginBottom: '8px'
-        }}>
+        <div className="quizium-flashcard-summary-stat">
           🎯 Topic: <strong>{topicInfo.topicName}</strong>
         </div>
       </>
@@ -430,20 +347,14 @@ export const FlashcardView: React.FC<FlashcardViewProps> = ({
   function renderSpacedRepetitionDetails(topicInfo: any, spacedBreakdown: any) {
     if (topicInfo.isSpacedRepetition && spacedBreakdown) {
       return (
-        <div style={{ 
-          fontSize: '14px', 
-          color: 'var(--text-muted)',
-          marginTop: '12px',
-          paddingTop: '8px',
-          borderTop: '1px solid var(--background-modifier-border)'
-        }}>
-          <div style={{ marginBottom: '4px' }}>
+        <div className="quizium-flashcard-spaced-details">
+          <div className="quizium-flashcard-spaced-stat-item">
             🔴 <strong>{spacedBreakdown.challengingCount}</strong> challenging questions
           </div>
-          <div style={{ marginBottom: '4px' }}>
+          <div className="quizium-flashcard-spaced-stat-item">
             🟡 <strong>{spacedBreakdown.moderateCount}</strong> moderate questions (recent)
           </div>
-          <div style={{ marginBottom: '4px' }}>
+          <div className="quizium-flashcard-spaced-stat-item">
             🟢 <strong>{spacedBreakdown.easyCount}</strong> easy questions (recent)
           </div>
           {spacedBreakdown.unratedCount > 0 && (
@@ -455,10 +366,7 @@ export const FlashcardView: React.FC<FlashcardViewProps> = ({
       );
     } else if (topicInfo.difficultyText) {
       return (
-        <div style={{ 
-          fontSize: '16px', 
-          color: 'var(--text-muted)'
-        }}>
+        <div className="quizium-flashcard-difficulty-text">
           ⚡ Difficulty: <strong>{topicInfo.difficultyText}</strong>
         </div>
       );
@@ -469,18 +377,7 @@ export const FlashcardView: React.FC<FlashcardViewProps> = ({
   // Additional helper functions for answer section components
   function renderAnswerContent() {
     return (
-      <div style={{ 
-        fontSize: '16px', 
-        color: 'var(--text-normal)',
-        marginBottom: '30px',
-        lineHeight: '1.5',
-        padding: '20px',
-        backgroundColor: 'rgba(34, 197, 94, 0.08)',
-        border: '2px solid #22c55e',
-        borderRadius: '12px',
-        boxShadow: '0 2px 8px rgba(34, 197, 94, 0.15)',
-        transition: 'all 0.3s ease'
-      }}>
+      <div className="quizium-flashcard-answer-content">
         {currentFlashcard?.answer}
       </div>
     );
@@ -489,47 +386,23 @@ export const FlashcardView: React.FC<FlashcardViewProps> = ({
   function renderDifficultyRating() {
     if (difficultyRated) {
       return (
-        <div style={{ 
-          textAlign: 'center',
-          color: 'var(--text-muted)',
-          fontSize: '12px',
-          fontStyle: 'italic',
-          marginTop: '20px',
-          marginBottom: '30px'
-        }}>
+        <div className="quizium-flashcard-rating-saved">
           Rating saved! Moving to next card...
         </div>
       );
     }
 
     return (
-      <div style={{ marginTop: '20px', marginBottom: '40px' }}>
-        <div style={{ 
-          fontSize: '14px', 
-          color: 'var(--text-muted)', 
-          marginBottom: '10px',
-          textAlign: 'center'
-        }}>
+      <div className="quizium-flashcard-rating-container">
+        <div className="quizium-flashcard-rating-title">
           Rate difficulty:
         </div>
-        <div style={{ 
-          display: 'flex', 
-          justifyContent: 'center', 
-          gap: '10px',
-          marginBottom: '8px'
-        }}>
+        <div className="quizium-flashcard-rating-buttons">
           {renderDifficultyButton('easy', 'Easy', '1', '#dcfce7', '#166534', '#bbf7d0')}
           {renderDifficultyButton('moderate', 'Moderate', '2', '#fef9c3', '#854d0e', '#fef08a')}
           {renderDifficultyButton('challenging', 'Challenging', '3', '#fee2e2', '#991b1b', '#fecaca')}
         </div>
-        <div style={{ 
-          textAlign: 'center',
-          fontSize: '12px',
-          color: 'var(--text-muted)',
-          fontStyle: 'italic',
-          marginTop: '8px',
-          marginBottom: '30px'
-        }}>
+        <div className="quizium-flashcard-rating-instructions">
           Press 1, 2, or 3 to quickly rate difficulty
         </div>
       </div>
@@ -547,50 +420,19 @@ export const FlashcardView: React.FC<FlashcardViewProps> = ({
     return (
       <button
         onClick={() => handleDifficultyRating(difficulty)}
-        style={{
-          padding: '8px 16px',
-          fontSize: '14px',
-          borderRadius: '6px',
-          border: 'none',
-          cursor: 'pointer',
-          backgroundColor: bgColor,
-          color: textColor,
-          fontWeight: '500',
-          transition: 'background-color 0.2s',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '6px'
-        }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.backgroundColor = hoverColor;
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.backgroundColor = bgColor;
-        }}
+        className={`quizium-difficulty-rating-button quizium-difficulty-rating-button-${difficulty}`}
       >
         <span>{label}</span>
-        <span style={{ 
-          fontSize: '12px', 
-          opacity: 0.7,
-          background: textColor,
-          color: 'white',
-          padding: '2px 6px',
-          borderRadius: '4px'
-        }}>{shortcut}</span>
+        <span className={`quizium-difficulty-rating-shortcut quizium-difficulty-rating-shortcut-${difficulty}`}>
+          {shortcut}
+        </span>
       </button>
     );
   }
 
   function renderSourceInfo() {
     return (
-      <div style={{ 
-        fontSize: '12px', 
-        color: '#666', 
-        textAlign: 'center',
-        marginBottom: '15px',
-        fontFamily: 'monospace',
-        marginTop: '20px'
-      }}>
+      <div className="quizium-flashcard-source-info">
         From: {getFilePath(currentFlashcard!)}
       </div>
     );
@@ -600,20 +442,9 @@ export const FlashcardView: React.FC<FlashcardViewProps> = ({
     if (!currentFlashcard) return null;
 
     return (
-      <div style={{ 
-        fontSize: '11px', 
-        color: '#888', 
-        textAlign: 'center',
-        marginBottom: '20px'
-      }}>
+      <div className="quizium-flashcard-topic-tags">
         Topics: {currentFlashcard.topics.map((topic: string, index: number) => (
-          <span key={index} style={{
-            background: 'var(--background-secondary)',
-            padding: '2px 6px',
-            borderRadius: '12px',
-            marginRight: '4px',
-            fontWeight: '500'
-          }}>
+          <span key={index} className="quizium-flashcard-topic-tag">
             {topic}
           </span>
         ))}
@@ -623,12 +454,7 @@ export const FlashcardView: React.FC<FlashcardViewProps> = ({
 
   function renderNavigationInfo() {
     return (
-      <div style={{ 
-        fontSize: '12px', 
-        color: 'var(--text-muted)', 
-        textAlign: 'center',
-        marginBottom: '20px'
-      }}>
+      <div className="quizium-flashcard-navigation-info">
         {flashcardHistory.length} viewed • {Math.max(0, totalAvailableForTopic - flashcardHistory.length)} remaining
       </div>
     );

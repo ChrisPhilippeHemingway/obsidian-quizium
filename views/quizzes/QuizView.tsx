@@ -21,15 +21,7 @@ export const QuizView: React.FC<QuizViewProps> = ({
         </div>
         <button
           onClick={() => setViewMode('quizHistory')}
-          className="quizium-quiz-history-button"
-          onMouseEnter={(e) => {
-            e.currentTarget.style.backgroundColor = '#c2410c';
-            e.currentTarget.style.transform = 'translateY(-1px)';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.backgroundColor = '#ea580c';
-            e.currentTarget.style.transform = 'translateY(0)';
-          }}
+          className="quizium-quiz-history-button quizium-quiz-history-button-hover"
           title="View historical quiz results"
         >
           Historical Results

@@ -47,16 +47,7 @@ export const ModalButtonsView: React.FC<ModalButtonsViewProps> = ({
             modalButtonStyles.resetButton(isResetting),
             modalButtonStyles.leftResetButton
           )}
-          onMouseEnter={(e) => {
-            if (!isResetting) {
-              Object.assign(e.currentTarget.style, modalButtonHoverEffects.resetButton);
-            }
-          }}
-          onMouseLeave={(e) => {
-            if (!isResetting) {
-              Object.assign(e.currentTarget.style, modalButtonHoverEffects.resetButtonReset);
-            }
-          }}
+          className={!isResetting ? "quizium-reset-button-hover" : ""}
           title="Remove all difficulty ratings from flashcards"
         >
           {isResetting ? (
@@ -89,16 +80,7 @@ export const ModalButtonsView: React.FC<ModalButtonsViewProps> = ({
             modalButtonStyles.resetButton(isResettingQuizResults),
             modalButtonStyles.rightResetButton
           )}
-          onMouseEnter={(e) => {
-            if (!isResettingQuizResults) {
-              Object.assign(e.currentTarget.style, modalButtonHoverEffects.resetButton);
-            }
-          }}
-          onMouseLeave={(e) => {
-            if (!isResettingQuizResults) {
-              Object.assign(e.currentTarget.style, modalButtonHoverEffects.resetButtonReset);
-            }
-          }}
+          className={!isResettingQuizResults ? "quizium-reset-button-hover" : ""}
           title="Clear all historical quiz results and scores"
         >
           {isResettingQuizResults ? (
