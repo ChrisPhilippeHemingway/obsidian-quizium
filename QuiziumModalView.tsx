@@ -543,10 +543,10 @@ export const QuiziumModalView = ({ onClose, monitoredTopics, plugin }: QuiziumMo
     
       let nextFlashcard: Flashcard | null = null;
       
-      if (isSpacedRepetitionMode) {
+      if (isSpacedRepetitionMode && spacedRepetitionService) {
         // Handle spaced repetition sequence
         const sequenceKey = `spaced-${selectedTopic || 'all'}`;
-        const spacedSequence = (flashcardService as any)._spacedRepetitionSequence?.[sequenceKey];
+        const spacedSequence = spacedRepetitionService.getSpacedRepetitionSequence(sequenceKey);
         
         if (spacedSequence && spacedSequence.currentIndex < spacedSequence.cards.length - 1) {
           spacedSequence.currentIndex++;

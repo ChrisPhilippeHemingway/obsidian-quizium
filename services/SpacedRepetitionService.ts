@@ -2,12 +2,33 @@ import { FlashcardService, Flashcard } from '../FlashcardService';
 import { MonitoredTopic } from '../main';
 import { SpacedRepetitionStats } from '../views/types';
 
+// Type for spaced repetition sequences
+interface SpacedRepetitionSequence {
+  [key: string]: {
+    cards: Flashcard[];
+    currentIndex: number;
+  };
+}
+
+// Type for plugin with proper settings
+interface PluginWithSettings {
+  settings?: {
+    spacedRepetition?: {
+      challengingDays: number;
+      moderateDays: number;
+      easyDays: number;
+    };
+  };
+}
+
 /**
  * Service class that handles spaced repetition functionality for flashcards.
  * This service manages the logic for determining which flashcards should be shown
  * based on their difficulty ratings and the time intervals since they were last reviewed.
  */
 export class SpacedRepetitionService {
+  private spacedRepetitionSequence: SpacedRepetitionSequence = {};
+
   constructor(
     private flashcardService: FlashcardService,
     private monitoredTopics: MonitoredTopic[]
@@ -95,7 +116,8 @@ export class SpacedRepetitionService {
    * @returns Spaced repetition settings object
    */
   private getSpacedRepetitionSettings() {
-    const settings = (this.flashcardService as any).plugin?.settings?.spacedRepetition;
+    const plugin = this.flashcardService.plugin as PluginWithSettings | undefined;
+    const settings = plugin?.settings?.spacedRepetition;
     
     if (!settings) {
       // Return default settings if plugin settings are not available
@@ -310,12 +332,10 @@ export class SpacedRepetitionService {
     // Shuffle the cards for variety
     const shuffledCards = spacedCards.sort(() => Math.random() - 0.5);
     
-    // Store the spaced repetition cards as a custom sequence in the service
-    (this.flashcardService as any)._spacedRepetitionSequence = {
-      [sequenceKey]: {
-        cards: shuffledCards,
-        currentIndex: 0
-      }
+    // Store the spaced repetition cards as a custom sequence in this service
+    this.spacedRepetitionSequence[sequenceKey] = {
+      cards: shuffledCards,
+      currentIndex: 0
     };
     
     return {
@@ -324,5 +344,16 @@ export class SpacedRepetitionService {
       totalCards: shuffledCards.length,
       shuffledCards
     };
+  }
+
+  /**
+   * Gets the spaced repetition sequence for a given topic.
+   * This is used by external components to access the sequence.
+   * 
+   * @param sequenceKey - The key for the sequence
+   * @returns The sequence data or undefined if not found
+   */
+  getSpacedRepetitionSequence(sequenceKey: string) {
+    return this.spacedRepetitionSequence[sequenceKey];
   }
 } 

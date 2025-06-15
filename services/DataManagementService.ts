@@ -1,6 +1,6 @@
-import { App } from 'obsidian';
+import { App, TFile } from 'obsidian';
 import { FlashcardService } from '../FlashcardService';
-import QuiziumPlugin from '../main';
+import QuiziumPlugin, { ProgressData } from '../main';
 import { QuizHistoryEntry } from '../views/types';
 
 /**
@@ -170,7 +170,7 @@ export class DataManagementService {
    * @param file - The file to process
    * @returns Promise resolving to processing result
    */
-  private async processFileForReset(file: any): Promise<{
+  private async processFileForReset(file: TFile): Promise<{
     modified: boolean;
     commentsRemoved: number;
   }> {
@@ -230,7 +230,7 @@ export class DataManagementService {
    * @param progressData - The progress data from the plugin
    * @returns Array of formatted quiz history entries
    */
-  private extractQuizHistoryFromProgressData(progressData: any): QuizHistoryEntry[] {
+  private extractQuizHistoryFromProgressData(progressData: ProgressData): QuizHistoryEntry[] {
     const history: QuizHistoryEntry[] = [];
     
     // Check if the expected data structure exists
@@ -241,7 +241,7 @@ export class DataManagementService {
     // Extract quiz results from all topics
     for (const [topicName, topicData] of Object.entries(progressData.quizium.data.topics)) {
       if (this.isValidTopicData(topicData)) {
-        const topicEntries = this.extractEntriesFromTopicData(topicName, topicData as any);
+        const topicEntries = this.extractEntriesFromTopicData(topicName, topicData);
         history.push(...topicEntries);
       }
     }
@@ -256,11 +256,11 @@ export class DataManagementService {
    * @param progressData - The progress data to validate
    * @returns Boolean indicating whether the structure is valid
    */
-  private isValidProgressDataStructure(progressData: any): boolean {
-    return progressData && 
+  private isValidProgressDataStructure(progressData: ProgressData): boolean {
+    return !!(progressData && 
            progressData.quizium && 
            progressData.quizium.data && 
-           progressData.quizium.data.topics;
+           progressData.quizium.data.topics);
   }
 
   /**
@@ -269,8 +269,11 @@ export class DataManagementService {
    * @param topicData - The topic data to validate
    * @returns Boolean indicating whether the structure is valid
    */
-  private isValidTopicData(topicData: any): boolean {
-    return topicData && topicData.results && Array.isArray(topicData.results);
+  private isValidTopicData(topicData: unknown): topicData is { results: any[] } {
+    return typeof topicData === 'object' && 
+           topicData !== null && 
+           'results' in topicData && 
+           Array.isArray((topicData as any).results);
   }
 
   /**
@@ -280,7 +283,7 @@ export class DataManagementService {
    * @param topicData - The topic's quiz data
    * @returns Array of quiz history entries for this topic
    */
-  private extractEntriesFromTopicData(topicName: string, topicData: { results: any[] }): QuizHistoryEntry[] {
+  private extractEntriesFromTopicData(topicName: string, topicData: { results: { timestamp: string; scorePercentage: number; }[] }): QuizHistoryEntry[] {
     return topicData.results.map(result => {
       const date = new Date(result.timestamp);
       const formattedDate = date.toLocaleString('en-GB', {
