@@ -273,7 +273,7 @@ export class DataManagementService {
     return typeof topicData === 'object' && 
            topicData !== null && 
            'results' in topicData && 
-           Array.isArray((topicData as any).results);
+           Array.isArray((topicData as Record<string, unknown>).results);
   }
 
   /**
