@@ -1,12 +1,12 @@
 {
 	"name": "quizium",
-	"version": "1.0.4",
+	"version": "1.0.5",
 	"description": "Quizium plugin - create and manage quizzes.",
 	"main": "main.js",
 	"scripts": {
 		"dev": "node esbuild.config.mjs",
 		"build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
-		"version": "1.0.4"
+		"version": "1.0.5"
 	},
 	"keywords": [],
 	"author": "Chris Philippe Hemingway",
