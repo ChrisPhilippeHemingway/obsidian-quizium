@@ -5,6 +5,74 @@ available in the app when your plugin is enabled.
 
 */
 
+/* KaTeX CSS for math rendering - loaded programmatically in main.tsx to avoid CSP issues */
+
+/* Custom LaTeX renderer styles */
+.latex-renderer {
+  line-height: 1.5;
+}
+
+.katex-display-block {
+  display: block;
+  text-align: center;
+  margin: 0.5em 0;
+}
+
+.katex-inline {
+  display: inline;
+}
+
+.katex-error {
+  color: #cc0000;
+  background-color: rgba(255, 204, 204, 0.1);
+  border: 1px solid rgba(255, 204, 204, 0.3);
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: monospace;
+  font-size: 0.9em;
+}
+
+/* KaTeX font adjustments for better integration with Obsidian themes */
+.katex {
+  font-size: 1em;
+}
+
+.katex .katex-mathml {
+  display: none;
+}
+
+.katex-display {
+  text-align: center;
+  margin: 0.5em 0;
+}
+
+.katex-display > .katex {
+  display: inline-block;
+  white-space: nowrap;
+}
+
+/* Ensure KaTeX renders well in different theme contexts */
+.theme-dark .katex {
+  color: var(--text-normal);
+}
+
+.theme-light .katex {
+  color: var(--text-normal);
+}
+
+/* Make sure LaTeX formulas work well in flashcard contexts */
+.quizium-flashcard-question-text .latex-renderer,
+.quizium-flashcard-hint-section .latex-renderer,
+.quizium-flashcard-answer-content .latex-renderer {
+  display: inline;
+}
+
+/* Make sure LaTeX formulas work well in quiz contexts */
+.quizium-quiz-question-text .latex-renderer,
+.quizium-quiz-answer-complex .latex-renderer {
+  display: inline;
+}
+
 /* Essential styles for safe DOM construction - only what we need */
 .topic-name-bold {
     font-weight: bold;

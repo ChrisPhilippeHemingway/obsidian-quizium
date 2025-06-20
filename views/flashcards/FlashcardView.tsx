@@ -2,6 +2,7 @@ import React from 'react';
 import { Flashcard } from '../../FlashcardService';
 import { flashcardStyles, hoverEffects } from './flashcard-styles';
 import { commonStyles } from '../shared-styles';
+import { LatexRenderer } from '../components/LatexRenderer';
 
 interface FlashcardViewProps {
   loading: boolean;
@@ -252,7 +253,7 @@ export const FlashcardView: React.FC<FlashcardViewProps> = ({
         
         {/* Question text */}
         <div className="quizium-flashcard-question-text">
-          {currentFlashcard?.question}
+          <LatexRenderer>{currentFlashcard?.question || ''}</LatexRenderer>
         </div>
       </div>
     );
@@ -268,7 +269,7 @@ export const FlashcardView: React.FC<FlashcardViewProps> = ({
 
     return (
       <div className="quizium-flashcard-hint-section">
-        💡 <strong>Hint:</strong> {currentFlashcard.hint}
+        💡 <strong>Hint:</strong> <LatexRenderer>{currentFlashcard.hint}</LatexRenderer>
       </div>
     );
   }
@@ -378,7 +379,7 @@ export const FlashcardView: React.FC<FlashcardViewProps> = ({
   function renderAnswerContent() {
     return (
       <div className="quizium-flashcard-answer-content">
-        {currentFlashcard?.answer}
+        <LatexRenderer>{currentFlashcard?.answer || ''}</LatexRenderer>
       </div>
     );
   }

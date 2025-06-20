@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { LatexRenderer } from '../components/LatexRenderer';
 
 interface Quiz {
   question: string;
@@ -154,7 +155,7 @@ export const QuizSessionView: React.FC<QuizSessionViewProps> = ({
   return (
     <div className="quizium-quiz-session-container">
       <div className="quizium-quiz-question-text">
-        {quiz.question}
+        <LatexRenderer>{quiz.question}</LatexRenderer>
       </div>
       
       {/* Add keyboard shortcut hints */}
@@ -199,7 +200,7 @@ export const QuizSessionView: React.FC<QuizSessionViewProps> = ({
               }>
                 {idx + 1}.
               </span>
-              {answer}
+              <LatexRenderer>{answer}</LatexRenderer>
             </div>
           );
         })}

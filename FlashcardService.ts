@@ -215,8 +215,9 @@ export class FlashcardService {
       const line = lines[i].trim();
       
       // Check if this line contains our question or answer in bracket format
-      const isQuestionLine = line === `[Q]${question}`;
-      const isAnswerLine = line === `[A]${answer}`;
+      // Use more robust matching to handle whitespace and encoding differences
+      const isQuestionLine = line.startsWith('[Q]') && line.substring(3).trim() === question.trim();
+      const isAnswerLine = line.startsWith('[A]') && line.substring(3).trim() === answer.trim();
       
       if (isQuestionLine || isAnswerLine) {
         if (blockStartIndex === -1) {

@@ -527,6 +527,9 @@ export default class QuiziumPlugin extends Plugin {
 	async onload() {
 		await this.loadSettings();
 		
+		// Load KaTeX CSS to avoid CSP issues with external CDN
+		this.loadKatexCSS();
+		
 		// Defer progress manager initialization until layout is ready
 		this.app.workspace.onLayoutReady(async () => {
 			this.progressManager = new ProgressManager(this.app, this.settings.progressFolderPath);
@@ -568,7 +571,26 @@ export default class QuiziumPlugin extends Plugin {
 	}
 
 	onunload() {
+		// Clean up KaTeX CSS
+		const katexStyle = document.getElementById('quizium-katex-css');
+		if (katexStyle) {
+			katexStyle.remove();
+		}
+	}
 
+	loadKatexCSS() {
+		// Inject KaTeX CSS directly to avoid CSP issues with external CDN
+		const katexCSS = `
+		.katex{font:normal 1.21em KaTeX_Main,Times New Roman,serif;line-height:1.2;text-indent:0;text-rendering:auto}.katex *{border-color:currentColor}.katex .katex-mathml{clip:rect(1px,1px,1px,1px);border:0;height:1px;overflow:hidden;padding:0;position:absolute;width:1px}.katex .base{position:relative;white-space:nowrap;width:min-content}.katex .base,.katex .strut{display:inline-block}.katex .textbf{font-weight:700}.katex .textit{font-style:italic}.katex .mathnormal{font-style:italic}.katex .mathit{font-style:italic}.katex .mathrm{font-style:normal}.katex .mathbf{font-weight:700}.katex .mfrac>span>span{text-align:center}.katex .mfrac .frac-line{border-bottom-style:solid;display:inline-block;width:100%;min-height:1px}.katex .sqrt>.root{margin-left:.2777777778em;margin-right:-.5555555556em}.katex .vlist-t{border-collapse:collapse;display:inline-table;table-layout:fixed}.katex .vlist-r{display:table-row}.katex .vlist{display:table-cell;position:relative;vertical-align:bottom}.katex .vlist>span{display:block;height:0;position:relative}.katex .vlist>span>span{display:inline-block}.katex .vlist>span>.pstrut{overflow:hidden;width:0}.katex .mspace{display:inline-block}.katex .rule{border:0 solid;display:inline-block;position:relative;min-height:1px}.katex-display{display:block;margin:1em 0;text-align:center}.katex-display>.katex{display:block;text-align:center;white-space:nowrap}.katex-display>.katex>.katex-html{display:block;position:relative}
+		`;
+		
+		// Check if KaTeX CSS is already loaded
+		if (!document.getElementById('quizium-katex-css')) {
+			const style = document.createElement('style');
+			style.id = 'quizium-katex-css';
+			style.textContent = katexCSS;
+			document.head.appendChild(style);
+		}
 	}
 
 	async loadSettings() {
