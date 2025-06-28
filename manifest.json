@@ -1,7 +1,7 @@
 {
 	"id": "quizium",
 	"name": "Quizium",
-	"version": "1.0.6",
+	"version": "1.0.7",
 	"minAppVersion": "0.15.0",
 	"description": "A plugin that allows users to study with the help of flashcards, spaced repetition, and quizzes",
 	"author": "Chris Philippe Hemingway",
