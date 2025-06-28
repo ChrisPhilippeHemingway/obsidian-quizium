@@ -94,7 +94,7 @@ class ProgressManager {
 		}
 	}
 
-		async getProgressData(): Promise<ProgressData> {
+	async getProgressData(): Promise<ProgressData> {
 		await this.ensureProgressFile();
 		const filePath = `${this.progressFolderPath}/${this.progressFileName}`;
 		
@@ -237,8 +237,9 @@ class ProgressManager {
 
 	async addTopic(topicName: string): Promise<void> {
 		const data = await this.getProgressData();
-		if (!data.quizium.data.topics[topicName]) {
-			data.quizium.data.topics[topicName] = { results: [] };
+		const sanitizedTopicName = this.sanitizeTopicName(topicName);
+		if (!data.quizium.data.topics[sanitizedTopicName]) {
+			data.quizium.data.topics[sanitizedTopicName] = { results: [] };
 			await this.saveProgressData(data);
 		}
 	}
@@ -246,6 +247,9 @@ class ProgressManager {
 	async addQuizResult(topicName: string, scorePercentage: number): Promise<void> {
 		const filePath = `${this.progressFolderPath}/${this.progressFileName}`;
 		await this.ensureProgressFile();
+		
+		// Sanitize topic name for YAML storage (remove leading #)
+		const sanitizedTopicName = this.sanitizeTopicName(topicName);
 		
 		try {
 			// Read existing file content
@@ -260,28 +264,28 @@ class ProgressManager {
 			const timestamp = new Date().toISOString();
 			const newResult = `          - timestamp: ${timestamp}\n            scorePercentage: ${scorePercentage}\n`;
 			
-			// Check if the topic already exists in the file
-			const topicPattern = new RegExp(`^      ${topicName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}:$`, 'm');
+			// Check if the topic already exists in the file (using sanitized name)
+			const topicPattern = new RegExp(`^      ${sanitizedTopicName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}:$`, 'm');
 			
 			let updatedContent;
 			if (topicPattern.test(existingContent)) {
 				// Topic exists, find the results section and append
-				const resultsPattern = new RegExp(`(^      ${topicName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}:\\s*\\n        results:\\s*\\n)`, 'm');
+				const resultsPattern = new RegExp(`(^      ${sanitizedTopicName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}:\\s*\\n        results:\\s*\\n)`, 'm');
 				updatedContent = existingContent.replace(resultsPattern, `$1${newResult}`);
 			} else {
 				// Topic doesn't exist, add it
 				// First, check if we have the empty topics: {} pattern and replace it
 				if (existingContent.includes('topics: {}')) {
 					// Replace the empty topics with the first topic
-					const newTopic = `topics:\n      ${topicName}:\n        results:\n${newResult}`;
+					const newTopic = `topics:\n      ${sanitizedTopicName}:\n        results:\n${newResult}`;
 					updatedContent = existingContent.replace('topics: {}', newTopic);
 				} else if (existingContent.includes('topics:\n') && !existingContent.includes('      ')) {
 					// We have topics: but no actual topics yet
-					const newTopic = `      ${topicName}:\n        results:\n${newResult}`;
+					const newTopic = `      ${sanitizedTopicName}:\n        results:\n${newResult}`;
 					updatedContent = existingContent.replace('topics:\n', `topics:\n${newTopic}`);
 				} else {
 					// We already have topics, just append the new one
-					const newTopic = `      ${topicName}:\n        results:\n${newResult}`;
+					const newTopic = `      ${sanitizedTopicName}:\n        results:\n${newResult}`;
 					updatedContent = existingContent + newTopic;
 				}
 			}
@@ -391,17 +395,29 @@ class ProgressManager {
 			data.quizium.data.monitoredTopics = [];
 		}
 		
-		// Check if topic already exists
+		// Sanitize topic name for YAML storage (remove leading #)
+		const sanitizedTopicName = this.sanitizeTopicName(topicName);
+		
+		// Check if topic already exists (check both hashtag and sanitized topic name)
 		const exists = data.quizium.data.monitoredTopics.some(
-			topic => topic.hashtag === hashtag || topic.topicName === topicName
+			topic => topic.hashtag === hashtag || topic.topicName === sanitizedTopicName
 		);
 		
 		if (!exists) {
-			data.quizium.data.monitoredTopics.push({ hashtag, topicName });
+			data.quizium.data.monitoredTopics.push({ hashtag, topicName: sanitizedTopicName });
 			await this.saveProgressData(data);
 			// Also ensure topic exists in the topics section
-			await this.addTopic(topicName);
+			await this.addTopic(sanitizedTopicName);
 		}
+	}
+
+	/**
+	 * Sanitizes topic names for use as YAML keys by removing leading # characters
+	 * @param topicName - The topic name to sanitize
+	 * @returns The sanitized topic name
+	 */
+	private sanitizeTopicName(topicName: string): string {
+		return topicName.startsWith('#') ? topicName.substring(1) : topicName;
 	}
 
 	async removeMonitoredTopic(hashtag: string): Promise<void> {
@@ -496,6 +512,48 @@ class ProgressManager {
 					}
 				}
 			}
+		}
+	}
+
+	/**
+	 * Fixes existing YAML files that have topics starting with # (which get treated as comments)
+	 * by moving the content to properly formatted topic entries.
+	 */
+	async fixCommentedTopics(): Promise<void> {
+		const filePath = `${this.progressFolderPath}/${this.progressFileName}`;
+		
+		try {
+			// Read the raw file content
+			const content = await this.app.vault.adapter.read(filePath);
+			const lines = content.split('\n');
+			
+			let hasCommentedTopics = false;
+			const fixedLines: string[] = [];
+			
+			for (let i = 0; i < lines.length; i++) {
+				const line = lines[i];
+				const trimmedLine = line.trim();
+				
+				// Check if this line looks like a commented topic (starts with #, ends with :, and has proper indentation)
+				if (line.match(/^      #[^:]+:$/)) {
+					hasCommentedTopics = true;
+					// Remove the # from the topic name
+					const sanitizedLine = line.replace(/^(      )#(.+):$/, '$1$2:');
+					fixedLines.push(sanitizedLine);
+					console.log(`Fixed commented topic: ${line.trim()} -> ${sanitizedLine.trim()}`);
+				} else {
+					fixedLines.push(line);
+				}
+			}
+			
+			// Only write back if we found and fixed commented topics
+			if (hasCommentedTopics) {
+				const fixedContent = fixedLines.join('\n');
+				await this.app.vault.adapter.write(filePath, fixedContent);
+				console.log('Fixed YAML file with commented topics');
+			}
+		} catch (error) {
+			console.error('Error fixing commented topics:', error);
 		}
 	}
 }
@@ -606,6 +664,9 @@ export default class QuiziumPlugin extends Plugin {
 		if (this.progressManager) {
 			// Only ensure progress file exists, don't add topics until quiz completion
 			await this.progressManager.ensureProgressFile();
+			
+			// Fix any existing YAML files with commented topics
+			await this.progressManager.fixCommentedTopics();
 			
 			// Migration: Move monitored topics from data.json to YAML if needed
 			await this.migrateMonitoredTopics();
@@ -1049,7 +1110,9 @@ class AddTopicModal extends Modal {
 						if (hashtagValue.trim() && topicNameValue.trim()) {
 							// Ensure hashtag starts with #
 							const hashtag = hashtagValue.startsWith('#') ? hashtagValue : '#' + hashtagValue;
-							this.onSubmit(hashtag, topicNameValue.trim());
+							// Sanitize topic name (remove leading # if present)
+							const sanitizedTopicName = topicNameValue.startsWith('#') ? topicNameValue.substring(1) : topicNameValue.trim();
+							this.onSubmit(hashtag, sanitizedTopicName);
 							this.close();
 						}
 					});
