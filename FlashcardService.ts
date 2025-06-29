@@ -246,15 +246,24 @@ export class FlashcardService {
     }
     
     // Look for QZ comment within or immediately before this block
+    // Generate question ID for matching
+    const questionId = question.substring(0, 20).replace(/[^a-zA-Z0-9]/g, '');
+    
     for (let i = Math.max(0, blockStartIndex - 3); i <= blockEndIndex; i++) {
       const line = lines[i].trim();
-      const qzMatch = line.match(/<!--QZ:(.*?),(.*?)-->/);
+      const qzMatch = line.match(/<!--QZ:(.*?),(.*?)(?:,(.*?))?-->/);
       if (qzMatch) {
-        const [, timestamp, difficulty] = qzMatch;
-        return {
-          difficulty: difficulty as 'easy' | 'moderate' | 'challenging',
-          lastRated: new Date(timestamp)
-        };
+        const [, timestamp, difficulty, commentQuestionId] = qzMatch;
+        
+                 // Only use this QZ comment if:
+         // 1. It has a question ID that matches ours (new format), OR
+         // 2. It's the old format (no question ID) and is immediately before our question block
+         if (commentQuestionId === questionId || (!commentQuestionId && i >= blockStartIndex - 1 && i < blockStartIndex + 2)) {
+           return {
+             difficulty: difficulty as 'easy' | 'moderate' | 'challenging',
+             lastRated: new Date(timestamp)
+           };
+         }
       }
     }
     
@@ -531,18 +540,18 @@ export class FlashcardService {
         flashcard.topics.includes(topic.topicName)
       );
       
-      const easy = topicFlashcards.filter(f => f.difficulty === 'easy').length;
-      const moderate = topicFlashcards.filter(f => f.difficulty === 'moderate').length;
-      const challenging = topicFlashcards.filter(f => f.difficulty === 'challenging').length;
-      const unrated = topicFlashcards.filter(f => !f.difficulty).length;
+      const easyCards = topicFlashcards.filter(f => f.difficulty === 'easy');
+      const moderateCards = topicFlashcards.filter(f => f.difficulty === 'moderate');
+      const challengingCards = topicFlashcards.filter(f => f.difficulty === 'challenging');
+      const unratedCards = topicFlashcards.filter(f => !f.difficulty);
       
       stats.push({
         topicName: topic.topicName,
         hashtag: topic.hashtag,
-        easy,
-        moderate,
-        challenging,
-        unrated,
+        easy: easyCards.length,
+        moderate: moderateCards.length,
+        challenging: challengingCards.length,
+        unrated: unratedCards.length,
         total: topicFlashcards.length
       });
     }
@@ -989,9 +998,10 @@ export class FlashcardService {
     
     if (questionLineIndex === -1) return; // Question not found
     
-    // Create the rating comment
+    // Create the rating comment with question identifier to ensure proper matching
     const timestamp = new Date().toISOString();
-    const ratingComment = `<!--QZ:${timestamp},${difficulty}-->`;
+    const questionId = flashcard.question.substring(0, 20).replace(/[^a-zA-Z0-9]/g, '');
+    const ratingComment = `<!--QZ:${timestamp},${difficulty},${questionId}-->`;
     
     // Look for existing QZ comment before the question line
     let existingCommentIndex = -1;
@@ -1003,11 +1013,18 @@ export class FlashcardService {
         continue;
       }
       
-      // Check if this line is a QZ comment
-      if (line.startsWith('<!--QZ:') && line.endsWith('-->')) {
-        existingCommentIndex = i;
-        break;
-      }
+              // Check if this line is a QZ comment for this specific question
+        if (line.startsWith('<!--QZ:') && line.endsWith('-->')) {
+          const existingMatch = line.match(/<!--QZ:(.*?),(.*?)(?:,(.*?))?-->/);
+          if (existingMatch) {
+            const [, , , existingQuestionId] = existingMatch;
+            // Match if it has our question ID (new format) or no question ID (old format)
+            if (existingQuestionId === questionId || !existingQuestionId) {
+              existingCommentIndex = i;
+              break;
+            }
+          }
+        }
       
       // If we hit any other non-empty line, stop searching
       break;

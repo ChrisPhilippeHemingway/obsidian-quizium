@@ -168,6 +168,8 @@ export const QuiziumModalView = ({ onClose, monitoredTopics, plugin }: QuiziumMo
     if (!app) return;
     
     try {
+      setError(null); // Clear any previous errors during initialization
+      
       const service = new FlashcardService(app, monitoredTopics, plugin);
       setFlashcardService(service);
       
@@ -185,6 +187,7 @@ export const QuiziumModalView = ({ onClose, monitoredTopics, plugin }: QuiziumMo
     } catch (error) {
       console.error('Error initializing services:', error);
       setError('Failed to initialize application services');
+      setLoading(false); // Ensure loading state is cleared on error
     }
   };
 
@@ -213,6 +216,10 @@ export const QuiziumModalView = ({ onClose, monitoredTopics, plugin }: QuiziumMo
       setQuizTopicStats(quizStats.topicStats);
       setTopicDifficultyStats(difficultyStats);
       
+      // Only check for content after loading is complete
+      // This prevents showing error messages during data loading
+      setLoading(false);
+      
       // Check if any content was found and show appropriate error message
       if (stats.totalUnique === 0 && quizStats.totalUnique === 0) {
         if (monitoredTopics.length === 0) {
@@ -221,10 +228,13 @@ export const QuiziumModalView = ({ onClose, monitoredTopics, plugin }: QuiziumMo
           const tagsText = monitoredTopics.map(t => t.hashtag).join(', ');
           setError(`No flashcards or quizzes found in your vault. Create a note with one of these tags: ${tagsText} and add questions with the exact format shown below.`);
         }
+      } else {
+        // Clear any previous error state when content is found
+        setError(null);
       }
     } catch (err) {
+      console.error('Error loading flashcards:', err);
       setError('Error loading flashcards: ' + (err instanceof Error ? err.message : 'Unknown error'));
-    } finally {
       setLoading(false);
     }
   };

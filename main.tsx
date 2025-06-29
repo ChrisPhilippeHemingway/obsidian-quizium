@@ -629,8 +629,10 @@ export default class QuiziumPlugin extends Plugin {
 		});
 
 		// This creates an icon in the left ribbon.
-		const ribbonIconEl = this.addRibbonIcon('graduation-cap', 'Quizium', (evt: MouseEvent) => {
+		const ribbonIconEl = this.addRibbonIcon('graduation-cap', 'Quizium', async (evt: MouseEvent) => {
 			// Called when the user clicks the icon.
+			// Ensure monitored topics are loaded before opening modal
+			await this.ensureMonitoredTopicsLoaded();
 			new QuiziumModal(this.app, this.settings, this).open();
 		});
 		// Perform additional things with the ribbon
@@ -644,7 +646,9 @@ export default class QuiziumPlugin extends Plugin {
 		this.addCommand({
 			id: 'open-quizium',
 			name: 'Open',
-			callback: () => {
+			callback: async () => {
+				// Ensure monitored topics are loaded before opening modal
+				await this.ensureMonitoredTopicsLoaded();
 				new QuiziumModal(this.app, this.settings, this).open();
 			}
 		});
@@ -733,6 +737,18 @@ export default class QuiziumPlugin extends Plugin {
 	async loadMonitoredTopicsFromYAML() {
 		// Load monitored topics from YAML into settings
 		this.settings.monitoredTopics = await this.progressManager.getMonitoredTopics();
+	}
+
+	async ensureMonitoredTopicsLoaded() {
+		// Wait for progress manager to be initialized if needed
+		if (!this.progressManager) {
+			await this.waitForProgressManager();
+		}
+		
+		// If monitored topics are empty, try to load them from YAML
+		if (this.settings.monitoredTopics.length === 0 && this.progressManager) {
+			await this.loadMonitoredTopicsFromYAML();
+		}
 	}
 
 	async saveSettings() {

@@ -34,7 +34,15 @@ export const MenuView: React.FC<MenuViewProps> = ({
   if (loading) {
     return (
       <div style={menuStyles.loadingContainer}>
-        Loading...
+        <div style={menuStyles.loadingIcon}>
+          🔍
+        </div>
+        <div style={menuStyles.loadingText}>
+          Searching for flashcards and quizzes...
+        </div>
+        <div style={menuStyles.loadingSubtext}>
+          Please wait while we scan your vault
+        </div>
       </div>
     );
   }

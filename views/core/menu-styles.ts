@@ -99,6 +99,23 @@ export const menuStyles = {
     color: '#888'
   },
 
+  loadingIcon: {
+    fontSize: '48px',
+    marginBottom: '15px'
+  },
+
+  loadingText: {
+    fontSize: '18px',
+    fontWeight: '600' as const,
+    color: 'var(--text-normal)',
+    marginBottom: '8px'
+  },
+
+  loadingSubtext: {
+    fontSize: '14px',
+    color: '#888'
+  },
+
   errorContainer: {
     textAlign: 'center' as const,
     padding: '20px'
