@@ -17,6 +17,7 @@ import { SpacedRepetitionHelpView } from './views/spaced-repetition/SpacedRepeti
 import { ViewMode, SpacedRepetitionStats, QuizHistoryEntry } from './views/types';
 import { SpacedRepetitionService } from './services/SpacedRepetitionService';
 import { DataManagementService } from './services/DataManagementService';
+import { PdfGenerationService } from './services/PdfGenerationService';
 import { modalStyles } from './modal-styles';
 
 interface QuiziumModalViewProps {
@@ -42,6 +43,7 @@ export const QuiziumModalView = ({ onClose, monitoredTopics, plugin }: QuiziumMo
   const [flashcardService, setFlashcardService] = useState<FlashcardService | null>(null);
   const [spacedRepetitionService, setSpacedRepetitionService] = useState<SpacedRepetitionService | null>(null);
   const [dataManagementService, setDataManagementService] = useState<DataManagementService | null>(null);
+  const [pdfGenerationService, setPdfGenerationService] = useState<PdfGenerationService | null>(null);
   
   // Flashcard state
   const [currentFlashcard, setCurrentFlashcard] = useState<Flashcard | null>(null);
@@ -172,8 +174,11 @@ export const QuiziumModalView = ({ onClose, monitoredTopics, plugin }: QuiziumMo
       const spacedService = new SpacedRepetitionService(service, monitoredTopics);
       setSpacedRepetitionService(spacedService);
       
-      const dataService = new DataManagementService(app, service, plugin);
-      setDataManagementService(dataService);
+              const dataService = new DataManagementService(app, service, plugin);
+        setDataManagementService(dataService);
+        
+        const pdfService = new PdfGenerationService(app, service);
+        setPdfGenerationService(pdfService);
       
       await loadFlashcardStats(service);
       await loadStreakData();
@@ -880,7 +885,9 @@ export const QuiziumModalView = ({ onClose, monitoredTopics, plugin }: QuiziumMo
         loading={loading}
         totalFlashcards={totalFlashcards}
         topicDifficultyStats={topicDifficultyStats}
+        monitoredTopics={monitoredTopics}
         startFlashcards={startFlashcards}
+        pdfGenerationService={pdfGenerationService || undefined}
       />
     );
   };

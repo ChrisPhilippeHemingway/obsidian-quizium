@@ -540,7 +540,6 @@ class ProgressManager {
 					// Remove the # from the topic name
 					const sanitizedLine = line.replace(/^(      )#(.+):$/, '$1$2:');
 					fixedLines.push(sanitizedLine);
-					console.log(`Fixed commented topic: ${line.trim()} -> ${sanitizedLine.trim()}`);
 				} else {
 					fixedLines.push(line);
 				}
@@ -550,7 +549,6 @@ class ProgressManager {
 			if (hasCommentedTopics) {
 				const fixedContent = fixedLines.join('\n');
 				await this.app.vault.adapter.write(filePath, fixedContent);
-				console.log('Fixed YAML file with commented topics');
 			}
 		} catch (error) {
 			console.error('Error fixing commented topics:', error);
@@ -661,7 +659,7 @@ export default class QuiziumPlugin extends Plugin {
 		// });
 
 		// When registering intervals, this function will automatically clear the interval when the plugin is disabled.
-		// this.registerInterval(window.setInterval(() => console.log('setInterval'), 5 * 60 * 1000));
+		// Example: this.registerInterval(window.setInterval(() => console.log('setInterval'), 5 * 60 * 1000));
 	}
 
 	onunload() {

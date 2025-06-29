@@ -1492,9 +1492,327 @@ available in the app when your plugin is enabled.
 }
 
 .quizium-qhist-linechart-legend-label {
+    font-size: 0.8em;
+    color: var(--text-muted);
+    margin-left: 8px;
+}
+
+/* Print button hover effect */
+.quizium-print-button-hover:hover:not(:disabled) {
+    background: #1d4ed8 !important;
+    transform: scale(1.05);
+}
+
+/* Topic Selection Modal Styles */
+.quizium-topic-selection-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    padding: 20px;
+}
+
+.quizium-topic-selection-modal {
+    background: var(--background-primary);
+    border: 1px solid var(--background-modifier-border);
+    border-radius: 8px;
+    width: 100%;
+    max-width: 600px;
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.quizium-topic-selection-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 20px 0 20px;
+    border-bottom: 1px solid var(--background-modifier-border);
+    margin-bottom: 20px;
+}
+
+.quizium-topic-selection-modal-title {
+    margin: 0;
+    color: var(--text-normal);
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.quizium-topic-selection-modal-close {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: var(--text-muted);
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    transition: all 0.2s;
+}
+
+.quizium-topic-selection-modal-close:hover:not(:disabled) {
+    background: var(--background-modifier-hover);
+    color: var(--text-normal);
+}
+
+.quizium-topic-selection-modal-close:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.quizium-topic-selection-modal-content {
+    padding: 0 20px;
+    flex: 1;
+    overflow-y: auto;
+    min-height: 0;
+}
+
+.quizium-topic-selection-modal-description {
+    color: var(--text-muted);
+    font-size: 14px;
+    margin-bottom: 20px;
+    line-height: 1.4;
+}
+
+.quizium-topic-selection-modal-controls {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.quizium-topic-selection-control-button {
+    background: var(--background-secondary);
+    color: var(--text-normal);
+    border: 1px solid var(--background-modifier-border);
+    border-radius: 4px;
+    padding: 6px 12px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.quizium-topic-selection-control-button:hover:not(:disabled) {
+    background: var(--background-modifier-hover);
+}
+
+.quizium-topic-selection-control-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.quizium-topic-selection-modal-list {
+    max-height: 300px;
+    overflow-y: auto;
+    border: 1px solid var(--background-modifier-border);
+    border-radius: 6px;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
+.quizium-topic-selection-modal-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.2s;
+    margin-bottom: 8px;
+}
+
+.quizium-topic-selection-modal-item:hover {
+    background: var(--background-modifier-hover);
+}
+
+.quizium-topic-selection-modal-item:last-child {
+    margin-bottom: 0;
+}
+
+.quizium-topic-selection-modal-checkbox {
+    margin: 0;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.quizium-topic-selection-modal-item-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.quizium-topic-selection-modal-item-name {
     font-weight: 500;
-    max-width: 120px;
+    color: var(--text-normal);
+    margin-bottom: 4px;
+}
+
+.quizium-topic-selection-modal-item-count {
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+.quizium-topic-selection-modal-item-breakdown {
+    font-size: 11px;
+    color: var(--text-faint);
+    margin-left: 4px;
+}
+
+.quizium-topic-selection-modal-warning {
+    background: var(--background-secondary);
+    color: var(--text-muted);
+    border: 1px solid var(--color-orange);
+    border-left: 4px solid var(--color-orange);
+    padding: 10px;
+    border-radius: 4px;
+    font-size: 13px;
+    margin-bottom: 20px;
+    text-align: center;
+    font-style: italic;
+}
+
+.quizium-topic-selection-modal-summary {
+    background: var(--background-secondary);
+    padding: 12px;
+    border-radius: 4px;
+    font-size: 14px;
+    color: var(--text-normal);
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.quizium-topic-selection-modal-footer {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 20px;
+    border-top: 1px solid var(--background-modifier-border);
+}
+
+.quizium-topic-selection-modal-button {
+    padding: 10px 20px;
+    border-radius: 6px;
+    border: none;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    flex: 1;
+}
+
+.quizium-topic-selection-modal-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.quizium-topic-selection-modal-button-cancel {
+    background: var(--background-secondary);
+    color: var(--text-normal);
+    border: 1px solid var(--background-modifier-border);
+}
+
+.quizium-topic-selection-modal-button-cancel:hover:not(:disabled) {
+    background: var(--background-modifier-hover);
+}
+
+.quizium-topic-selection-modal-button-generate {
+    background: #3b82f6;
+    color: white;
+}
+
+.quizium-topic-selection-modal-button-generate:hover:not(:disabled) {
+    background: #1d4ed8;
+}
+
+.quizium-topic-selection-modal-button-generate:disabled {
+    background-color: var(--background-modifier-border);
+    cursor: not-allowed;
+}
+
+/* Time estimate display */
+.quizium-topic-selection-modal-time-estimate {
+    background: var(--background-secondary);
+    border: 1px solid var(--background-modifier-border);
+    border-radius: 8px;
+    padding: 16px;
+    margin: 16px 0;
+}
+
+.quizium-topic-selection-modal-time-estimate-header {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-normal);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.quizium-topic-selection-modal-time-estimate-note {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.4;
+}
+
+/* Progress bar display */
+.quizium-topic-selection-modal-progress {
+    background: var(--background-secondary);
+    border: 1px solid var(--background-modifier-border);
+    border-radius: 8px;
+    padding: 16px;
+    margin: 16px 0;
+}
+
+.quizium-topic-selection-modal-progress-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.quizium-topic-selection-modal-progress-stage {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-normal);
+}
+
+.quizium-topic-selection-modal-progress-counter {
+    font-size: 13px;
+    color: var(--text-muted);
+    font-family: var(--font-monospace);
+}
+
+.quizium-topic-selection-modal-progress-bar {
+    width: 100%;
+    height: 8px;
+    background-color: var(--background-modifier-border);
+    border-radius: 4px;
     overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    margin-bottom: 8px;
+}
+
+.quizium-topic-selection-modal-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #3b82f6, #1d4ed8);
+    border-radius: 4px;
+    transition: width 0.3s ease;
+    min-width: 2px;
+    width: var(--progress-width, 0%);
+}
+
+.quizium-topic-selection-modal-progress-text {
+    text-align: center;
+    font-size: 12px;
+    color: var(--text-muted);
+    font-weight: 500;
 }

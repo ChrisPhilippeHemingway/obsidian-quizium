@@ -1,11 +1,12 @@
 import React, { useEffect } from 'react';
+import { TFile } from 'obsidian';
 import { LatexRenderer } from '../components/LatexRenderer';
 
 interface Quiz {
   question: string;
   correctAnswer: string;
   wrongAnswers: string[];
-  file: any; // TFile
+  file: TFile;
   topics: string[];
 }
 

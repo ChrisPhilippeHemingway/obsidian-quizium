@@ -1,5 +1,6 @@
 import { App, TFile } from 'obsidian';
 import { MonitoredTopic } from './main';
+import type QuiziumPlugin from './main';
 
 export interface Flashcard {
   question: string;
@@ -39,12 +40,12 @@ export class FlashcardService {
   private app: App;
   private monitoredTopics: MonitoredTopic[];
   private shuffledSequences: Map<string, { cards: Flashcard[], currentIndex: number }> = new Map();
-  public plugin: any; // Reference to the Quizium plugin
+  public plugin: QuiziumPlugin | null; // Reference to the Quizium plugin
 
-  constructor(app: App, monitoredTopics: MonitoredTopic[] = [], plugin?: any) {
+  constructor(app: App, monitoredTopics: MonitoredTopic[] = [], plugin?: QuiziumPlugin) {
     this.app = app;
     this.monitoredTopics = monitoredTopics;
-    this.plugin = plugin;
+    this.plugin = plugin || null;
   }
 
   /**
