@@ -4,6 +4,25 @@ import { flashcardStyles, hoverEffects } from './flashcard-styles';
 import { commonStyles } from '../shared-styles';
 import { LatexRenderer } from '../components/LatexRenderer';
 
+/**
+ * Interface for topic information used in completion messages
+ */
+interface TopicInfo {
+  isSpacedRepetition: boolean;
+  topicName: string;
+  difficultyText?: string;
+}
+
+/**
+ * Interface for spaced repetition breakdown statistics
+ */
+interface SpacedBreakdown {
+  challengingCount: number;
+  moderateCount: number;
+  easyCount: number;
+  unratedCount: number;
+}
+
 interface FlashcardViewProps {
   loading: boolean;
   showCompletionMessage: boolean;
@@ -170,13 +189,13 @@ export const FlashcardView: React.FC<FlashcardViewProps> = ({
   );
 
   /**
-   * Renders the achievement summary box with session statistics.
+   * Renders the achievement summary section with completion stats.
    * 
    * @param topicInfo - The topic information object
    * @param spacedBreakdown - The spaced repetition breakdown statistics
    * @returns JSX element with achievement summary
    */
-  const renderAchievementSummary = (topicInfo: any, spacedBreakdown: any) => (
+  const renderAchievementSummary = (topicInfo: TopicInfo, spacedBreakdown: SpacedBreakdown | null) => (
     <div style={flashcardStyles.achievementSummary(topicInfo.isSpacedRepetition ? '#3b82f6' : '#22c55e')}>
       {renderSummaryTitle(topicInfo)}
       {renderSummaryStats(topicInfo)}
@@ -324,7 +343,7 @@ export const FlashcardView: React.FC<FlashcardViewProps> = ({
    * @param topicInfo - The topic information object
    * @returns JSX element for summary stats
    */
-  function renderSummaryStats(topicInfo: any) {
+  function renderSummaryStats(topicInfo: TopicInfo) {
     return (
       <>
         <div className="quizium-flashcard-summary-stat">
@@ -345,7 +364,7 @@ export const FlashcardView: React.FC<FlashcardViewProps> = ({
    * @param spacedBreakdown - The spaced repetition breakdown statistics
    * @returns JSX element for spaced repetition details
    */
-  function renderSpacedRepetitionDetails(topicInfo: any, spacedBreakdown: any) {
+  function renderSpacedRepetitionDetails(topicInfo: TopicInfo, spacedBreakdown: SpacedBreakdown | null) {
     if (topicInfo.isSpacedRepetition && spacedBreakdown) {
       return (
         <div className="quizium-flashcard-spaced-details">

@@ -4,6 +4,14 @@ import QuiziumPlugin, { ProgressData } from '../main';
 import { QuizHistoryEntry } from '../views/types';
 
 /**
+ * Interface for individual quiz result entries
+ */
+interface QuizResult {
+  timestamp: string;
+  scorePercentage: number;
+}
+
+/**
  * Service class that handles data management operations for the Quizium plugin.
  * This service manages operations like resetting flashcard ratings, clearing quiz results,
  * and loading quiz history data.
@@ -269,7 +277,7 @@ export class DataManagementService {
    * @param topicData - The topic data to validate
    * @returns Boolean indicating whether the structure is valid
    */
-  private isValidTopicData(topicData: unknown): topicData is { results: any[] } {
+  private isValidTopicData(topicData: unknown): topicData is { results: QuizResult[] } {
     return typeof topicData === 'object' && 
            topicData !== null && 
            'results' in topicData && 
@@ -283,7 +291,7 @@ export class DataManagementService {
    * @param topicData - The topic's quiz data
    * @returns Array of quiz history entries for this topic
    */
-  private extractEntriesFromTopicData(topicName: string, topicData: { results: { timestamp: string; scorePercentage: number; }[] }): QuizHistoryEntry[] {
+  private extractEntriesFromTopicData(topicName: string, topicData: { results: QuizResult[] }): QuizHistoryEntry[] {
     return topicData.results.map(result => {
       const date = new Date(result.timestamp);
       const formattedDate = date.toLocaleString('en-GB', {

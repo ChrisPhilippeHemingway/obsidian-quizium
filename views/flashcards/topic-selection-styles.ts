@@ -6,10 +6,48 @@ export const topicSelectionStyles = {
     padding: '20px'
   },
 
+  // Header with title and print button
+  header: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: '20px'
+  },
+
   // Header
   title: {
+    margin: '0',
+    color: 'var(--text-normal)',
+    textAlign: 'center' as const,
+    flex: '1'
+  },
+
+  // Print button
+  printButton: {
+    background: '#3b82f6',
+    color: 'white',
+    border: 'none',
+    borderRadius: '6px',
+    padding: '8px 12px',
+    fontSize: '16px',
+    cursor: 'pointer',
+    transition: 'all 0.2s',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    minWidth: '40px',
+    height: '40px'
+  } as CSSProperties,
+
+  // PDF generation message
+  pdfMessage: {
+    background: 'var(--background-secondary)',
+    border: '1px solid var(--background-modifier-border)',
+    borderRadius: '6px',
+    padding: '12px',
     marginBottom: '20px',
     color: 'var(--text-normal)',
+    fontSize: '14px',
     textAlign: 'center' as const
   },
 
