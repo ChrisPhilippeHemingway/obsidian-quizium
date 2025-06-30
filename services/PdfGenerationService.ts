@@ -120,17 +120,17 @@ export class PdfGenerationService {
       const pageHeight = 297;
       const margin = 10;
       
-      // Calculate card dimensions (3 columns × 5 rows)
-      const cardWidth = (pageWidth - 2 * margin) / 3;
-      const cardHeight = (pageHeight - 2 * margin) / 5;
+      // Calculate card dimensions (6 columns × 10 rows)
+      const cardWidth = (pageWidth - 2 * margin) / 6;
+      const cardHeight = (pageHeight - 2 * margin) / 10;
 
-      // Process flashcards in chunks of 15 (one page)
-      const totalPages = Math.ceil(flashcards.length / 15);
+      // Process flashcards in chunks of 60 (one page)
+      const totalPages = Math.ceil(flashcards.length / 60);
 
       let totalProcessedCards = 0;
 
       for (let pageIndex = 0; pageIndex < totalPages; pageIndex++) {
-        const pageFlashcards = flashcards.slice(pageIndex * 15, (pageIndex + 1) * 15);
+        const pageFlashcards = flashcards.slice(pageIndex * 60, (pageIndex + 1) * 60);
         
         // Generate images for questions
         const questionImages = await this.generateCardImages(
@@ -227,9 +227,9 @@ export class PdfGenerationService {
   ): Promise<string[]> {
     const images: string[] = [];
     
-    // Convert mm to pixels - SIGNIFICANTLY INCREASED for high quality print
-    const pixelWidth = Math.round(cardWidth * 4.5);
-    const pixelHeight = Math.round(cardHeight * 4.5);
+    // Convert mm to pixels - High quality resolution for crisp, non-pixelated output
+    const pixelWidth = Math.round(cardWidth * 6.0);
+    const pixelHeight = Math.round(cardHeight * 6.0);
     
     // Process in very small batches to prevent memory overflow
     const batchSize = 2;
@@ -422,12 +422,14 @@ export class PdfGenerationService {
     ctx.fillStyle = '#ffffff';
     ctx.fillRect(0, 0, width, height);
     
-    // Border
+    // Border optimized for small cards
     ctx.strokeStyle = '#000000';
-    ctx.lineWidth = 2;
+    ctx.lineWidth = 1;
     ctx.strokeRect(1, 1, width - 2, height - 2);
     
-    // Text styling
+    // High-quality text styling
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
     ctx.fillStyle = '#000000';
     ctx.textAlign = 'left';
     ctx.textBaseline = 'top';
@@ -435,13 +437,13 @@ export class PdfGenerationService {
     // Clean the content
     const cleanContent = this.cleanTextForPDF(content);
     
-    // Calculate optimal font size
-    const padding = 20;
+    // Calculate optimal font size for very small cards
+    const padding = 6;
     const availableWidth = width - (padding * 2);
     const availableHeight = height - (padding * 2);
     
-    // Try different font sizes
-    let fontSize = 24;
+    // Try different font sizes optimized for very small cards (6x10 grid)
+    let fontSize = 10;
     let lineHeight = fontSize * 1.2;
     let lines: string[] = [];
     
@@ -467,7 +469,7 @@ export class PdfGenerationService {
     });
     
     // Convert to base64
-    return canvas.toDataURL('image/png', 0.8);
+    return canvas.toDataURL('image/jpeg', 0.95);
   }
 
   /**
@@ -492,14 +494,16 @@ export class PdfGenerationService {
     ctx.lineWidth = 1;
     ctx.strokeRect(0, 0, width, height);
     
-    // Error message
+    // High-quality error message
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
     ctx.fillStyle = '#666666';
     ctx.font = '14px Arial, sans-serif';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillText('Card rendering failed', width / 2, height / 2);
     
-    return canvas.toDataURL('image/png', 0.8);
+    return canvas.toDataURL('image/jpeg', 0.95);
   }
 
   /**
@@ -530,7 +534,7 @@ export class PdfGenerationService {
   }
 
   /**
-   * Draws a page of images in a 3×5 grid layout.
+   * Draws a page of images in a 6×10 grid layout.
    * 
    * @param pdf - jsPDF instance
    * @param images - Array of base64 image data
@@ -554,17 +558,17 @@ export class PdfGenerationService {
     pdf.setTextColor(100, 100, 100);
     pdf.text(title, margin, margin / 2);
     
-    // Draw images in 3×5 grid
+    // Draw images in 6×10 grid
     for (let i = 0; i < images.length; i++) {
-      const row = Math.floor(i / 3);
-      const originalCol = i % 3;
-      const col = mirrorHorizontal ? 2 - originalCol : originalCol; // Mirror for answers
+      const row = Math.floor(i / 6);
+      const originalCol = i % 6;
+      const col = mirrorHorizontal ? 5 - originalCol : originalCol; // Mirror for answers
       
       const x = margin + col * cardWidth;
       const y = margin + row * cardHeight;
       
       try {
-        pdf.addImage(images[i], 'PNG', x, y, cardWidth, cardHeight);
+        pdf.addImage(images[i], 'JPEG', x, y, cardWidth, cardHeight);
       } catch (err) {
         console.warn('Failed to add image to PDF:', err);
         // Draw a simple rectangle as fallback
@@ -611,7 +615,7 @@ export class PdfGenerationService {
   private async createHighQualityImage(content: string, width: number, height: number): Promise<string> {
     const canvas = document.createElement('canvas');
     
-    const scale = 2; 
+    const scale = 2.5; // High resolution scale for crisp, non-pixelated text
     canvas.width = width * scale;
     canvas.height = height * scale;
     
@@ -623,17 +627,18 @@ export class PdfGenerationService {
     // Scale context to match canvas scaling
     ctx.scale(scale, scale);
     
-    // Enable MAXIMUM quality text rendering
-    ctx.imageSmoothingEnabled = false; // Disable smoothing for crisp pixel-perfect text
+    // Enable MAXIMUM quality text rendering with high-resolution smoothing
+    ctx.imageSmoothingEnabled = true; // Enable smoothing for crisp high-resolution text
+    ctx.imageSmoothingQuality = 'high'; // Use highest quality smoothing algorithm
     
     // White background
     ctx.fillStyle = '#ffffff';
     ctx.fillRect(0, 0, width, height);
     
-    // Border with crisp lines
+    // Border with crisp lines optimized for small cards
     ctx.strokeStyle = '#000000';
-    ctx.lineWidth = 2; // Slightly thicker border for better visibility
-    ctx.strokeRect(2, 2, width - 4, height - 4);
+    ctx.lineWidth = 1; // Thinner border to maximize text space in small cards
+    ctx.strokeRect(1, 1, width - 2, height - 2);
     
     // Text styling for maximum readability
     ctx.fillStyle = '#000000';
@@ -643,14 +648,14 @@ export class PdfGenerationService {
     // Clean the content
     const cleanContent = this.cleanTextForPDF(content);
     
-    // Calculate optimal font size with excellent spacing
-    const padding = 25; // Increased padding for better margins
+    // Calculate optimal font size with spacing optimized for very small cards
+    const padding = 8; // Minimal padding for maximum text space in 6x10 grid
     const availableWidth = width - (padding * 2);
     const availableHeight = height - (padding * 2);
     
-    // Try different font sizes with MUCH better initial size
-    let fontSize = 36; // Much higher initial font size for crisp readability
-    let lineHeight = fontSize * 1.4; // Better line spacing
+    // Try different font sizes optimized for very small cards (6x10 grid)
+    let fontSize = 14; // Much smaller initial font size to prevent overflow
+    let lineHeight = fontSize * 1.3; // Tighter line spacing for small cards
     let lines: string[] = [];
     
     do {
@@ -659,13 +664,13 @@ export class PdfGenerationService {
       lines = this.wrapTextToLines(ctx, cleanContent, availableWidth);
       const totalTextHeight = lines.length * lineHeight;
       
-      if (totalTextHeight <= availableHeight || fontSize <= 14) {
+      if (totalTextHeight <= availableHeight || fontSize <= 6) {
         break;
       }
       
-      fontSize -= 2;
-      lineHeight = fontSize * 1.4;
-    } while (fontSize > 14);
+      fontSize -= 1;
+      lineHeight = fontSize * 1.3;
+    } while (fontSize > 6);
     
     // PERFECT TEXT CENTERING
     const totalTextHeight = lines.length * lineHeight;
@@ -684,8 +689,8 @@ export class PdfGenerationService {
       ctx.fillText(line, width / 2, y);
     });
     
-    // Convert to PNG with MAXIMUM quality
-    const result = canvas.toDataURL('image/png', 1.0); // 100% PNG quality
+    // Convert to JPEG with very high quality for crisp, non-pixelated output
+    const result = canvas.toDataURL('image/jpeg', 0.95); // 95% JPEG quality for maximum clarity
     
     // Immediate cleanup
     ctx.clearRect(0, 0, width, height);
