@@ -1739,6 +1739,68 @@ available in the app when your plugin is enabled.
     cursor: not-allowed;
 }
 
+/* Card size selection */
+.quizium-topic-selection-modal-card-size {
+    background: var(--background-secondary);
+    border: 1px solid var(--background-modifier-border);
+    border-radius: 8px;
+    padding: 16px;
+    margin: 16px 0;
+}
+
+.quizium-topic-selection-modal-card-size-title {
+    margin: 0 0 12px 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-normal);
+}
+
+.quizium-topic-selection-modal-card-size-options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.quizium-topic-selection-modal-card-size-option {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px;
+    border: 1px solid var(--background-modifier-border);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.quizium-topic-selection-modal-card-size-option:hover {
+    background: var(--background-modifier-hover);
+}
+
+.quizium-topic-selection-modal-card-size-option:has(input:checked) {
+    background: rgba(59, 130, 246, 0.1);
+    border-color: #3b82f6;
+}
+
+.quizium-topic-selection-modal-radio {
+    margin: 0;
+    flex-shrink: 0;
+}
+
+.quizium-topic-selection-modal-card-size-info {
+    flex: 1;
+}
+
+.quizium-topic-selection-modal-card-size-name {
+    font-weight: 500;
+    color: var(--text-normal);
+    margin-bottom: 2px;
+}
+
+.quizium-topic-selection-modal-card-size-desc {
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
 /* Time estimate display */
 .quizium-topic-selection-modal-time-estimate {
     background: var(--background-secondary);

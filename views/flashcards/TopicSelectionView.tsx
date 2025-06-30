@@ -42,7 +42,7 @@ export const TopicSelectionView: React.FC<TopicSelectionViewProps> = ({
     setShowTopicModal(false);
   };
 
-  const handleGeneratePDF = async (selectedTopics: string[]) => {
+  const handleGeneratePDF = async (selectedTopics: string[], cardSize: 'small' | 'big') => {
     if (!pdfGenerationService) {
       setPdfMessage('PDF generation service not available');
       setTimeout(() => setPdfMessage(''), 3000);
@@ -60,6 +60,7 @@ export const TopicSelectionView: React.FC<TopicSelectionViewProps> = ({
     try {
       const result = await pdfGenerationService.generateFlashcardsPDF(
         selectedTopics,
+        cardSize,
         (progress) => {
           const now = Date.now();
           if (now - lastProgressUpdate >= progressThrottleMs) {

@@ -15,15 +15,17 @@ export class PdfGenerationService {
   ) {}
 
   /**
-   * Generates a PDF of flashcards with optional topic filtering.
+   * Generates a PDF of flashcards with optional topic filtering and card size selection.
    * Uses image-based rendering for perfect LaTeX and mathematical notation.
    * 
    * @param selectedTopics - Optional array of topic names to filter by
+   * @param cardSize - Size of cards: 'small' (6x10 grid) or 'big' (4x5 grid)
    * @param onProgress - Optional callback to report generation progress
    * @returns Promise resolving to operation result with filename if successful
    */
   async generateFlashcardsPDF(
     selectedTopics?: string[],
+    cardSize: 'small' | 'big' = 'big',
     onProgress?: (progress: {
       currentCard: number;
       totalCards: number;
@@ -58,15 +60,16 @@ export class PdfGenerationService {
         return { success: false, error: message };
       }
 
-      // Generate filename with timestamp and topic info
+      // Generate filename with timestamp, card size, and topic info
       const timestamp = this.generateTimestamp();
       const topicSuffix = selectedTopics && selectedTopics.length > 0 
         ? `-${selectedTopics.join('-').replace(/[^a-zA-Z0-9-]/g, '').substring(0, 30)}`
         : '';
-      const filename = `quizium-flashcards${topicSuffix}-${timestamp}.pdf`;
+      const cardSizeSuffix = `-${cardSize}-cards`;
+      const filename = `quizium-flashcards${topicSuffix}${cardSizeSuffix}-${timestamp}.pdf`;
 
       // Create PDF with flashcards using image-based rendering
-      const pdfResult = await this.createImageBasedPDF(allFlashcards, filename, onProgress);
+      const pdfResult = await this.createImageBasedPDF(allFlashcards, filename, cardSize, onProgress);
       
       if (!pdfResult.success) {
         return pdfResult;
@@ -89,12 +92,14 @@ export class PdfGenerationService {
    * 
    * @param flashcards - Array of flashcards to include in the PDF
    * @param filename - Name of the PDF file to create
+   * @param cardSize - Size of cards: 'small' (6x10 grid) or 'big' (4x5 grid)
    * @param onProgress - Optional callback to report generation progress
    * @returns Promise resolving to operation result
    */
   private async createImageBasedPDF(
     flashcards: Flashcard[],
     filename: string,
+    cardSize: 'small' | 'big',
     onProgress?: (progress: {
       currentCard: number;
       totalCards: number;
@@ -118,19 +123,29 @@ export class PdfGenerationService {
       // A4 dimensions in mm
       const pageWidth = 210;
       const pageHeight = 297;
-      const margin = 10;
       
-      // Calculate card dimensions (6 columns × 10 rows)
-      const cardWidth = (pageWidth - 2 * margin) / 6;
-      const cardHeight = (pageHeight - 2 * margin) / 10;
+      // Calculate card dimensions based on card size selection
+      const columns = cardSize === 'small' ? 6 : 4;
+      const rows = cardSize === 'small' ? 10 : 5;
+      const cardsPerPage = columns * rows;
+      
+      const totalGridWidth = 190; // Use most of the page width (210 - 20mm margins)
+      const totalGridHeight = 277; // Use most of the page height (297 - 20mm margins)
+      
+      const cardWidth = totalGridWidth / columns;
+      const cardHeight = totalGridHeight / rows;
+      
+      // Center the grid perfectly on the page
+      const gridStartX = (pageWidth - totalGridWidth) / 2;
+      const gridStartY = (pageHeight - totalGridHeight) / 2;
 
-      // Process flashcards in chunks of 60 (one page)
-      const totalPages = Math.ceil(flashcards.length / 60);
+      // Process flashcards in chunks based on card size
+      const totalPages = Math.ceil(flashcards.length / cardsPerPage);
 
       let totalProcessedCards = 0;
 
       for (let pageIndex = 0; pageIndex < totalPages; pageIndex++) {
-        const pageFlashcards = flashcards.slice(pageIndex * 60, (pageIndex + 1) * 60);
+        const pageFlashcards = flashcards.slice(pageIndex * cardsPerPage, (pageIndex + 1) * cardsPerPage);
         
         // Generate images for questions
         const questionImages = await this.generateCardImages(
@@ -178,11 +193,11 @@ export class PdfGenerationService {
         if (pageIndex > 0) {
           pdf.addPage();
         }
-        this.drawImagesPage(pdf, questionImages, cardWidth, cardHeight, margin, 'Flashcard Questions');
+        this.drawImagesPage(pdf, questionImages, cardWidth, cardHeight, gridStartX, gridStartY, columns, 'Flashcard Questions');
         
         // Add answers page with mirrored horizontal order
         pdf.addPage();
-        this.drawImagesPage(pdf, answerImages, cardWidth, cardHeight, margin, 'Flashcard Answers', true);
+        this.drawImagesPage(pdf, answerImages, cardWidth, cardHeight, gridStartX, gridStartY, columns, 'Flashcard Answers', true);
       }
 
       // Save PDF to vault
@@ -534,13 +549,15 @@ export class PdfGenerationService {
   }
 
   /**
-   * Draws a page of images in a 6×10 grid layout.
+   * Draws a page of images in a flexible grid layout with perfect centering.
    * 
    * @param pdf - jsPDF instance
    * @param images - Array of base64 image data
    * @param cardWidth - Width of each card in mm
    * @param cardHeight - Height of each card in mm
-   * @param margin - Page margin in mm
+   * @param gridStartX - X position where grid starts (centered)
+   * @param gridStartY - Y position where grid starts (centered)
+   * @param columns - Number of columns in the grid
    * @param title - Page title
    * @param mirrorHorizontal - Whether to mirror horizontal order for answers page
    */
@@ -549,23 +566,26 @@ export class PdfGenerationService {
     images: string[],
     cardWidth: number,
     cardHeight: number,
-    margin: number,
+    gridStartX: number,
+    gridStartY: number,
+    columns: number,
     title: string,
     mirrorHorizontal: boolean = false
   ) {
-    // Add page title
+    // Add page title (positioned above the centered grid)
     pdf.setFontSize(14);
     pdf.setTextColor(100, 100, 100);
-    pdf.text(title, margin, margin / 2);
+    pdf.text(title, gridStartX, gridStartY - 5); // Position title 5mm above the grid
     
-    // Draw images in 6×10 grid
+    // Draw images in perfectly centered grid
     for (let i = 0; i < images.length; i++) {
-      const row = Math.floor(i / 6);
-      const originalCol = i % 6;
-      const col = mirrorHorizontal ? 5 - originalCol : originalCol; // Mirror for answers
+      const row = Math.floor(i / columns);
+      const originalCol = i % columns;
+      const col = mirrorHorizontal ? (columns - 1) - originalCol : originalCol; // Mirror for answers
       
-      const x = margin + col * cardWidth;
-      const y = margin + row * cardHeight;
+      // Use precise grid positioning for perfect alignment
+      const x = gridStartX + col * cardWidth;
+      const y = gridStartY + row * cardHeight;
       
       try {
         pdf.addImage(images[i], 'JPEG', x, y, cardWidth, cardHeight);

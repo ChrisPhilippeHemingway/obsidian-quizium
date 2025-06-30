@@ -5,7 +5,7 @@ import { TopicDifficultyStats } from '../../FlashcardService';
 interface TopicSelectionModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onGenerate: (selectedTopics: string[]) => void;
+  onGenerate: (selectedTopics: string[], cardSize: 'small' | 'big') => void;
   monitoredTopics: MonitoredTopic[];
   topicDifficultyStats: TopicDifficultyStats[];
   isGenerating: boolean;
@@ -28,6 +28,7 @@ export const TopicSelectionModal: React.FC<TopicSelectionModalProps> = ({
   generationProgress
 }) => {
   const [selectedTopics, setSelectedTopics] = useState<string[]>([]);
+  const [cardSize, setCardSize] = useState<'small' | 'big'>('big'); // Default to big cards
 
   // Initialize with all topics selected
   useEffect(() => {
@@ -53,7 +54,7 @@ export const TopicSelectionModal: React.FC<TopicSelectionModalProps> = ({
   };
 
   const handleGenerate = () => {
-    onGenerate(selectedTopics);
+    onGenerate(selectedTopics, cardSize);
   };
 
   const getTotalFlashcards = () => {
@@ -163,6 +164,42 @@ export const TopicSelectionModal: React.FC<TopicSelectionModalProps> = ({
 
           {isGenerating && renderProgressBar()}
 
+          <div className="quizium-topic-selection-modal-card-size">
+            <h4 className="quizium-topic-selection-modal-card-size-title">Card Size</h4>
+            <div className="quizium-topic-selection-modal-card-size-options">
+              <label className="quizium-topic-selection-modal-card-size-option">
+                <input
+                  type="radio"
+                  name="cardSize"
+                  value="big"
+                  checked={cardSize === 'big'}
+                  onChange={(e) => setCardSize(e.target.value as 'small' | 'big')}
+                  disabled={isGenerating}
+                  className="quizium-topic-selection-modal-radio"
+                />
+                <div className="quizium-topic-selection-modal-card-size-info">
+                  <div className="quizium-topic-selection-modal-card-size-name">Big Cards (Recommended)</div>
+                  <div className="quizium-topic-selection-modal-card-size-desc">4 columns × 5 rows (20 cards per page)</div>
+                </div>
+              </label>
+              <label className="quizium-topic-selection-modal-card-size-option">
+                <input
+                  type="radio"
+                  name="cardSize"
+                  value="small"
+                  checked={cardSize === 'small'}
+                  onChange={(e) => setCardSize(e.target.value as 'small' | 'big')}
+                  disabled={isGenerating}
+                  className="quizium-topic-selection-modal-radio"
+                />
+                <div className="quizium-topic-selection-modal-card-size-info">
+                  <div className="quizium-topic-selection-modal-card-size-name">Small Cards</div>
+                  <div className="quizium-topic-selection-modal-card-size-desc">6 columns × 10 rows (60 cards per page)</div>
+                </div>
+              </label>
+            </div>
+          </div>
+
           <div className="quizium-topic-selection-modal-controls">
             <button
               onClick={handleSelectAll}
@@ -236,7 +273,7 @@ export const TopicSelectionModal: React.FC<TopicSelectionModalProps> = ({
               ? generationProgress 
                 ? `Generating... (${Math.round(((generationProgress.currentCard) / generationProgress.totalCards) * 100)}%)`
                 : 'Generating...'
-              : `Generate PDF (${getTotalFlashcards()} cards)`
+              : `Generate ${cardSize === 'big' ? 'Big' : 'Small'} Cards PDF (${getTotalFlashcards()} cards)`
             }
           </button>
         </div>
